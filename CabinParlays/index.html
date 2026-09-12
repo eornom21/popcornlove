@@ -99,13 +99,18 @@
 
   footer{ max-width:640px; margin:0 auto; padding:0 20px 40px; font-size:12.5px; color:var(--slate); }
   footer p{ margin:4px 0; }
-</style>
+
+  .nav{ display:flex; gap:18px; margin:0 0 18px; font-size:13.5px; font-weight:600; }
+  .nav a{ color:#D7D2C2; text-decoration:none; border-bottom:2px solid transparent; padding-bottom:2px; }
+  .nav a.on{ color:var(--gold); border-color:var(--gold); }
+  </style>
 </head>
 <body>
 
 <header class="hero">
   <div class="hero-inner">
-    <p class="eyebrow">College &amp; NFL — Live Sweat</p>
+    <div class="nav"><a class="on" href="./">Board</a><a href="odds/">Odds</a></div>
+<p class="eyebrow">College &amp; NFL — Live Sweat</p>
     <h1 class="display">Weekend Slate</h1>
     <p class="sub">September 12–13, 2026</p>
     <p class="crew">Brad, Nate, Nate &amp; Zach</p>
