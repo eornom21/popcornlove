@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Armageddon · BVK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap">
+
+<style>
+:root{--ink:#120E0A;--board:#1C1610;--board-2:#251D15;--line:#3A2E22;--paper:#F3E8D6;--muted:#A2907A;
+--amber:#E8A33D;--amber-deep:#B9761A;--hop:#8CA85E;--hot:#D9503F;--pad:clamp(14px,2.2vw,26px);color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--ink)}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;
+font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:var(--amber)}
+.wrap{max-width:1040px;margin:0 auto;padding:var(--pad) var(--pad) 72px;display:flex;flex-direction:column;gap:var(--pad)}
+.nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+border-bottom:1px solid var(--line);padding-bottom:10px}
+.nav a{color:var(--muted);text-decoration:none;padding:4px 0}
+.nav a:hover,.nav a.on{color:var(--amber)}
+.nav .brand{font-family:"Alfa Slab One",Georgia,serif;font-size:14px;letter-spacing:.06em;color:var(--paper);margin-right:auto}
+.mast{border-bottom:3px solid var(--amber-deep);padding-bottom:12px}
+.mast h1{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;margin:0;font-size:clamp(28px,5.2vw,52px);line-height:.98;text-wrap:balance}
+.mast h1 em{font-style:normal;color:var(--amber);display:block;font-size:.55em;letter-spacing:.06em}
+.mast p{margin:10px 0 0;color:var(--muted);font-size:15px;max-width:66ch}
+.kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+h2{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:clamp(20px,3vw,28px);margin:0 0 10px;line-height:1.1}
+h3{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin:0 0 8px;font-weight:600}
+section{background:var(--board);border:1px solid var(--line);padding:clamp(16px,2.6vw,26px)}
+p{margin:0 0 10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--pad)}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--board-2);border:1px solid var(--line);padding:10px 12px}
+.stat .v{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:22px;line-height:1.1;color:var(--amber);font-variant-numeric:tabular-nums}
+.stat .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{color:var(--muted);white-space:nowrap}
+.tbl{overflow-x:auto}
+ul.plain{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+ul.plain li{padding-left:14px;position:relative}
+ul.plain li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--amber)}
+.chip{display:inline-block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:3px 7px;white-space:nowrap;vertical-align:middle}
+.chip.draft{color:var(--hop);border-color:#4A5B36}
+.chip.speed{color:#1A1206;background:var(--amber);border-color:var(--amber);font-weight:700}
+.chip.special{color:var(--amber);border-color:var(--amber-deep)}
+.foot{color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase;border-top:1px solid var(--line);padding-top:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{display:block;background:var(--board-2);border:1px solid var(--line);padding:16px 18px;text-decoration:none;color:var(--paper);transition:border-color .12s}
+.card:hover{border-color:var(--amber)}
+.card b{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:20px;display:block;margin-bottom:4px}
+.card span{color:var(--muted);font-size:14px}
+.card.hot{border-color:var(--amber);background:linear-gradient(180deg,#2B2014,#1F1810)}
+.quote{border-left:3px solid var(--amber-deep);padding:6px 14px;color:var(--paper);font-size:17px;margin:0 0 6px}
+.quote small{display:block;color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.warn{color:var(--amber)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="nav"><a class="brand" href="/BVK/">BVK</a><a class="on" href="/BVK/armageddon/">Armageddon</a><a href="/BVK/speeddraft/">Speed Draft</a><a href="/BVK/ledger/">Ledger</a></nav>
+
+<header class="mast">
+  <div class="kicker">Tonight · BVK #169</div>
+  <h1>Armageddon<em>1998 · Touchstone · dir. Michael Bay</em></h1>
+  <p>Everything worth having open while the tape rolls: the numbers, the crew roster for Snag, Shag, Body Bag,
+  the director for Drinking with the Director, the science fight, the song, and where this movie touches the
+  first 168 episodes.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="v">Jul 1, 1998</div><div class="k">US release</div></div>
+  <div class="stat"><div class="v">150 min</div><div class="k">Runtime</div></div>
+  <div class="stat"><div class="v">$140M</div><div class="k">Budget</div></div>
+  <div class="stat"><div class="v">$553.7M</div><div class="k">Worldwide · #1 of 1998</div></div>
+</div>
+
+<div class="grid2">
+<section>
+  <h2>Fast facts</h2>
+  <ul class="plain">
+    <li><b>Director</b> Michael Bay · <b>Producers</b> Jerry Bruckheimer, Gale Anne Hurd, Michael Bay</li>
+    <li><b>Screenplay</b> Jonathan Hensleigh &amp; J.J. Abrams · <b>Adaptation</b> Tony Gilroy &amp; Shane Salerno ·
+        <b>Story</b> Robert Roy Pool &amp; Hensleigh. Uncredited passes by Paul Attanasio, Ann Biderman, Scott Rosenberg and
+        Robert Towne (Chinatown). Nine writers on a movie about drilling a hole.</li>
+    <li><b>Box office</b> $201.6M domestic, $352.1M overseas. Biggest movie in the world in 1998; second in the US behind
+        Saving Private Ryan.</li>
+    <li><b>Shot</b> Aug 27, 1997 – Jan 29, 1998, mostly at Culver Studios. Premiered at Kennedy Space Center June 29, 1998.</li>
+    <li><b>Narrated by</b> Charlton Heston.</li>
+    <li><b>The rival</b> Deep Impact (Mimi Leder) opened May 8, 1998, seven weeks earlier, on a $75M budget — and made $349M.
+        Deep Impact's writer says a Disney exec took notes on their script over lunch and Armageddon was the answer.
+        Disney's Joe Roth added $3M in May '98 just to blow up Paris so the two movies wouldn't look alike.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Scoreboard</h2>
+  <ul class="plain">
+    <li><b>Rotten Tomatoes</b> 42% critics · 73% audience. Consensus: pretty, dumb, exactly what it says on the tin.</li>
+    <li><b>Ebert</b> One star. Called it an assault on "the eyes, the ears, the brain, common sense."</li>
+    <li><b>Oscars</b> Four nominations, zero wins: Sound, Sound Effects Editing, Visual Effects, Original Song.</li>
+    <li><b>Razzies</b> Bruce Willis <span class="warn">won</span> Worst Actor (shared credit with Mercury Rising and The Siege).
+        Also nominated for Worst Picture, Director, Screenplay, Supporting Actress (Tyler), Screen Couple (Affleck/Tyler)
+        and Worst Original Song — the same song the Oscars nominated.</li>
+    <li><b>Saturn Awards</b> Won Best Science Fiction Film and Best Director. Same year, same movie, same Michael Bay.</li>
+    <li><b>MTV Movie Awards</b> Best Action Sequence — the asteroid shower flattening Manhattan.</li>
+    <li><b>Criterion Collection</b> Spine #40. A director's cut with a Jeanine Basinger essay defending it. Still the
+        single most argued-about title in the collection.</li>
+  </ul>
+</section>
+</div>
+
+<section>
+  <h2>The crew — for Snag, Shag, Body Bag</h2>
+  <div class="tbl"><table>
+    <tr><th>Character</th><th>Actor</th><th>Who they are</th><th>Fate</th></tr>
+    <tr><td><b>Harry S. Stamper</b></td><td>Bruce Willis</td><td>Best deep-core driller on the planet. Grace&#x27;s dad. Owns the rig, owns the crew.</td><td class="n">Dies — stays behind, pushes the button</td></tr><tr><td><b>A.J. Frost</b></td><td>Ben Affleck</td><td>Harry&#x27;s protégé, Grace&#x27;s boyfriend, the guy Harry chases with a shotgun in the first reel.</td><td class="n">Lives</td></tr><tr><td><b>Grace Stamper</b></td><td>Liv Tyler</td><td>Harry&#x27;s daughter, raised on oil rigs. The animal crackers scene.</td><td class="n">Lives</td></tr><tr><td><b>Dan Truman</b></td><td>Billy Bob Thornton</td><td>NASA Executive Director. Wanted to be an astronaut, never got cleared to fly. The calm in the room.</td><td class="n">Lives</td></tr><tr><td><b>Chick Chapple</b></td><td>Will Patton</td><td>Harry&#x27;s second. Estranged wife and a kid who doesn&#x27;t know him — the salesman scene.</td><td class="n">Lives</td></tr><tr><td><b>Rockhound</b></td><td>Steve Buscemi</td><td>Geologist, degenerate, two doctorates. Sits on the nuke. Space dementia.</td><td class="n">Lives</td></tr><tr><td><b>Col. Willie Sharp</b></td><td>William Fichtner</td><td>Shuttle Freedom commander. Carries the secondary-protocol order from the Pentagon, then sides with Harry against it.</td><td class="n">Lives</td></tr><tr><td><b>Oscar Choice</b></td><td>Owen Wilson</td><td>Roughneck philosopher. Ends up on Independence.</td><td class="n">Dies — Independence crash</td></tr><tr><td><b>Bear</b></td><td>Michael Clarke Duncan</td><td>Biggest man on the crew, rides a motorcycle into the intro.</td><td class="n">Lives</td></tr><tr><td><b>Lev Andropov</b></td><td>Peter Stormare</td><td>Lone cosmonaut on Mir. Fixes things by hitting them. Joins Independence when Mir goes.</td><td class="n">Lives</td></tr><tr><td><b>Max Lennert</b></td><td>Ken Hudson Campbell</td><td>Drives the Armadillo. Mama&#x27;s boy. Hits the gas pocket.</td><td class="n">Dies — gas pocket</td></tr><tr><td><b>Gruber</b></td><td>Grayson McCouch</td><td>NASA&#x27;s geologist on Freedom.</td><td class="n">Dies — gas pocket</td></tr><tr><td><b>Freddie Noonan</b></td><td>Clark Brolly</td><td>Roughneck. Independence.</td><td class="n">Dies — Independence crash</td></tr><tr><td><b>Jennifer Watts</b></td><td>Jessica Steen</td><td>Freedom co-pilot.</td><td class="n">Lives</td></tr><tr><td><b>Gen. Kimsey</b></td><td>Keith David</td><td>The Pentagon voice that wants to detonate remotely.</td><td class="n">Lives</td></tr><tr><td><b>Dr. Ronald Quincy</b></td><td>Jason Isaacs</td><td>NASA&#x27;s smartest man. Explains the plan with a cracker.</td><td class="n">Lives</td></tr><tr><td><b>Walter Clark</b></td><td>Chris Ellis</td><td>Flight Director in Houston.</td><td class="n">Lives</td></tr><tr><td><b>The President</b></td><td>Stanley Anderson</td><td>Gives the speech the whole world hears.</td><td class="n">Lives</td></tr><tr><td><b>Narrator</b></td><td>Charlton Heston</td><td>Sixty-five million years ago…</td><td class="n">—</td></tr>
+  </table></div>
+  <p style="margin-top:10px;color:var(--muted);font-size:14px">Freedom carried Sharp, Watts, Harry, Chick, Rockhound, Max and Gruber.
+  Independence carried Davis, Tucker, Halsey, A.J., Oscar, Bear and Noonan, and picked up Lev at Mir. Independence goes down on
+  approach; A.J., Bear and Lev walk away from it.</p>
+</section>
+
+<div class="grid2">
+<section>
+  <h2>Drinking with the Director</h2>
+  <h3>Michael Bay</h3>
+  <ul class="plain">
+    <li>Born Feb 17, 1965, Los Angeles. Wesleyan, class of '86, English and film. Then Art Center in Pasadena.</li>
+    <li>Cut his teeth on commercials and videos: the 1993 Got Milk? "Aaron Burr" spot (Clio Grand Prix, Commercial of the Year)
+        and a 1992 Red Cross spot that won a Clio.</li>
+    <li>Features: Bad Boys (1995), The Rock (1996), Armageddon (1998), Pearl Harbor (2001), Bad Boys II (2003), The Island (2005),
+        Transformers (2007, 2009, 2011), Pain &amp; Gain (2013). This was movie three.</li>
+    <li>Over $6.6 billion worldwide as a director — fifth-most commercially successful ever.</li>
+    <li>His own line on the whole thing: "I make movies for teenage boys. Oh, dear, what a crime."</li>
+    <li>Suggested pour: whatever it is, it should be loud, orange, and served in slow motion.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>The song</h2>
+  <h3>"I Don't Want to Miss a Thing"</h3>
+  <ul class="plain">
+    <li>Written by Diane Warren, who pictured "Celine Dion or somebody like that" singing it. U2 were approached first.</li>
+    <li>Went to Aerosmith after Liv Tyler was cast — her dad's band, for her movie.</li>
+    <li>Hit #1 on the Hot 100 on Sept 5, 1998 and stayed four weeks. Aerosmith's first and only #1 in the US, twenty-five years into the band.</li>
+    <li>Oscar-nominated for Best Original Song. Razzie-nominated for Worst Original Song. Won the MTV Video Music Award for Best Video from a Film.</li>
+  </ul>
+</section>
+</div>
+
+<section>
+  <h2>The science fight</h2>
+  <ul class="plain">
+    <li>The asteroid is "the size of Texas." The largest known potentially hazardous asteroid is about 7 km across.</li>
+    <li>In 2011 a group of Leicester physics postgrads worked out that splitting it Harry's way would take an H-bomb about
+        a billion times stronger than Tsar Bomba, the biggest ever detonated.</li>
+    <li>Neil deGrasse Tyson said it broke more laws of physics per minute than any movie he'd seen — a title it held until Moonfall (2022).</li>
+    <li>NASA cooperated on the film and then put a disclaimer in the credits saying cooperation was not endorsement.</li>
+    <li>Bay has admitted the central premise — that NASA would need oil drillers — is nonsense. Ben Affleck asked him on the
+        DVD commentary why it was easier to train drillers to be astronauts than astronauts to drill; Bay told him to shut up.</li>
+    <li><span class="warn">The legend:</span> NASA supposedly screens this in management training and asks trainees to find the
+        168 scientific errors. It's everywhere online and nobody has ever produced the NASA document. Treat it as folklore — or as a draft.</li>
+  </ul>
+</section>
+
+<div class="grid2">
+<section>
+  <h2>Trivia that plays on air</h2>
+  <ul class="plain">
+    <li>Super Bowl XXXII spot cost $2.6 million. Billboards were realistic enough to cause some local panic.</li>
+    <li>After wrap, Richard Karn from Home Improvement found the asteroid set. Tim Allen asked Bay to borrow it; Bay said yes
+        if they waited six months. It became a credits gag where Wilson's basement caves in.</li>
+    <li>VHS and DVD landed Nov 13, 1998 and passed Pretty Woman as Buena Vista's best-selling live-action title.
+        In the UK it sold 100,000 DVDs — a record until The Matrix.</li>
+    <li>After 9/11, ABC cut the shot of the meteor hitting the World Trade Center. After the 2003 Columbia disaster, FX pulled
+        the movie from its schedule and ran Aliens instead.</li>
+    <li>Disneyland Paris opened Armageddon – Les Effets Spéciaux in March 2002: you stand inside the Mir set while it comes apart,
+        with Michael Clarke Duncan hosting the pre-show. It ran until 2019.</li>
+    <li>Eddie Griffin is the bike messenger. Udo Kier is the psychologist. Shawnee Smith (Saw) is the redhead.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Where it touches BVK</h2>
+  <div class="tbl"><table>
+    <tr><td><b>Bruce Willis</b></td><td>Die Hard (#27), Pulp Fiction (#11)</td></tr><tr><td><b>Ben Affleck</b></td><td>Good Will Hunting (#79), Dogma (#37) — and the Matt Damon draft (#80) was basically about his roommate</td></tr><tr><td><b>Steve Buscemi</b></td><td>The Big Lebowski (#51), Pulp Fiction (#11), and the Coen character draft (#52)</td></tr><tr><td><b>Peter Stormare</b></td><td>The Big Lebowski (#51) — he&#x27;s the nihilist with the marmot</td></tr><tr><td><b>Owen Wilson</b></td><td>Wedding Crashers (#35), The Royal Tenenbaums (#153)</td></tr><tr><td><b>Jerry Bruckheimer</b></td><td>Top Gun (#67) — BVK&#x27;s one previous Bruckheimer picture</td></tr><tr><td><b>Michael Bay</b></td><td>Never. Tonight is the first Bay movie in 168 episodes.</td></tr><tr><td><b>Billy Bob Thornton, Will Patton, Liv Tyler, Michael Clarke Duncan, William Fichtner, Keith David</b></td><td>None of them have been on the show before</td></tr>
+  </table></div>
+  <h3 style="margin-top:14px">The 1998 club</h3>
+  <p style="color:var(--muted);font-size:14px">BVK has already covered five 1998 movies: The Big Lebowski (#51), The Wedding Singer (#116),
+  There's Something About Mary (#100), Saving Private Ryan (#118) and Rounders (#167). Armageddon makes six — and it outgrossed
+  all of them combined overseas.</p>
+</section>
+</div>
+
+<section>
+  <h2>Draft categories this movie sets up</h2>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:12px">For #170. Every one of these is checked against the ledger — none has been drafted.</p>
+  <div class="tbl"><table>
+    <tr><td><b>Most Memorable Movie Dads</b></td><td>Mothers ran as #48. Fathers never have. Harry Stamper is a top-three pick sitting right there.</td></tr><tr><td><b>Best Ragtag Crew Assembled for One Job</b></td><td>The gathering-the-team montage is the first act of this movie.</td></tr><tr><td><b>Best Movie Set in Space</b></td><td>Interstellar (#161) is the only pure space movie you&#x27;ve done, and that draft went to inventions.</td></tr><tr><td><b>Most Memorable Heroic Sacrifice</b></td><td>Deaths ran as #16. Sacrifices, specifically, never have.</td></tr><tr><td><b>Best Disaster Movie</b></td><td>Never drafted, and 1998 alone gives you two.</td></tr><tr><td><b>Best Slow-Motion Walk</b></td><td>The shuttle walk is the template. Reservoir Dogs, The Right Stuff, Ocean&#x27;s Eleven all fit.</td></tr><tr><td><b>Best Movie President</b></td><td>Stanley Anderson gives the speech. Bill Pullman, Harrison Ford, Morgan Freeman (Deep Impact) — deep pool.</td></tr><tr><td><b>Most Memorable Countdown</b></td><td>Clock-on-the-wall movies. Never drafted.</td></tr>
+  </table></div>
+</section>
+
+<div class="foot">Last updated: Sep 12, 2026 5:23 PM PT</div>
+</div>
+
+</body>
+</html>
