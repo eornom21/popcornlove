@@ -190,7 +190,7 @@ html{background:#120E0A}
       <li><b>Judge leaves the room.</b> Then hit <b>Draw the topic</b>. The topic goes up and a one-minute prep clock starts. Think. Don't type yet. The draft order for the other three is shown under the clock, and it snakes: 1-2-3, then 3-2-1, then 1-2-3.</li>
       <li><b>Draft.</b> When prep hits zero the first drafter's clock starts. Each drafter has <b>two minutes total</b> for all three of his picks, and it only runs while he's up. Say the pick, type it in the box, hit Enter. The clock passes to the next guy. Nine picks and it's over. Run out of time and you're frozen — the empty slots stay empty.</li>
       <li><b>Who types:</b> the guy who just picked types for the guy who's up. His clock is stopped. The drafter's isn't.</li>
-      <li><b>Judge comes back.</b> A three-minute clock starts on its own. He sees every board with every pick. He taps 1, 2 or 3 on each drafter's row while the room debriefs, then hits <b>Post the results</b>. First place is 3 points, second is 2, third is 1. That topic is burned and won't come up again.</li>
+      <li><b>Judge comes back.</b> A three-minute clock starts on its own. He sees the three boards with every pick, but <b>blind</b> — labeled A, B, C in random order, no names. He taps 1, 2 or 3 on each board while the room debriefs, then hits <b>Post the results</b>. Names come out with the scores. First place is 3 points, second is 2, third is 1. That topic is burned and won't come up again.</li>
       <li><b>Next draft.</b> The judge chair rotates automatically. After the fourth draft the board names the champ and shows all four topics and who won each.</li>
     </ol>
     <div class="rulebox">Don't reload this page mid-episode. The hopper and the crew names survive a refresh; the scoreboard doesn't. Volume up — it beeps at ten seconds and horns at zero.</div>
@@ -416,6 +416,8 @@ function lockPick(){
 function startJudging(){
   stopTimer();
   S.phase = "judge";
+  S.anon = S.order.slice();
+  for(let i=S.anon.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [S.anon[i],S.anon[j]]=[S.anon[j],S.anon[i]]; }
   horn();
   startTimer(JUDGE_S, () => {});
   render();
@@ -544,7 +546,7 @@ function renderStage(){
       '<div class="phase-tag">Judging · '+esc(S.roster[judgeIdx()])+' is back in</div>'+
       '<h2 class="topic">'+esc(S.topic)+'</h2>'+
       '<div class="clock-row"><div class="'+clockCls+'">'+mmss(remaining)+'</div>'+
-      '<div class="clock-side">Three minutes to rank the boards while the guys debrief<b>3 / 2 / 1 points</b></div></div>'+
+      '<div class="clock-side">Boards are blind — A, B, C in random order. Rank them, then the names come out<b>3 / 2 / 1 points</b></div></div>'+
       '<div class="btns"><button class="primary" id="btnAward"'+(ranked?"":" disabled")+'>'+
       (ranked ? "Post the results" : "Rank all three to continue")+'</button></div>';
     if(ranked) $("btnAward").onclick = awardRound;
@@ -584,7 +586,9 @@ function renderBoard(){
   if(S.phase === "idle" || S.phase === "done" || !S.order.length){ b.innerHTML = ""; return; }
   const up = S.phase === "draft" ? currentDrafter() : null;
   const hide = S.phase === "prep";
-  b.innerHTML = S.order.map(d => {
+  const blind = S.phase === "judge";
+  const seq = blind && S.anon ? S.anon : S.order;
+  b.innerHTML = seq.map((d, pos) => {
     const cls = ["drafter"];
     if(d === up) cls.push("active");
     if(S.banks[d] <= 0 && S.picks[d].length < ROUNDS) cls.push("out");
@@ -600,8 +604,10 @@ function renderBoard(){
           (S.phase==="result"?" disabled":"")+'>'+r+'</button>').join("")+'</div>'
       : '<div class="rank"><span class="idx" style="font-family:\'JetBrains Mono\',monospace;color:var(--muted)">'+
         S.picks[d].length+'/3</span></div>';
-    return '<div class="'+cls.join(" ")+'"><div class="who"><span class="n">'+esc(S.roster[d])+
-           '</span><span class="bank">'+mmss(S.banks[d])+'</span></div>'+
+    const label = blind ? "Board " + "ABC".charAt(pos) : esc(S.roster[d]);
+    const bank  = blind ? "" : '<span class="bank">'+mmss(S.banks[d])+'</span>';
+    return '<div class="'+cls.join(" ")+'"><div class="who"><span class="n">'+label+
+           '</span>'+bank+'</div>'+
            '<ul class="picks">'+rows.join("")+'</ul>'+rank+'</div>';
   }).join("");
   b.querySelectorAll(".rank button[data-r]").forEach(btn => {
