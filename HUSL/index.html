@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>HUSL Board Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1a5632;--green2:#2a7a4a;--gold:#ffd500;--cream:#f4f6f1;--ink:#1c1c1c;--mut:#667;--line:#d5e0d5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--ink)}
+.hero{background:linear-gradient(135deg,var(--green),#0f3a20);color:#fff;padding:34px 20px 26px;text-align:center}
+.hero h1{font-family:'Big Shoulders Display';font-weight:900;font-size:44px;letter-spacing:1px}
+.hero .sub{color:#cfe3d4;font-size:15px;margin-top:4px}
+.hero .badge{display:inline-block;margin-top:12px;background:rgba(255,213,0,.15);border:1px solid var(--gold);color:var(--gold);font-size:12px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:20px;text-transform:uppercase}
+.wrap{max-width:1080px;margin:0 auto;padding:26px 18px 60px}
+.search{width:100%;max-width:520px;display:block;margin:0 auto 26px;padding:12px 16px;font-size:16px;border:2px solid var(--line);border-radius:10px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.card h2{font-family:'Big Shoulders Display';font-weight:700;font-size:24px;letter-spacing:.5px;background:var(--green);color:#fff;padding:10px 16px}
+.card ul{list-style:none;padding:8px 0}
+.card li{border-bottom:1px solid #eef2ec}
+.card li:last-child{border-bottom:none}
+.card a,.card .ph{display:block;padding:10px 16px;text-decoration:none;color:var(--ink);font-size:15px}
+.card a:hover{background:#eef4ee}
+.card a b{color:var(--green)}
+.tag{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-radius:4px;padding:1px 7px;margin-left:8px;vertical-align:1px}
+.t-drive{background:#e3edff;color:#1a48a0}.t-web{background:#e2f3e6;color:#186a33}.t-doc{background:#fff3cd;color:#8a6d00}
+.ph{color:#a5aca3!important;font-style:italic}
+.ph .tag{background:#eee;color:#999}
+.note{max-width:760px;margin:30px auto 0;font-size:13px;color:var(--mut);text-align:center;line-height:1.6}
+.upd{text-align:center;color:#8a938a;font-size:12.5px;margin-top:18px}
+@media(max-width:640px){.hero h1{font-size:34px}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>HUSL BOARD PORTAL</h1>
+  <div class="sub">Hughson United Soccer League &mdash; documents, records &amp; tools for board members</div>
+  <div class="badge">Internal &middot; Not for public distribution</div>
+</div>
+<div class="wrap">
+  <input class="search" id="q" type="text" placeholder="Filter everything&hellip; (try: minutes, policy, standings, coach)" oninput="flt()">
+  <div class="grid" id="grid">
+
+    <div class="card"><h2>GOVERNANCE &amp; POLICIES</h2><ul>
+      <li><span class="ph">Bylaws (current) <span class="tag">add link</span></span></li>
+      <li><a href="#"><b>Background Check &amp; Eligibility Policy</b> <span class="tag t-web">website</span></a></li>
+      <li><a href="https://drive.google.com/file/d/1DqMiI6kpQvs5B4jk9hFEKOWoIVIR-MYO/view"><b>Division Rules at a Glance (2026)</b> <span class="tag t-drive">drive</span></a></li>
+      <li><a href="#"><b>Competitive Play (Mercy) Rule</b> <span class="tag t-doc">gdoc</span></a></li>
+      <li><span class="ph">Weather &amp; Air Quality Policy <span class="tag">add link</span></span></li>
+      <li><span class="ph">Parking Volunteer Waiver <span class="tag">add link</span></span></li>
+    </ul></div>
+
+    <div class="card"><h2>MEETINGS</h2><ul>
+      <li><span class="ph">2026 Agendas folder <span class="tag">add link</span></span></li>
+      <li><span class="ph">2026 Minutes folder <span class="tag">add link</span></span></li>
+      <li><span class="ph">2025 &amp; older archive <span class="tag">add link</span></span></li>
+      <li><span class="ph">Next meeting agenda (draft) <span class="tag">add link</span></span></li>
+    </ul></div>
+
+    <div class="card"><h2>PEOPLE &amp; CONTACTS</h2><ul>
+      <li><span class="ph">Board roster &amp; contacts <span class="tag">add link</span></span></li>
+      <li><span class="ph">Coaches &amp; contacts &mdash; Fall 2026 (all divisions) <span class="tag">add link</span></span></li>
+      <li><span class="ph">Team parents list <span class="tag">add link</span></span></li>
+      <li><span class="ph">Referee roster (Riley) <span class="tag">add link</span></span></li>
+      <li><span class="ph">Key vendors: Shoob Photography, uniform shop, Turf Tank <span class="tag">add link</span></span></li>
+    </ul></div>
+
+    <div class="card"><h2>SEASON OPERATIONS &mdash; FALL 2026</h2><ul>
+      <li><a href="https://hughsonsoccer.com/Default.aspx?tabid=2773840"><b>Schedules hub (public site)</b> <span class="tag t-web">website</span></a></li>
+      <li><a href="https://drive.google.com/file/d/1F2PJvz1HJu3r0eXY_5uVK6VI-2uAhtrH/view"><b>Master Schedule &mdash; all fields, all weeks</b> <span class="tag t-drive">drive</span></a></li>
+      <li><a href="https://drive.google.com/drive/folders/12H3DCCwbZdcbvz6L-StBtdtPZuntGRva"><b>HUSL_2026_Schedules Drive folder</b> <span class="tag t-drive">drive</span></a></li>
+      <li><a href="https://drive.google.com/file/d/1nYvrDD2YZRV2xIGbckISdBIFAKErg2h-/view"><b>Coach Resource Packet</b> <span class="tag t-drive">drive</span></a></li>
+      <li><a href="https://dt5602vnjxv0c.cloudfront.net/portals/22558/images/husl_2026_gameday_map_high%20res.png"><b>Game Day Field Map (hi-res)</b> <span class="tag t-web">image</span></a></li>
+      <li><a href="https://hughsonsoccer.com/Default.aspx?tabid=2778327"><b>Standings: 9/10 Boys</b> <span class="tag t-web">website</span></a></li>
+      <li><a href="https://hughsonsoccer.com/Default.aspx?tabid=2778326"><b>Standings: 9/10 Girls</b> <span class="tag t-web">website</span></a></li>
+      <li><a href="https://hughsonsoccer.com/Default.aspx?tabid=2778328"><b>Standings: 11-13 Boys</b> <span class="tag t-web">website</span></a></li>
+      <li><a href="https://hughsonsoccer.com/Default.aspx?tabid=2778329"><b>Standings: 11-13 Girls</b> <span class="tag t-web">website</span></a></li>
+    </ul></div>
+
+    <div class="card"><h2>FINANCE &amp; SPONSORS</h2><ul>
+      <li><span class="ph">2026 sponsor list &amp; commitments <span class="tag">add link</span></span></li>
+      <li><span class="ph">Sponsor logo folder <span class="tag">add link</span></span></li>
+      <li><span class="ph">Budget &amp; financials <span class="tag">add link</span></span></li>
+      <li><span class="ph">Sponsorship form <span class="tag">add link</span></span></li>
+    </ul></div>
+
+    <div class="card"><h2>TOOLS &amp; ADMIN</h2><ul>
+      <li><a href="https://hughsonsoccer.com"><b>hughsonsoccer.com (public site)</b> <span class="tag t-web">website</span></a></li>
+      <li><span class="ph">Sports Connect admin login <span class="tag">add link</span></span></li>
+      <li><span class="ph">HUSL Google Drive (root) <span class="tag">add link</span></span></li>
+      <li><span class="ph">huslsoccer@gmail.com &mdash; shared inbox <span class="tag">add link</span></span></li>
+      <li><span class="ph">Board handoff manual (in progress) <span class="tag">add link</span></span></li>
+    </ul></div>
+
+  </div>
+  <p class="note">This portal is a directory: it links to documents where they live (Google Drive, the league website) rather than storing copies. Access to linked Drive files is controlled by their own sharing settings. Items marked <i>add link</i> are placeholders awaiting their file locations.</p>
+  <p class="upd">Test build &middot; Last updated: Sep 12, 2026 (PT)</p>
+</div>
+<script>
+function flt(){var q=document.getElementById('q').value.toLowerCase();
+document.querySelectorAll('#grid .card').forEach(function(c){var any=false;
+c.querySelectorAll('li').forEach(function(li){var m=li.textContent.toLowerCase().indexOf(q)>-1;li.style.display=m?'':'none';if(m)any=true;});
+c.style.display=(any||c.querySelector('h2').textContent.toLowerCase().indexOf(q)>-1)?'':'none';
+if(c.querySelector('h2').textContent.toLowerCase().indexOf(q)>-1){c.querySelectorAll('li').forEach(function(li){li.style.display='';});}
+});}
+</script>
+</body>
+</html>
