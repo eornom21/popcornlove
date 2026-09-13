@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Speed Draft Board · BVK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap">
+<style>
+:root{
+  --ink:#120E0A;
+  --board:#1C1610;
+  --board-2:#251D15;
+  --line:#3A2E22;
+  --paper:#F3E8D6;
+  --muted:#A2907A;
+  --amber:#E8A33D;
+  --amber-deep:#B9761A;
+  --hop:#8CA85E;
+  --hot:#D9503F;
+  --pad:clamp(14px,2.2vw,26px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Barlow","Helvetica Neue",Arial,sans-serif;
+  font-size:16px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:var(--pad) var(--pad) 64px;display:flex;flex-direction:column;gap:var(--pad)}
+
+/* ---------- masthead ---------- */
+.mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;
+  border-bottom:3px solid var(--amber-deep);padding-bottom:12px}
+.mast h1{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;margin:0;
+  font-size:clamp(26px,4.6vw,44px);letter-spacing:.01em;line-height:.98;color:var(--paper);text-wrap:balance}
+.mast h1 em{font-style:normal;color:var(--amber);display:block;font-size:.62em;letter-spacing:.06em}
+.mast .meta{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:right}
+.mast .meta b{color:var(--paper);font-weight:600}
+
+/* ---------- scoreboard ---------- */
+.scores{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:620px){.scores{grid-template-columns:repeat(2,1fr)}}
+.score{background:var(--board);border:1px solid var(--line);padding:10px 12px;display:flex;
+  flex-direction:column;gap:2px;position:relative;overflow:hidden}
+.score .nm{font-weight:700;font-size:15px;letter-spacing:.03em;text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.score .pts{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:28px;line-height:1;
+  font-variant-numeric:tabular-nums;color:var(--amber)}
+.score .rl{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.score.is-judge{border-color:var(--hop)}
+.score.is-judge .rl{color:var(--hop)}
+.score.is-up{border-color:var(--amber)}
+.score.is-lead::after{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--amber)}
+
+/* ---------- stage ---------- */
+.stage{background:var(--board);border:1px solid var(--line);padding:clamp(16px,3vw,32px);
+  display:flex;flex-direction:column;gap:18px}
+.phase-tag{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.topic{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;line-height:1.06;
+  font-size:clamp(30px,6.4vw,64px);margin:0;text-wrap:balance;color:var(--paper)}
+.topic.blank{color:var(--line)}
+.clock{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:clamp(56px,15vw,140px);
+  line-height:.9;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--paper)}
+.clock.warn{color:var(--amber)}
+.clock.dead{color:var(--hot)}
+.clock-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:16px 24px;justify-content:space-between}
+.clock-side{font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);max-width:34ch}
+.clock-side b{display:block;font-family:"Alfa Slab One",Georgia,serif;font-weight:400;
+  font-size:26px;letter-spacing:0;text-transform:none;color:var(--hop);margin-top:4px}
+
+/* ---------- buttons ---------- */
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--board-2);
+  color:var(--paper);padding:12px 18px;font-size:15px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;transition:background .12s,border-color .12s,color .12s}
+button:hover{border-color:var(--amber);color:var(--amber)}
+button:focus-visible{outline:3px solid var(--hop);outline-offset:2px}
+button.primary{background:var(--amber);border-color:var(--amber);color:#1A1206;
+  font-family:"Alfa Slab One",Georgia,serif;font-weight:400;letter-spacing:.04em;
+  font-size:clamp(18px,3.4vw,26px);padding:16px 30px;text-transform:uppercase}
+button.primary:hover{background:#F3B559;border-color:#F3B559;color:#1A1206}
+button.ghost{background:transparent}
+button.small{padding:7px 12px;font-size:12px;letter-spacing:.1em}
+button[disabled]{opacity:.35;cursor:not-allowed}
+button[disabled]:hover{border-color:var(--line);color:var(--paper)}
+
+/* ---------- draft board ---------- */
+.board{display:grid;gap:10px}
+.drafter{background:var(--board);border:1px solid var(--line);padding:12px 14px;
+  display:grid;grid-template-columns:minmax(140px,1fr) 2fr auto;gap:14px;align-items:center}
+@media (max-width:700px){.drafter{grid-template-columns:1fr;gap:8px}}
+.drafter.active{border-color:var(--amber);background:var(--board-2)}
+.drafter.out{opacity:.5}
+.drafter .who{display:flex;align-items:baseline;gap:10px}
+.drafter .who .n{font-family:"Alfa Slab One",Georgia,serif;font-size:20px;font-weight:400}
+.drafter .who .bank{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:16px;
+  font-variant-numeric:tabular-nums;color:var(--muted)}
+.drafter.active .who .bank{color:var(--amber)}
+.drafter .picks{display:flex;flex-direction:column;gap:3px;min-width:0}
+.drafter .picks li{list-style:none;font-size:15px;display:flex;gap:8px;min-width:0}
+.drafter .picks .idx{font-family:"JetBrains Mono",ui-monospace,monospace;color:var(--muted);flex:none}
+.drafter .picks .txt{overflow-wrap:anywhere}
+.drafter .picks .empty{color:var(--line)}
+.rank{display:flex;gap:6px}
+.rank button{padding:8px 12px;font-size:13px}
+.rank button.sel{background:var(--amber);border-color:var(--amber);color:#1A1206}
+ul{margin:0;padding:0}
+
+/* ---------- pick input ---------- */
+.entry{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.entry label{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);width:100%}
+.entry input{flex:1 1 260px;min-width:0;background:var(--ink);border:1px solid var(--line);
+  color:var(--paper);font-family:inherit;font-size:20px;padding:12px 14px}
+.entry input:focus{outline:none;border-color:var(--amber)}
+
+/* ---------- misc ---------- */
+.note{font-size:13px;color:var(--muted);max-width:66ch}
+.note code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;color:var(--paper)}
+.rule{height:1px;background:var(--line);border:0;margin:0}
+.foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.roster-edit{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:620px){.roster-edit{grid-template-columns:repeat(2,1fr)}}
+.roster-edit input{background:var(--ink);border:1px solid var(--line);color:var(--paper);
+  font-family:inherit;font-size:15px;padding:8px 10px;width:100%}
+.roster-edit input:focus{outline:none;border-color:var(--amber)}
+.champ{font-family:"Alfa Slab One",Georgia,serif;font-size:clamp(34px,8vw,76px);line-height:1;
+  color:var(--amber);margin:0;text-wrap:balance}
+.recap{display:grid;gap:8px}
+.recap .r{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:baseline;
+  border-bottom:1px solid var(--line);padding-bottom:6px;font-size:14px}
+.recap .r .num{font-family:"JetBrains Mono",ui-monospace,monospace;color:var(--muted)}
+.recap .r .win{color:var(--amber);font-weight:600;white-space:nowrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid var(--line);padding-bottom:10px}
+.nav a{color:var(--muted);text-decoration:none;padding:4px 0}
+.nav a:hover,.nav a.on{color:var(--amber)}
+.nav .brand{font-family:"Alfa Slab One",Georgia,serif;font-size:14px;letter-spacing:.06em;color:var(--paper);margin-right:auto}
+html{background:#120E0A}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<nav class="nav"><a class="brand" href="/BVK/">BVK</a><a href="/BVK/armageddon/">Armageddon</a><a class="on" href="/BVK/speeddraft/">Speed Draft</a><a href="/BVK/ledger/">Ledger</a></nav>
+
+
+  <header class="mast">
+    <h1>Bev's Video Kingdom<em>Speed Draft Board</em></h1>
+    <div class="meta">
+      Draft <b id="mDraft">1</b> of 4 &nbsp;·&nbsp; Judge: <b id="mJudge">Host</b><br>
+      <span id="mPool">— topics left in the hopper</span>
+    </div>
+  </header>
+
+  <section class="scores" id="scores"></section>
+
+  <section class="stage" id="stage"></section>
+
+  <section class="board" id="board"></section>
+
+  <hr class="rule">
+
+  <footer class="foot">
+    <div class="btns">
+      <button class="small ghost" id="btnRoster">Edit crew</button>
+      <button class="small ghost" id="btnShuffleJudge">Shuffle judge order</button>
+      <button class="small ghost" id="btnReset">Reset episode</button>
+      <button class="small ghost" id="btnForget">Clear used-topic history</button>
+      <button class="small ghost" id="btnLock">Re-seal on this device</button>
+    </div>
+    <div id="storeState">local memory</div>
+  </footer>
+
+  <div id="rosterBox" hidden>
+    <div class="roster-edit" id="rosterEdit"></div>
+    <p class="note">Judging order runs left to right — draft 1 is judged by the first name, draft 4 by the last. The other three draft.</p>
+  </div>
+
+</div>
+
+
+<script>
+(function(){
+"use strict";
+
+/* ------------------------------------------------------------------
+   TOPIC POOL — SEALED
+   130 categories, every one checked against all 168 BVK episodes so
+   none of the ~80 already drafted on the show appear, and all deep
+   enough to survive nine picks. The list is encrypted (AES-GCM), so
+   nothing readable sits in this file: view source, search the page,
+   crack open dev tools — you get ciphertext. It unseals only when the
+   host key is entered, and only into memory.
+------------------------------------------------------------------- */
+const POOL_SIZE = 130;
+const SEALED = "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";
+let TOPICS = null;
+
+async function unseal(pass){
+  const raw = Uint8Array.from(atob(SEALED), c => c.charCodeAt(0));
+  const salt = raw.slice(0,16), iv = raw.slice(16,28), body = raw.slice(28);
+  const km = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey(
+    {name:"PBKDF2", salt: salt, iterations:120000, hash:"SHA-256"},
+    km, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+  const pt = await crypto.subtle.decrypt({name:"AES-GCM", iv: iv}, key, body);
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+
+const DEFAULT_ROSTER = ["Host","The Governor","Zach","Brad"];
+const ROSTER_LS = "bvk-speeddraft-roster";
+const DRAFTS_PER_EP = 4, ROUNDS = 3, PREP_S = 60, BANK_S = 60, JUDGE_S = 180;
+const PTS = {1:3, 2:2, 3:1};
+
+/* ------------------------------- state ------------------------------- */
+let S = null;          // episode state
+let used = [];         // topics burned in past episodes
+let store = null;      // db namespace, or null
+const $ = id => document.getElementById(id);
+
+function freshEpisode(roster){
+  return {
+    roster: roster.slice(),
+    judgeOrder: [0,1,2,3],
+    idx: 0,
+    phase: "idle",           // idle | prep | draft | judge | result | done
+    topic: null,
+    order: [],               // drafter indices, snake base order
+    turn: 0,                 // position in the full 9-pick sequence
+    picks: {},               // drafterIdx -> [str,str,str]
+    banks: {},               // drafterIdx -> seconds left
+    ranks: {},               // drafterIdx -> 1|2|3
+    points: {0:0,1:0,2:0,3:0},
+    log: []                  // {topic, winner, judge}
+  };
+}
+
+/* ------------------------- persistence (db > local) ------------------- */
+const LS = "bvk-speeddraft-v1";
+const KEY_LS = "bvk-speeddraft-key";
+async function loadStore(){
+  try{
+    const db = window.claude && await window.claude.use("db");
+    if(db){
+      store = db;
+      const doc = await db.doc("bvk/history").get();
+      used = (doc && doc.usedTopics) || [];
+      $("storeState").textContent = "shared memory · synced";
+      return;
+    }
+  }catch(e){ /* fall through to local */ }
+  try{ used = JSON.parse(localStorage.getItem(LS) || "[]"); }catch(e){ used = []; }
+  $("storeState").textContent = "local memory (this browser)";
+}
+async function saveUsed(){
+  try{
+    if(store){ await store.doc("bvk/history").set({usedTopics: used, updated: Date.now()}); return; }
+  }catch(e){}
+  try{ localStorage.setItem(LS, JSON.stringify(used)); }catch(e){}
+}
+
+/* -------------------------------- sound ------------------------------- */
+let ac = null;
+function beep(freq, ms, vol){
+  try{
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "square"; o.frequency.value = freq;
+    g.gain.value = vol == null ? 0.06 : vol;
+    o.connect(g); g.connect(ac.destination);
+    o.start(); o.stop(ac.currentTime + ms/1000);
+  }catch(e){}
+}
+const tick  = () => beep(660, 70, .04);
+const horn  = () => { beep(180, 420, .09); setTimeout(()=>beep(140,520,.09), 180); };
+
+/* -------------------------------- timer ------------------------------- */
+let timerId = null, remaining = 0, onZero = null, warned = false;
+function startTimer(seconds, cb){
+  stopTimer();
+  remaining = seconds; onZero = cb; warned = false;
+  render();
+  timerId = setInterval(() => {
+    remaining--;
+    if(S.phase === "draft") S.banks[currentDrafter()] = remaining;
+    if(remaining === 10 && !warned){ warned = true; tick(); }
+    if(remaining <= 5 && remaining > 0) tick();
+    if(remaining <= 0){ stopTimer(); horn(); const f = onZero; onZero = null; if(f) f(); }
+    render();
+  }, 1000);
+}
+function stopTimer(){ if(timerId){ clearInterval(timerId); timerId = null; } }
+const mmss = s => {
+  s = Math.max(0, Math.round(s));
+  return String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
+};
+
+/* ------------------------------ draft logic --------------------------- */
+const judgeIdx = () => S.judgeOrder[S.idx];
+function snakeSeq(){                       // 9 slots: 1-2-3, 3-2-1, 1-2-3
+  const o = S.order, seq = [];
+  for(let r=0;r<ROUNDS;r++){
+    const row = r % 2 ? o.slice().reverse() : o.slice();
+    row.forEach(d => seq.push(d));
+  }
+  return seq;
+}
+function currentDrafter(){
+  const seq = snakeSeq();
+  for(let i=S.turn;i<seq.length;i++){ if(S.banks[seq[i]] > 0) return seq[i]; }
+  return null;
+}
+function advanceTurn(){
+  S.turn++;
+  const next = currentDrafter();
+  if(next === null){ startJudging(); return; }
+  startTimer(S.banks[next], () => { S.banks[next] = 0; advanceTurn(); });
+  render(true);
+}
+
+function drawTopic(){
+  if(!TOPICS) return;
+  const pool = TOPICS.filter(t => !used.includes(t) && t !== S.topic
+                                 && !S.log.some(l => l.topic === t));
+  if(!pool.length){ alert("Every topic in the hopper has been used. Clear the history to start over."); return; }
+  S.topic = pool[Math.floor(Math.random()*pool.length)];
+  const drafters = [0,1,2,3].filter(i => i !== judgeIdx());
+  for(let i=drafters.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [drafters[i],drafters[j]]=[drafters[j],drafters[i]]; }
+  S.order = drafters;
+  S.picks = {}; S.banks = {}; S.ranks = {}; S.turn = 0;
+  drafters.forEach(d => { S.picks[d] = []; S.banks[d] = BANK_S; });
+  S.phase = "prep";
+  horn();
+  startTimer(PREP_S, startDrafting);
+  render();
+}
+function startDrafting(){
+  S.phase = "draft";
+  const d = currentDrafter();
+  startTimer(S.banks[d], () => { S.banks[d] = 0; advanceTurn(); });
+  render(true);
+}
+function lockPick(){
+  const inp = $("pickInput"); if(!inp) return;
+  const v = inp.value.trim(); if(!v) return;
+  const d = currentDrafter(); if(d === null) return;
+  S.picks[d].push(v);
+  inp.value = "";
+  stopTimer();
+  S.banks[d] = remaining;
+  const filled = [0,1,2,3].filter(i => S.picks[i]).every(i => S.picks[i].length >= ROUNDS);
+  if(filled){ startJudging(); return; }
+  advanceTurn();
+}
+function startJudging(){
+  stopTimer();
+  S.phase = "judge";
+  horn();
+  startTimer(JUDGE_S, () => {});
+  render();
+}
+function setRank(d, r){
+  Object.keys(S.ranks).forEach(k => { if(S.ranks[k] === r) delete S.ranks[k]; });
+  S.ranks[d] = r;
+  render();
+}
+function awardRound(){
+  stopTimer();
+  S.order.forEach(d => { S.points[d] += PTS[S.ranks[d]] || 0; });
+  const win = S.order.find(d => S.ranks[d] === 1);
+  S.log.push({topic: S.topic, winner: S.roster[win], judge: S.roster[judgeIdx()]});
+  used.push(S.topic); saveUsed();
+  S.phase = "result";
+  render();
+}
+function nextDraft(){
+  S.idx++;
+  S.topic = null; S.order = []; S.picks = {}; S.banks = {}; S.ranks = {}; S.turn = 0;
+  S.phase = S.idx >= DRAFTS_PER_EP ? "done" : "idle";
+  render();
+}
+
+/* -------------------------------- render ------------------------------ */
+function render(focus){
+  $("mDraft").textContent = Math.min(S.idx + 1, DRAFTS_PER_EP);
+  $("mJudge").textContent = S.phase === "done" ? "—" : S.roster[judgeIdx()];
+  const left = POOL_SIZE - used.length;
+  $("mPool").textContent = TOPICS
+    ? left + " topic" + (left===1?"":"s") + " left in the hopper"
+    : "hopper sealed";
+
+  // scoreboard
+  const top = Math.max.apply(null, [0,1,2,3].map(i => S.points[i]));
+  const up = S.phase === "draft" ? currentDrafter() : null;
+  $("scores").innerHTML = [0,1,2,3].map(i => {
+    const cls = ["score"];
+    if(i === judgeIdx() && S.phase !== "done") cls.push("is-judge");
+    if(i === up) cls.push("is-up");
+    if(S.points[i] === top && top > 0) cls.push("is-lead");
+    let role = "drafting";
+    if(S.phase === "done") role = "final";
+    else if(i === judgeIdx()) role = "judging";
+    else if(i === up) role = "on the clock";
+    return '<div class="'+cls.join(" ")+'"><div class="nm">'+esc(S.roster[i])+'</div>'+
+           '<div class="pts">'+S.points[i]+'</div><div class="rl">'+role+'</div></div>';
+  }).join("");
+
+  renderStage();
+  renderBoard();
+  if(focus){ const inp = $("pickInput"); if(inp) inp.focus(); }
+}
+
+function renderStage(){
+  const st = $("stage");
+  const clockCls = "clock" + (remaining <= 10 && timerId ? " dead" : remaining <= 20 && timerId ? " warn" : "");
+
+  if(S.phase === "idle"){
+    if(!TOPICS){
+      st.innerHTML =
+        '<div class="phase-tag">Hopper sealed</div>'+
+        '<h2 class="topic blank">Locked</h2>'+
+        '<p class="note">The 130 topics are encrypted inside this page — there is nothing readable '+
+        'in the source, so no one can scout them ahead of time. Enter the host key to unseal them '+
+        'for this device. Everything else on the board works without it.</p>'+
+        '<div class="entry"><label for="keyInput">Host key</label>'+
+        '<input id="keyInput" type="password" autocomplete="off" placeholder="Host key…">'+
+        '<button class="primary" id="btnUnlock">Unseal</button></div>'+
+        '<p class="note" id="keyErr" hidden style="color:var(--hot)">That key doesn\'t open it. Check the spelling — it\'s all lowercase.</p>';
+      const go = async () => {
+        const v = $("keyInput").value.trim();
+        if(!v) return;
+        try{
+          TOPICS = await unseal(v);
+          try{ localStorage.setItem(KEY_LS, v); }catch(e){}
+          render();
+        }catch(e){ $("keyErr").hidden = false; $("keyInput").select(); }
+      };
+      $("btnUnlock").onclick = go;
+      $("keyInput").onkeydown = e => { if(e.key === "Enter"){ e.preventDefault(); go(); } };
+      return;
+    }
+    st.innerHTML =
+      '<div class="phase-tag">Draft '+(S.idx+1)+' of 4 · judge is '+esc(S.roster[judgeIdx()])+'</div>'+
+      '<h2 class="topic blank">Topic sealed</h2>'+
+      '<p class="note">Hit the button, then '+esc(S.roster[judgeIdx()])+' leaves the room. '+
+      'The clock gives the other three one minute to think before drafting opens.</p>'+
+      '<div class="btns"><button class="primary" id="btnDraw">Draw the topic</button></div>';
+    $("btnDraw").onclick = drawTopic;
+    return;
+  }
+
+  if(S.phase === "prep"){
+    st.innerHTML =
+      '<div class="phase-tag">Prep · judge out of the room</div>'+
+      '<h2 class="topic">'+esc(S.topic)+'</h2>'+
+      '<div class="clock-row"><div class="'+clockCls+'">'+mmss(remaining)+'</div>'+
+      '<div class="clock-side">Drafting opens when this hits zero<b>'+
+      S.order.map(d=>esc(S.roster[d])).join(" → ")+'</b></div></div>'+
+      '<div class="btns"><button id="btnSkipPrep">Start drafting now</button></div>';
+    $("btnSkipPrep").onclick = () => { stopTimer(); startDrafting(); };
+    return;
+  }
+
+  if(S.phase === "draft"){
+    const d = currentDrafter();
+    const roundNo = Math.floor(S.turn / 3) + 1;
+    st.innerHTML =
+      '<div class="phase-tag">Round '+Math.min(roundNo,ROUNDS)+' of 3 · pick '+(S.turn+1)+' of 9</div>'+
+      '<h2 class="topic">'+esc(S.topic)+'</h2>'+
+      '<div class="clock-row"><div class="'+clockCls+'">'+mmss(remaining)+'</div>'+
+      '<div class="clock-side">On the clock<b>'+esc(S.roster[d])+'</b></div></div>'+
+      '<div class="entry"><label for="pickInput">'+esc(S.roster[d])+"'s pick — hit enter to lock it and pass the clock</label>"+
+      '<input id="pickInput" autocomplete="off" spellcheck="false" placeholder="Type the pick…">'+
+      '<button class="primary" id="btnLock">Lock it</button></div>';
+    $("btnLock").onclick = lockPick;
+    $("pickInput").onkeydown = e => { if(e.key === "Enter"){ e.preventDefault(); lockPick(); } };
+    return;
+  }
+
+  if(S.phase === "judge"){
+    const ranked = S.order.every(d => S.ranks[d]);
+    st.innerHTML =
+      '<div class="phase-tag">Judging · '+esc(S.roster[judgeIdx()])+' is back in</div>'+
+      '<h2 class="topic">'+esc(S.topic)+'</h2>'+
+      '<div class="clock-row"><div class="'+clockCls+'">'+mmss(remaining)+'</div>'+
+      '<div class="clock-side">Three minutes to rank the boards while the guys debrief<b>3 / 2 / 1 points</b></div></div>'+
+      '<div class="btns"><button class="primary" id="btnAward"'+(ranked?"":" disabled")+'>'+
+      (ranked ? "Post the results" : "Rank all three to continue")+'</button></div>';
+    if(ranked) $("btnAward").onclick = awardRound;
+    return;
+  }
+
+  if(S.phase === "result"){
+    const win = S.order.find(d => S.ranks[d] === 1);
+    st.innerHTML =
+      '<div class="phase-tag">Draft '+(S.idx+1)+' result</div>'+
+      '<h2 class="topic">'+esc(S.roster[win])+' takes it</h2>'+
+      '<p class="note">'+esc(S.topic)+' — judged by '+esc(S.roster[judgeIdx()])+
+      '. That topic is now burned and won\'t come up again.</p>'+
+      '<div class="btns"><button class="primary" id="btnNext">'+
+      (S.idx + 1 >= DRAFTS_PER_EP ? "Crown the champ" : "Next draft")+'</button></div>';
+    $("btnNext").onclick = nextDraft;
+    return;
+  }
+
+  // done
+  const best = [0,1,2,3].sort((a,b) => S.points[b] - S.points[a]);
+  const champ = S.roster[best[0]];
+  const tied = S.points[best[1]] === S.points[best[0]];
+  st.innerHTML =
+    '<div class="phase-tag">Episode complete · four drafts, four judges</div>'+
+    '<h2 class="champ">'+(tied ? "Dead heat" : esc(champ) + " is the Speed Draft champ")+'</h2>'+
+    '<div class="recap">'+S.log.map((l,i) =>
+      '<div class="r"><span class="num">'+(i+1)+'</span><span>'+esc(l.topic)+
+      ' <span style="color:var(--muted)">· judge '+esc(l.judge)+'</span></span>'+
+      '<span class="win">'+esc(l.winner)+'</span></div>').join("")+'</div>'+
+    '<div class="btns"><button class="primary" id="btnAgain">Start a new episode</button></div>';
+  $("btnAgain").onclick = () => { S = freshEpisode(S.roster); render(); };
+}
+
+function renderBoard(){
+  const b = $("board");
+  if(S.phase === "idle" || S.phase === "done" || !S.order.length){ b.innerHTML = ""; return; }
+  const up = S.phase === "draft" ? currentDrafter() : null;
+  const hide = S.phase === "prep";
+  b.innerHTML = S.order.map(d => {
+    const cls = ["drafter"];
+    if(d === up) cls.push("active");
+    if(S.banks[d] <= 0 && S.picks[d].length < ROUNDS) cls.push("out");
+    const rows = [];
+    for(let i=0;i<ROUNDS;i++){
+      const p = S.picks[d][i];
+      rows.push('<li><span class="idx">'+(i+1)+'</span><span class="txt'+(p?"":" empty")+'">'+
+                (p ? esc(p) : (hide ? "—" : "on the board")) + '</span></li>');
+    }
+    const rank = S.phase === "judge" || S.phase === "result"
+      ? '<div class="rank">'+[1,2,3].map(r =>
+          '<button class="'+(S.ranks[d]===r?"sel":"")+'" data-d="'+d+'" data-r="'+r+'"'+
+          (S.phase==="result"?" disabled":"")+'>'+r+'</button>').join("")+'</div>'
+      : '<div class="rank"><span class="idx" style="font-family:\'JetBrains Mono\',monospace;color:var(--muted)">'+
+        S.picks[d].length+'/3</span></div>';
+    return '<div class="'+cls.join(" ")+'"><div class="who"><span class="n">'+esc(S.roster[d])+
+           '</span><span class="bank">'+mmss(S.banks[d])+'</span></div>'+
+           '<ul class="picks">'+rows.join("")+'</ul>'+rank+'</div>';
+  }).join("");
+  b.querySelectorAll(".rank button[data-r]").forEach(btn => {
+    btn.onclick = () => setRank(+btn.dataset.d, +btn.dataset.r);
+  });
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+/* ------------------------------ chrome wiring ------------------------- */
+$("btnRoster").onclick = () => {
+  const box = $("rosterBox");
+  box.hidden = !box.hidden;
+  if(!box.hidden){
+    $("rosterEdit").innerHTML = S.roster.map((n,i) =>
+      '<input data-i="'+i+'" value="'+esc(n)+'" aria-label="Crew member '+(i+1)+'">').join("");
+    $("rosterEdit").querySelectorAll("input").forEach(inp => {
+      inp.oninput = () => { S.roster[+inp.dataset.i] = inp.value || "—"; try{ localStorage.setItem(ROSTER_LS, JSON.stringify(S.roster)); }catch(e){} render(); };
+    });
+  }
+};
+$("btnShuffleJudge").onclick = () => {
+  if(S.idx > 0 || S.phase !== "idle"){ if(!confirm("This resets the episode. Go ahead?")) return; }
+  const o = [0,1,2,3];
+  for(let i=3;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [o[i],o[j]]=[o[j],o[i]]; }
+  S = freshEpisode(S.roster); S.judgeOrder = o; render();
+};
+$("btnReset").onclick = () => {
+  if(!confirm("Wipe this episode's scores and start at draft 1?")) return;
+  stopTimer(); S = freshEpisode(S.roster); render();
+};
+$("btnLock").onclick = () => {
+  try{ localStorage.removeItem(KEY_LS); }catch(e){}
+  TOPICS = null; stopTimer(); S = freshEpisode(S.roster); render();
+};
+$("btnForget").onclick = async () => {
+  if(!confirm("Put all "+used.length+" used topics back in the hopper?")) return;
+  used = []; await saveUsed(); render();
+};
+
+/* -------------------------------- boot -------------------------------- */
+let _r = null; try{ _r = JSON.parse(localStorage.getItem(ROSTER_LS) || "null"); }catch(e){}
+S = freshEpisode(Array.isArray(_r) && _r.length === 4 ? _r : DEFAULT_ROSTER);
+render();
+(async () => {
+  let saved = null;
+  try{ saved = localStorage.getItem(KEY_LS); }catch(e){}
+  if(saved){ try{ TOPICS = await unseal(saved); }catch(e){ TOPICS = null; } }
+  await loadStore();
+  render();
+})();
+
+})();
+</script>
+
+</body>
+</html>
