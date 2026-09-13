@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anytime TD — Weekend Slate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --field: #1B4332;
+    --field-deep: #0F2A1E;
+    --field-light: #2D6A4F;
+    --chalk: #F5F3EC;
+    --ink: #14181A;
+    --gold: #C9A227;
+    --red: #A63D40;
+    --slate: #6B7280;
+    --line: #D8D3C4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--chalk);
+    color:var(--ink);
+    font-family:'Source Sans 3', sans-serif;
+    line-height:1.45;
+  }
+  .display{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+  }
+  header.hero{
+    background: linear-gradient(180deg, var(--field-deep) 0%, var(--field) 55%, var(--field-light) 100%);
+    color:var(--chalk);
+    padding:28px 20px 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 48px);
+    pointer-events:none;
+  }
+  .hero-inner{ max-width:640px; margin:0 auto; position:relative; }
+  .eyebrow{ font-size:13px; color:var(--gold); font-weight:600; margin:0 0 4px; }
+  h1{ font-size:clamp(34px, 8vw, 46px); margin:0 0 2px; line-height:0.95; }
+  .sub{ font-size:15px; color:#D7D2C2; margin:0 0 4px; }
+  .crew{ font-size:13.5px; color:var(--gold); font-weight:600; margin:0 0 20px; }
+  .scoreboard{ display:flex; gap:0; border-top:1px solid rgba(245,243,236,0.25); border-bottom:1px solid rgba(245,243,236,0.25); flex-wrap:wrap; }
+  .score-cell{ flex:1; min-width:120px; padding:14px 12px; border-right:1px solid rgba(245,243,236,0.18); }
+  .score-cell:last-child{ border-right:none; }
+  .score-label{ font-size:11.5px; color:#B9C9BE; margin-bottom:3px; }
+  .score-value{ font-size:24px; font-family:'Big Shoulders Display', sans-serif; font-weight:700; }
+  .score-value.gold{ color:var(--gold); }
+
+  main{ max-width:640px; margin:0 auto; padding:24px 20px 60px; }
+
+  .day-heading{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:700;
+    font-size:22px;
+    color:var(--field);
+    margin:32px 0 4px;
+    padding-bottom:6px;
+    border-bottom:2px solid var(--gold);
+  }
+  .day-heading.first{ margin-top:0; }
+  .day-sub{ font-size:12.5px; color:var(--slate); margin:0 0 12px; }
+
+  .ticket{ border-bottom:1px solid var(--line); padding:18px 0; }
+  .ticket.first{ padding-top:0; }
+  .ticket-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px; }
+  .ticket-name{ font-family:'Big Shoulders Display', sans-serif; font-weight:700; font-size:20px; margin:0; }
+  .ticket-time{ font-size:12.5px; color:var(--slate); margin-top:2px; }
+  .stake-line{ text-align:right; white-space:nowrap; font-size:14px; }
+  .stake-line b{ font-weight:700; }
+  .arrow{ color:var(--slate); margin:0 3px; }
+
+  .status-pill{
+    display:inline-block; font-size:11px; font-weight:700; padding:3px 9px;
+    border-radius:3px; margin-top:6px; letter-spacing:0.02em;
+  }
+  .status-pending{ background:#EAE7DB; color:var(--slate); }
+  .status-won{ background:#E4EFE8; color:var(--field); }
+  .status-lost{ background:#F3E4E4; color:var(--red); }
+  .status-push{ background:#EFE8D4; color:var(--gold); }
+
+  .legs{ margin-top:10px; }
+  .leg{ display:flex; justify-content:space-between; align-items:baseline; padding:6px 0; font-size:14.5px; border-top:1px dashed var(--line); }
+  .leg.first{ border-top:none; }
+  .leg-desc{ flex:1; padding-right:10px; }
+  .leg-game{ display:block; font-size:12px; color:var(--slate); margin-top:1px; }
+  .leg-status{ font-size:12px; font-weight:700; white-space:nowrap; color:var(--slate); }
+
+  footer{ max-width:640px; margin:0 auto; padding:0 20px 40px; font-size:12.5px; color:var(--slate); }
+  footer p{ margin:4px 0; }
+
+  .nav{ display:flex; gap:18px; margin:0 0 18px; font-size:13.5px; font-weight:600; }
+  .nav a{ color:#D7D2C2; text-decoration:none; border-bottom:2px solid transparent; padding-bottom:2px; }
+  .nav a.on{ color:var(--gold); border-color:var(--gold); }
+  .tabs{ display:flex; gap:8px; margin:0 0 20px; flex-wrap:wrap; }
+  .tabs a{ font-size:13px; font-weight:600; color:var(--field); text-decoration:none; padding:6px 12px; border:1px solid var(--line); border-radius:3px; background:#fff; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; margin:0 0 6px; }
+  th{ text-align:left; font-size:11.5px; color:var(--slate); font-weight:600; padding:6px 6px 6px 0; border-bottom:2px solid var(--gold); }
+  td{ padding:9px 6px 9px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td.num{ white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums; }
+  th.num{ text-align:right; }
+  .mine{ display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--gold); margin-left:6px; vertical-align:middle; }
+  .note{ font-size:12.5px; color:var(--slate); margin:10px 0 28px; }
+  .game{ font-weight:600; }
+  .game small{ display:block; font-weight:400; font-size:12px; color:var(--slate); }
+  h2.day-heading{ scroll-margin-top:12px; }
+
+  .banner{ background:var(--gold); color:var(--field-deep); font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:22px; text-align:center; padding:8px 12px; letter-spacing:0.02em; }
+
+  .tabs a.on{ background:var(--field); color:#fff; border-color:var(--field); }
+  .sec{ display:none; } .sec.show{ display:block; }
+  .nojs .sec{ display:block; }
+</style></head><body class="nojs">
+<div class="banner">Brad sucks balls</div>
+<header class="hero"><div class="hero-inner">
+<div class="nav"><a href="../">Board</a><a href="../odds/">Odds</a><a href="../props/">Props</a><a class="on" href="./">TD</a></div>
+<p class="eyebrow">Sunday NFL — Anytime Touchdown</p>
+<h1 class="display">Who Scores</h1>
+<p class="sub">Every player with a published price · shortest first · gold dot = already on our parlay</p>
+<p class="crew">Prices from Bovada (our 12) and FanDuel/DraftKings (the rest), Sept 12–13. Confirm on Bovada before betting.</p>
+</div></header>
+<main>
+<div class="tabs"><a href="#early" class="tab on" data-t="early">10:00 AM games</a><a href="#late" class="tab" data-t="late">1:25 PM games</a><a href="#all" class="tab" data-t="all">All Sunday</a><a href="#night" class="tab" data-t="night">SNF / MNF</a></div>
+
+<div id="early" class="sec show"><h2 class="day-heading first">10:00 AM PT — early window</h2><p class="day-sub">8 games · 15 players priced</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Jahmyr Gibbs<span class="mine" title="on our card"></span><small>DET · Lions vs Saints</small></td><td class="num">-315</td></tr><tr><td class="game">Derrick Henry<span class="mine" title="on our card"></span><small>BAL · Ravens @ Colts</small></td><td class="num">-213</td></tr><tr><td class="game">Jonathan Taylor<small>IND · Colts vs Ravens</small></td><td class="num">-185</td></tr><tr><td class="game">Bijan Robinson<span class="mine" title="on our card"></span><small>ATL · Falcons @ Steelers</small></td><td class="num">-143</td></tr><tr><td class="game">D'Andre Swift<span class="mine" title="on our card"></span><small>CHI · Bears @ Panthers</small></td><td class="num">-143</td></tr><tr><td class="game">Chase Brown<span class="mine" title="on our card"></span><small>CIN · Bengals vs Bucs</small></td><td class="num">-132</td></tr><tr><td class="game">Ja'Marr Chase<small>CIN · Bengals vs Bucs</small></td><td class="num">-130</td></tr><tr><td class="game">David Montgomery<span class="mine" title="on our card"></span><small>HOU · Texans vs Bills</small></td><td class="num">-122</td></tr><tr><td class="game">James Cook<small>BUF · Bills @ Texans</small></td><td class="num">+100</td></tr><tr><td class="game">Bucky Irving<small>TB · Bucs @ Bengals</small></td><td class="num">+110</td></tr><tr><td class="game">Breece Hall<span class="mine" title="on our card"></span><small>NYJ · Jets @ Titans</small></td><td class="num">+115</td></tr><tr><td class="game">Bhayshul Tuten<span class="mine" title="on our card"></span><small>JAX · Jaguars vs Browns</small></td><td class="num">+145</td></tr><tr><td class="game">Emeka Egbuka<small>TB · Bucs @ Bengals</small></td><td class="num">+170</td></tr><tr><td class="game">Carnell Tate<small>TEN · Titans vs Jets</small></td><td class="num">+270</td></tr><tr><td class="game">Dalton Kincaid<small>BUF · Bills @ Texans</small></td><td class="num">+340</td></tr></table>
+<p class="note">Gibbs is the shortest price on the whole slate. Taylor (-185) is the best price on a guy we don't already have. Tuten (+145) is the longest leg in our parlay — Kincaid (+340) and Tate (+270) are the early-window long shots people like.</p></div>
+
+<div id="late" class="sec"><h2 class="day-heading first">1:25 PM PT — late window</h2><p class="day-sub">4 games · 10 players priced</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Omarion Hampton<span class="mine" title="on our card"></span><small>LAC · Chargers vs Cardinals</small></td><td class="num">-162</td></tr><tr><td class="game">Ashton Jeanty<span class="mine" title="on our card"></span><small>LV · Raiders vs Dolphins</small></td><td class="num">-148</td></tr><tr><td class="game">Saquon Barkley<span class="mine" title="on our card"></span><small>PHI · Eagles vs Commanders</small></td><td class="num">-122</td></tr><tr><td class="game">De'Von Achane<small>MIA · Dolphins @ Raiders</small></td><td class="num">+110</td></tr><tr><td class="game">Marshawn Lloyd<span class="mine" title="on our card"></span><small>GB · Packers @ Vikings</small></td><td class="num">+120</td></tr><tr><td class="game">Dallas Goedert<small>PHI · Eagles vs Commanders</small></td><td class="num">+210</td></tr><tr><td class="game">Tyler Allgeier<small>ARI · Cardinals @ Chargers</small></td><td class="num">+220</td></tr><tr><td class="game">Kyler Murray<small>MIN · Vikings vs Packers</small></td><td class="num">+275</td></tr><tr><td class="game">Matthew Golden<small>GB · Packers @ Vikings</small></td><td class="num">+330</td></tr><tr><td class="game">Keaton Mitchell<small>LAC · Chargers vs Cardinals</small></td><td class="num">+340</td></tr></table>
+<p class="note">Achane at +110 is the sharp play here — he's a pass-catching back against a Raiders D that couldn't cover backs last year. Allgeier (+220) is the "Cardinals are getting blown out so they'll run" angle. Kyler rushing TD (+275) is a real thing in Minnesota's offense.</p></div>
+
+<div id="all" class="sec"><h2 class="day-heading first">All Sunday — combined</h2><p class="day-sub">25 players · sorted shortest to longest</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Jahmyr Gibbs<span class="mine" title="on our card"></span><small>DET · Lions vs Saints · 10:00a</small></td><td class="num">-315</td></tr><tr><td class="game">Derrick Henry<span class="mine" title="on our card"></span><small>BAL · Ravens @ Colts · 10:00a</small></td><td class="num">-213</td></tr><tr><td class="game">Jonathan Taylor<small>IND · Colts vs Ravens · 10:00a</small></td><td class="num">-185</td></tr><tr><td class="game">Omarion Hampton<span class="mine" title="on our card"></span><small>LAC · Chargers vs Cardinals · 1:25p</small></td><td class="num">-162</td></tr><tr><td class="game">Ashton Jeanty<span class="mine" title="on our card"></span><small>LV · Raiders vs Dolphins · 1:25p</small></td><td class="num">-148</td></tr><tr><td class="game">Bijan Robinson<span class="mine" title="on our card"></span><small>ATL · Falcons @ Steelers · 10:00a</small></td><td class="num">-143</td></tr><tr><td class="game">D'Andre Swift<span class="mine" title="on our card"></span><small>CHI · Bears @ Panthers · 10:00a</small></td><td class="num">-143</td></tr><tr><td class="game">Chase Brown<span class="mine" title="on our card"></span><small>CIN · Bengals vs Bucs · 10:00a</small></td><td class="num">-132</td></tr><tr><td class="game">Ja'Marr Chase<small>CIN · Bengals vs Bucs · 10:00a</small></td><td class="num">-130</td></tr><tr><td class="game">David Montgomery<span class="mine" title="on our card"></span><small>HOU · Texans vs Bills · 10:00a</small></td><td class="num">-122</td></tr><tr><td class="game">Saquon Barkley<span class="mine" title="on our card"></span><small>PHI · Eagles vs Commanders · 1:25p</small></td><td class="num">-122</td></tr><tr><td class="game">James Cook<small>BUF · Bills @ Texans · 10:00a</small></td><td class="num">+100</td></tr><tr><td class="game">Bucky Irving<small>TB · Bucs @ Bengals · 10:00a</small></td><td class="num">+110</td></tr><tr><td class="game">De'Von Achane<small>MIA · Dolphins @ Raiders · 1:25p</small></td><td class="num">+110</td></tr><tr><td class="game">Breece Hall<span class="mine" title="on our card"></span><small>NYJ · Jets @ Titans · 10:00a</small></td><td class="num">+115</td></tr><tr><td class="game">Marshawn Lloyd<span class="mine" title="on our card"></span><small>GB · Packers @ Vikings · 1:25p</small></td><td class="num">+120</td></tr><tr><td class="game">Bhayshul Tuten<span class="mine" title="on our card"></span><small>JAX · Jaguars vs Browns · 10:00a</small></td><td class="num">+145</td></tr><tr><td class="game">Emeka Egbuka<small>TB · Bucs @ Bengals · 10:00a</small></td><td class="num">+170</td></tr><tr><td class="game">Dallas Goedert<small>PHI · Eagles vs Commanders · 1:25p</small></td><td class="num">+210</td></tr><tr><td class="game">Tyler Allgeier<small>ARI · Cardinals @ Chargers · 1:25p</small></td><td class="num">+220</td></tr><tr><td class="game">Carnell Tate<small>TEN · Titans vs Jets · 10:00a</small></td><td class="num">+270</td></tr><tr><td class="game">Kyler Murray<small>MIN · Vikings vs Packers · 1:25p</small></td><td class="num">+275</td></tr><tr><td class="game">Matthew Golden<small>GB · Packers @ Vikings · 1:25p</small></td><td class="num">+330</td></tr><tr><td class="game">Dalton Kincaid<small>BUF · Bills @ Texans · 10:00a</small></td><td class="num">+340</td></tr><tr><td class="game">Keaton Mitchell<small>LAC · Chargers vs Cardinals · 1:25p</small></td><td class="num">+340</td></tr></table></div>
+
+<div id="night" class="sec"><h2 class="day-heading first">Sunday &amp; Monday night</h2><p class="day-sub">Not in our parlay window — wide open</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Javonte Williams<small>DAL · Cowboys @ Giants · SNF</small></td><td class="num">-140</td></tr><tr><td class="game">Kenneth Walker III<small>KC · Chiefs vs Broncos · MNF</small></td><td class="num">-120</td></tr><tr><td class="game">Cam Skattebo<small>NYG · Giants vs Cowboys · SNF</small></td><td class="num">+100</td></tr></table></div>
+</main>
+<footer><p>Static snapshot for the trip. Pick your guy and send Nate.</p></footer>
+<script>
+document.body.classList.remove('nojs');
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',e=>{e.preventDefault();
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); t.classList.add('on');
+ document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('show', s.id===t.dataset.t));
+ history.replaceState(null,'','#'+t.dataset.t);}));
+if(location.hash){const t=document.querySelector('.tab[data-t="'+location.hash.slice(1)+'"]'); if(t) t.click();}
+</script>
+</body></html>
