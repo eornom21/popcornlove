@@ -188,7 +188,7 @@ html{background:#120E0A}
       <li><b>Unseal the hopper.</b> Type the host key once. It stays unsealed on this device.</li>
       <li><b>Set the crew.</b> Edit crew and put the four names in. Left to right is judging order: the first name judges draft 1, the last judges draft 4. Shuffle it if you want.</li>
       <li><b>Judge leaves the room.</b> Then hit <b>Draw the topic</b>. The topic goes up and a one-minute prep clock starts. Think. Don't type yet. The draft order for the other three is shown under the clock, and it snakes: 1-2-3, then 3-2-1, then 1-2-3.</li>
-      <li><b>Draft.</b> When prep hits zero the first drafter's clock starts. Each drafter has <b>one minute total</b> for all three of his picks, and it only runs while he's up. Say the pick, type it in the box, hit Enter. The clock passes to the next guy. Nine picks and it's over. Run out of time and you're frozen — the empty slots stay empty.</li>
+      <li><b>Draft.</b> When prep hits zero the first drafter's clock starts. Each drafter has <b>two minutes total</b> for all three of his picks, and it only runs while he's up. Say the pick, type it in the box, hit Enter. The clock passes to the next guy. Nine picks and it's over. Run out of time and you're frozen — the empty slots stay empty.</li>
       <li><b>Who types:</b> the guy who just picked types for the guy who's up. His clock is stopped. The drafter's isn't.</li>
       <li><b>Judge comes back.</b> A three-minute clock starts on its own. He sees every board with every pick. He taps 1, 2 or 3 on each drafter's row while the room debriefs, then hits <b>Post the results</b>. First place is 3 points, second is 2, third is 1. That topic is burned and won't come up again.</li>
       <li><b>Next draft.</b> The judge chair rotates automatically. After the fourth draft the board names the champ and shows all four topics and who won each.</li>
@@ -270,7 +270,7 @@ async function unseal(pass){
 
 const DEFAULT_ROSTER = ["Host","The Governor","Zach","Brad"];
 const ROSTER_LS = "bvk-speeddraft-roster";
-const DRAFTS_PER_EP = 4, ROUNDS = 3, PREP_S = 60, BANK_S = 60, JUDGE_S = 180;
+const DRAFTS_PER_EP = 4, ROUNDS = 3, PREP_S = 60, BANK_S = 120, JUDGE_S = 180;
 const PTS = {1:3, 2:2, 3:1};
 
 /* ------------------------------- state ------------------------------- */
