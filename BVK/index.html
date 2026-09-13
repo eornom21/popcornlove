@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>BVK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap">
+
+<style>
+:root{--ink:#120E0A;--board:#1C1610;--board-2:#251D15;--line:#3A2E22;--paper:#F3E8D6;--muted:#A2907A;
+--amber:#E8A33D;--amber-deep:#B9761A;--hop:#8CA85E;--hot:#D9503F;--pad:clamp(14px,2.2vw,26px);color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--ink)}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;
+font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:var(--amber)}
+.wrap{max-width:1040px;margin:0 auto;padding:var(--pad) var(--pad) 72px;display:flex;flex-direction:column;gap:var(--pad)}
+.nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+border-bottom:1px solid var(--line);padding-bottom:10px}
+.nav a{color:var(--muted);text-decoration:none;padding:4px 0}
+.nav a:hover,.nav a.on{color:var(--amber)}
+.nav .brand{font-family:"Alfa Slab One",Georgia,serif;font-size:14px;letter-spacing:.06em;color:var(--paper);margin-right:auto}
+.mast{border-bottom:3px solid var(--amber-deep);padding-bottom:12px}
+.mast h1{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;margin:0;font-size:clamp(28px,5.2vw,52px);line-height:.98;text-wrap:balance}
+.mast h1 em{font-style:normal;color:var(--amber);display:block;font-size:.55em;letter-spacing:.06em}
+.mast p{margin:10px 0 0;color:var(--muted);font-size:15px;max-width:66ch}
+.kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+h2{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:clamp(20px,3vw,28px);margin:0 0 10px;line-height:1.1}
+h3{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin:0 0 8px;font-weight:600}
+section{background:var(--board);border:1px solid var(--line);padding:clamp(16px,2.6vw,26px)}
+p{margin:0 0 10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--pad)}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--board-2);border:1px solid var(--line);padding:10px 12px}
+.stat .v{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:22px;line-height:1.1;color:var(--amber);font-variant-numeric:tabular-nums}
+.stat .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{color:var(--muted);white-space:nowrap}
+.tbl{overflow-x:auto}
+ul.plain{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+ul.plain li{padding-left:14px;position:relative}
+ul.plain li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--amber)}
+.chip{display:inline-block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:3px 7px;white-space:nowrap;vertical-align:middle}
+.chip.draft{color:var(--hop);border-color:#4A5B36}
+.chip.speed{color:#1A1206;background:var(--amber);border-color:var(--amber);font-weight:700}
+.chip.special{color:var(--amber);border-color:var(--amber-deep)}
+.foot{color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase;border-top:1px solid var(--line);padding-top:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{display:block;background:var(--board-2);border:1px solid var(--line);padding:16px 18px;text-decoration:none;color:var(--paper);transition:border-color .12s}
+.card:hover{border-color:var(--amber)}
+.card b{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:20px;display:block;margin-bottom:4px}
+.card span{color:var(--muted);font-size:14px}
+.card.hot{border-color:var(--amber);background:linear-gradient(180deg,#2B2014,#1F1810)}
+.quote{border-left:3px solid var(--amber-deep);padding:6px 14px;color:var(--paper);font-size:17px;margin:0 0 6px}
+.quote small{display:block;color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.warn{color:var(--amber)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="nav"><a class="brand" href="/BVK/">BVK</a><a href="/BVK/armageddon/">Armageddon</a><a href="/BVK/speeddraft/">Speed Draft</a><a href="/BVK/ledger/">Ledger</a></nav>
+
+<header class="mast">
+  <div class="kicker">Bev's Video Kingdom</div>
+  <h1>The Kingdom<em>Research, tools and the ledger — for the table, while the tape rolls</em></h1>
+</header>
+
+<section>
+  <h2>Tonight</h2>
+  <div class="cards">
+    <a class="card hot" href="/BVK/armageddon/"><b>Armageddon</b><span>BVK #169 · the numbers, the crew roster, Bay, the science fight, the song, draft setups</span></a>
+    <a class="card hot" href="/BVK/speeddraft/"><b>Speed Draft Board</b><span>Topic hopper, prep and draft clocks, judge rotation, scoreboard</span></a>
+  </div>
+</section>
+
+<section>
+  <h2>Always up</h2>
+  <div class="cards">
+    <a class="card" href="/BVK/ledger/"><b>The Ledger</b><span>Every episode, searchable. Check it before you pitch a category.</span></a>
+  </div>
+</section>
+
+<section>
+  <h2>How a night runs</h2>
+  <p>Open the movie page on one screen and the board on another. The movie page is static — everything on it works
+  in a phone preview without tapping anything. The board needs a real browser tab; whoever is driving unseals the
+  hopper once on their own device and it stays unsealed there.</p>
+  <p style="color:var(--muted);font-size:14px;margin:0">Episode pages get added here as they're built. Each one follows the same
+  shape: fast facts, scoreboard, the crew for Snag, Shag, Body Bag, the director for Drinking with the Director, and
+  the draft categories the movie sets up.</p>
+</section>
+
+<div class="foot">Last updated: Sep 12, 2026 5:24 PM PT</div>
+</div>
+
+</body>
+</html>
