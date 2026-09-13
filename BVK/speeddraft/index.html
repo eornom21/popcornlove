@@ -138,6 +138,18 @@ ul{margin:0;padding:0}
   border-bottom:1px solid var(--line);padding-bottom:6px;font-size:14px}
 .recap .r .num{font-family:"JetBrains Mono",ui-monospace,monospace;color:var(--muted)}
 .recap .r .win{color:var(--amber);font-weight:600;white-space:nowrap}
+
+/* ---------- how it works ---------- */
+.howto{background:var(--board);border:1px solid var(--line);padding:clamp(16px,2.6vw,26px)}
+.howto h2{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:clamp(20px,3vw,26px);margin:0 0 6px}
+.howto p{margin:0 0 12px;color:var(--muted);font-size:14px;max-width:66ch}
+.howto ol{margin:0;padding-left:0;list-style:none;counter-reset:step;display:grid;gap:10px}
+.howto li{position:relative;padding-left:44px;font-size:16px;line-height:1.4;counter-increment:step;max-width:70ch}
+.howto li::before{content:counter(step);position:absolute;left:0;top:-2px;width:30px;height:30px;
+  display:grid;place-items:center;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;
+  color:#1A1206;background:var(--amber);font-weight:700}
+.howto li b{color:var(--amber);font-weight:600}
+.howto .rulebox{margin-top:14px;border-left:3px solid var(--hop);padding:4px 12px;color:var(--paper);font-size:14px;max-width:66ch}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 .nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid var(--line);padding-bottom:10px}
@@ -167,6 +179,22 @@ html{background:#120E0A}
   <section class="stage" id="stage"></section>
 
   <section class="board" id="board"></section>
+
+
+  <section class="howto" id="howto">
+    <h2>How a Speed Draft runs</h2>
+    <p>One laptop at the table drives everything. Four drafts per episode, four judges, everybody judges once.</p>
+    <ol>
+      <li><b>Unseal the hopper.</b> Type the host key once. It stays unsealed on this device.</li>
+      <li><b>Set the crew.</b> Edit crew and put the four names in. Left to right is judging order: the first name judges draft 1, the last judges draft 4. Shuffle it if you want.</li>
+      <li><b>Judge leaves the room.</b> Then hit <b>Draw the topic</b>. The topic goes up and a one-minute prep clock starts. Think. Don't type yet. The draft order for the other three is shown under the clock, and it snakes: 1-2-3, then 3-2-1, then 1-2-3.</li>
+      <li><b>Draft.</b> When prep hits zero the first drafter's clock starts. Each drafter has <b>one minute total</b> for all three of his picks, and it only runs while he's up. Say the pick, type it in the box, hit Enter. The clock passes to the next guy. Nine picks and it's over. Run out of time and you're frozen — the empty slots stay empty.</li>
+      <li><b>Who types:</b> the guy who just picked types for the guy who's up. His clock is stopped. The drafter's isn't.</li>
+      <li><b>Judge comes back.</b> A three-minute clock starts on its own. He sees every board with every pick. He taps 1, 2 or 3 on each drafter's row while the room debriefs, then hits <b>Post the results</b>. First place is 3 points, second is 2, third is 1. That topic is burned and won't come up again.</li>
+      <li><b>Next draft.</b> The judge chair rotates automatically. After the fourth draft the board names the champ and shows all four topics and who won each.</li>
+    </ol>
+    <div class="rulebox">Don't reload this page mid-episode. The hopper and the crew names survive a refresh; the scoreboard doesn't. Volume up — it beeps at ten seconds and horns at zero.</div>
+  </section>
 
   <hr class="rule">
 
