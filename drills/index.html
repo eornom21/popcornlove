@@ -1,0 +1,1909 @@
+<title>Monroe Soccer Drill Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+:root{
+  --shell:#F4F2EB; --paper:#FFFDF8; --sink:#EDE9DE;
+  --ink:#191E17; --body:#3A4335; --muted:#69745F; --hair:#E2DCCD;
+  --deep:#1B3322; --deep2:#122318; --cream:#F2EFE4; --sage:#B9C8AE;
+  --orange:#B85B18; --lime:#46901F; --gold:#B0821D;
+  --t56bg:#E4F2D9; --t56fg:#356F1F; --t78bg:#FAE6D7; --t78fg:#9A4A17;
+  --catbg:#E9EDF1; --catfg:#46545F; --phbg:#F3EBD6; --phfg:#7C6626;
+  --okbg:#EFF7E8; --okfg:#37711F; --nobg:#F1EEE5; --nofg:#948D7C;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --shell:#12160F; --paper:#1A2017; --sink:#222A1E;
+  --ink:#EDEBE0; --body:#CBD2C2; --muted:#93A089; --hair:#2E3828;
+  --deep:#16281B; --deep2:#0D160F; --cream:#EDEBE0; --sage:#8FA286;
+  --orange:#E08A44; --lime:#7FC44F; --gold:#D6AC4C;
+  --t56bg:#26381C; --t56fg:#9BD073; --t78bg:#3A2415; --t78fg:#E5A164;
+  --catbg:#232C33; --catfg:#A9BAC6; --phbg:#332C1A; --phfg:#D8BE73;
+  --okbg:#1E2F17; --okfg:#8FCC68; --nobg:#242A20; --nofg:#8A907E;
+}}
+:root[data-theme="dark"]{
+  --shell:#12160F; --paper:#1A2017; --sink:#222A1E;
+  --ink:#EDEBE0; --body:#CBD2C2; --muted:#93A089; --hair:#2E3828;
+  --deep:#16281B; --deep2:#0D160F; --cream:#EDEBE0; --sage:#8FA286;
+  --orange:#E08A44; --lime:#7FC44F; --gold:#D6AC4C;
+  --t56bg:#26381C; --t56fg:#9BD073; --t78bg:#3A2415; --t78fg:#E5A164;
+  --catbg:#232C33; --catfg:#A9BAC6; --phbg:#332C1A; --phfg:#D8BE73;
+  --okbg:#1E2F17; --okfg:#8FCC68; --nobg:#242A20; --nofg:#8A907E;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--shell);color:var(--body);
+  font-family:'Source Sans 3',ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;
+  font-size:16px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px}
+
+.hero{background:linear-gradient(162deg,var(--deep) 0%,var(--deep2) 100%);color:var(--cream);
+  padding-block:40px 34px}
+.hero h1{font-family:'Big Shoulders Display',Impact,ui-sans-serif,sans-serif;font-weight:800;
+  font-size:clamp(40px,8vw,68px);line-height:.93;margin:0;color:var(--cream);text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{margin:12px 0 0;color:var(--sage);max-width:60ch;font-size:16.5px}
+.upd{margin-top:16px;font-size:12px;color:var(--sage);letter-spacing:.11em;text-transform:uppercase;opacity:.82}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-block:-40px 24px}
+.stat{background:var(--paper);border:1px solid var(--hair);border-radius:12px;padding:14px}
+.stat b{display:block;font-family:'Big Shoulders Display',Impact,sans-serif;font-size:38px;
+  line-height:1;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)}
+.stat span{display:block;font-size:12.5px;color:var(--muted);margin-top:5px}
+.stat.o b{color:var(--orange)} .stat.l b{color:var(--lime)} .stat.g b{color:var(--gold)}
+
+.filters{background:var(--paper);border:1px solid var(--hair);border-radius:14px;
+  padding:13px 14px 9px;margin-bottom:22px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.frow{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:8px}
+.lbl{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);
+  flex:0 0 56px;font-weight:700}
+button.f{font:inherit;font-size:13.5px;border:1px solid var(--hair);background:var(--shell);
+  color:var(--body);padding:5px 11px;border-radius:999px;cursor:pointer}
+button.f:hover{border-color:var(--muted);color:var(--ink)}
+button.f:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button.f.on{background:var(--deep);border-color:var(--deep);color:var(--cream)}
+button.f.t56.on{background:var(--lime);border-color:var(--lime);color:#0C1608}
+button.f.t78.on{background:var(--orange);border-color:var(--orange);color:#1A0C04}
+#q{font:inherit;font-size:14px;border:1px solid var(--hair);border-radius:999px;
+  padding:6px 14px;width:190px;background:var(--shell);color:var(--ink)}
+.count{font-size:13px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;align-items:start}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:14px;overflow:hidden}
+.card.hide{display:none}
+.chead{padding:15px 16px 13px}
+.ctop{display:flex;align-items:flex-start;gap:10px}
+.card h3{font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:700;font-size:25px;
+  line-height:1.06;margin:0;flex:1;color:var(--ink);text-wrap:balance}
+.status{flex:0 0 auto;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;
+  font-size:13px;font-weight:700}
+.status.done{background:var(--okbg);color:var(--okfg)}
+.status.new{background:var(--nobg);color:var(--nofg)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.chip{font-size:11px;letter-spacing:.03em;padding:2.5px 8px;border-radius:999px;font-weight:600;white-space:nowrap}
+.chip.t56{background:var(--t56bg);color:var(--t56fg)}
+.chip.t78{background:var(--t78bg);color:var(--t78fg)}
+.chip.cat{background:var(--catbg);color:var(--catfg)}
+.chip.ph{background:var(--phbg);color:var(--phfg)}
+.blurb{margin:10px 0 0;font-size:14.5px;color:var(--body)}
+.ran{margin-top:10px;font-size:12.5px;color:var(--okfg);background:var(--okbg);border-radius:8px;padding:5px 9px}
+.ran.notyet{color:var(--nofg);background:var(--nobg)}
+.cbody{padding:0 16px 14px;border-top:1px solid var(--hair)}
+.diawrap{margin:14px 0 4px;background:#FBFCF8;border:1px solid var(--hair);border-radius:10px;
+  padding:8px;overflow-x:auto}
+svg.dg{display:block;width:100%;height:auto;max-width:100%}
+.cols{display:grid;gap:14px;margin-top:12px}
+.card h4{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.cbody ol,.cbody ul{margin:0;padding-left:18px;font-size:14.5px;color:var(--body)}
+.cbody li{margin-bottom:5px}
+ul.keys{list-style:none;padding-left:0}
+ul.keys li{padding-left:16px;position:relative}
+ul.keys li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;
+  border-radius:50%;background:var(--gold)}
+.note{margin:12px 0 0;font-size:13.5px;font-style:italic;color:var(--muted);
+  border-left:3px solid var(--gold);padding-left:10px}
+button.more{width:100%;font:inherit;font-size:13px;font-weight:600;background:var(--sink);
+  border:0;border-top:1px solid var(--hair);color:var(--muted);padding:9px;cursor:pointer}
+button.more:hover{color:var(--ink)}
+button.more:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.empty{text-align:center;color:var(--muted);padding:50px 0}
+footer{text-align:center;color:var(--muted);font-size:13px;padding-block:30px 60px}
+@media(max-width:720px){
+  .stats{grid-template-columns:repeat(2,1fr);margin-top:-30px}
+  .lbl{flex:0 0 100%;margin-bottom:2px}
+  #q{width:100%} .count{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="hero"><div class="wrap">
+  <h1>Monroe Soccer<br><em>Drill Book</em></h1>
+  <p>Everything we have run with the Slimers and the Smashing Pumpkins, plus the back catalogue from
+  the Eagles, Fireballs, Lasers, Blue Bunnies and Thunderbolts. Filter by team, by skill, or by where
+  you are in the season.</p>
+  <div class="upd">Updated Sep 19, 2026 · Pacific</div>
+</div></header>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat g"><b>71</b><span>drills in the book</span></div>
+    <div class="stat o"><b>25</b><span>run with the Pumpkins</span></div>
+    <div class="stat l"><b>15</b><span>run with the Slimers</span></div>
+    <div class="stat"><b>35</b><span>not used yet this season</span></div>
+  </div>
+
+  <div class="filters">
+    <div class="frow"><span class="lbl">Team</span>
+      <button class="f t56" data-k="team" data-v="5/6">Slimers 5/6</button>
+      <button class="f t78" data-k="team" data-v="7/8">Pumpkins 7/8</button>
+    </div>
+    <div class="frow"><span class="lbl">Skill</span><button class="f" data-k="cat" data-v="Warmup">Warmup</button><button class="f" data-k="cat" data-v="Dribbling">Dribbling</button><button class="f" data-k="cat" data-v="Passing">Passing</button><button class="f" data-k="cat" data-v="Trapping">Trapping</button><button class="f" data-k="cat" data-v="Shooting">Shooting</button><button class="f" data-k="cat" data-v="Throw-ins">Throw-ins</button><button class="f" data-k="cat" data-v="Defending">Defending</button><button class="f" data-k="cat" data-v="Goalkeeping">Goalkeeping</button><button class="f" data-k="cat" data-v="Set pieces">Set pieces</button><button class="f" data-k="cat" data-v="Games">Games</button></div>
+    <div class="frow"><span class="lbl">When</span><button class="f" data-k="phase" data-v="Early">Early season</button><button class="f" data-k="phase" data-v="Mid">Mid season</button><button class="f" data-k="phase" data-v="Late">Late season</button>
+      <button class="f" data-k="status" data-v="done">Already run</button>
+      <button class="f" data-k="status" data-v="new">Not used yet</button>
+    </div>
+    <div class="frow"><span class="lbl">Find</span>
+      <input id="q" type="search" placeholder="search drills…" autocomplete="off" aria-label="Search drills">
+      <button class="f" id="clear">Clear all</button>
+      <span class="count" id="count">71 of 71 drills</span>
+    </div>
+  </div>
+
+  <div class="grid" id="grid">
+<article class="card" data-cat="Warmup" data-teams="5/6|7/8"
+ data-phase="Early|Mid|Late" data-status="new" data-name="walking twists">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Walking Twists</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Warmup</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Walk the width of the field twisting the upper body side to side.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Line up and walk slowly across the field.</li><li>Twist the shoulders left and right with each step.</li><li>Arms loose, no bouncing.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Slow and controlled</li><li>Twist from the belly, not the arms</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Warmup" data-teams="5/6|7/8"
+ data-phase="Early|Mid|Late" data-status="new" data-name="walk / run / jog / sprint">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Walk / Run / Jog / Sprint</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Warmup</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Four-speed warmup lap. Coach calls the speed, they change on the call.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Everyone moves together down the field.</li><li>Call out walk, run, jog, or sprint and they switch speed right away.</li><li>Finish on a sprint.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Change speed the instant you hear it</li><li>Sprints are real sprints</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Warmup" data-teams="5/6|7/8"
+ data-phase="Early|Mid|Late" data-status="new" data-name="high knees">
+ <header class="chead">
+   <div class="ctop">
+     <h3>High Knees</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Warmup</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Knees up to waist height across the field.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Jog forward driving each knee up to waist height.</li><li>Short, quick steps.</li><li>Back down at an easy jog.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Knees to waist</li><li>Stay on the balls of your feet</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Warmup" data-teams="5/6|7/8"
+ data-phase="Early|Mid|Late" data-status="done" data-name="small dribbles down, long dribbles back">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Small Dribbles Down, Long Dribbles Back</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Warmup</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Two-way dribbling warmup that teaches both touch sizes. Twice through.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/15 &nbsp;·&nbsp; Slimers 9/16</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="420" height="150" rx="10" fill="#F3F8EE"/><circle cx="40" cy="45" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="58" cy="45" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="58" cy="45" r="1.8" fill="#161B14"/><circle cx="76.9" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="95.9" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="114.8" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="133.8" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="152.7" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="171.6" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="190.6" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="209.5" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="228.5" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="247.4" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="266.4" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="285.3" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="304.2" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="323.2" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="342.1" cy="45.0" r="2.2" fill="#5E6B57"/><circle cx="361.1" cy="45.0" r="2.2" fill="#5E6B57"/><line x1="380" y1="100" x2="60" y2="100" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><text x="200" y="30" text-anchor="middle" font-size="13" fill="#5E6B57" font-family="Source Sans 3,sans-serif">small touches →</text><text x="200" y="125" text-anchor="middle" font-size="13" fill="#5E6B57" font-family="Source Sans 3,sans-serif">← long pushes</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Dribble down the field with tiny touches — ball never leaves your feet.</li><li>Dribble back with long pushes, running onto the ball.</li><li>Do it twice.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Small touches going, big touches coming back</li><li>Head up on the long ones</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Warmup" data-teams="5/6|7/8"
+ data-phase="Early|Mid|Late" data-status="done" data-name="ball taps">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Ball Taps</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Warmup</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Bottom of the foot tapping the top of the ball, feet alternating. 20 taps, two rounds.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/15 &nbsp;·&nbsp; Slimers 9/16</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Ball still on the ground in front of you.</li><li>Tap the top of the ball with the bottom of one foot, then the other.</li><li>20 taps, rest, then 20 more.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Light and quick, do not stomp it</li><li>Stay on your toes</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Warmup" data-teams="5/6|7/8"
+ data-phase="Early|Mid|Late" data-status="done" data-name="the snake">
+ <header class="chead">
+   <div class="ctop">
+     <h3>The Snake</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Warmup</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Follow-the-leader in one line. On the whistle the last girl sprints to the front.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/3</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="420" height="160" rx="10" fill="#F3F8EE"/><path d="M40,120 L90,60 L150,110 L215,50 L280,105 L340,60 L385,95" fill="none" stroke="#BE8D24" stroke-width="2.6" stroke-linejoin="round" opacity="0.75"/><circle cx="385" cy="95" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="385" y="99" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">1</text><circle cx="340" cy="60" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="280" cy="105" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="215" cy="50" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="150" cy="110" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="40" cy="120" r="11" fill="#BE8D24" stroke="#fff" stroke-width="2"/><text x="40" y="124" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">L</text><line x1="40" y1="140" x2="380" y2="140" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><text x="210" y="155" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">on the whistle, back sprints to front</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Single file line. The leader goes wherever she wants — curves, loops, zig-zags.</li><li>Everybody follows her exact path.</li><li>On the whistle, the girl at the back sprints all the way to the front and becomes the new leader.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Follow her path, do not cut the corner</li><li>Sprint, do not jog, when it is your turn</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Warmup" data-teams="5/6|7/8"
+ data-phase="Early|Mid" data-status="done" data-name="dribble – stop – roll back">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Dribble – Stop – Roll Back</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Warmup</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">Dribble, stop the ball dead with the sole, roll it backward, reverse. Every change on the whistle.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/3</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Dribble forward.</li><li>Whistle: stop the ball with the bottom of your foot.</li><li>Whistle: roll it backward and turn with it.</li><li>Whistle: dribble forward again.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Stop it dead, do not trap it with the side</li><li>Turn with the ball, not away from it</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Warmup" data-teams="7/8"
+ data-phase="Mid|Late" data-status="done" data-name="follow your throw">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Follow Your Throw</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Warmup</span>
+     <span class="chip ph">Mid · Late season</span>
+   </div>
+   <p class="blurb">Throw-in warmup that builds the habit of moving after you release it.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/15</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Pairs, about 10 yards apart along a line.</li><li>Legal throw-in to your partner.</li><li>Sprint to a new spot right after you release it.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Both feet down, ball over the head</li><li>Move the second it leaves your hands</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Warmup" data-teams="7/8"
+ data-phase="Mid|Late" data-status="done" data-name="one-touch partner passing">
+ <header class="chead">
+   <div class="ctop">
+     <h3>One-Touch Partner Passing</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Warmup</span>
+     <span class="chip ph">Mid · Late season</span>
+   </div>
+   <p class="blurb">Pairs pass without trapping first, backing up a step each time they string clean ones together.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/15</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 380 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="380" height="130" rx="10" fill="#F3F8EE"/><circle cx="70" cy="65" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="70" y="69" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">A</text><circle cx="310" cy="65" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="310" y="69" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">B</text><line x1="92" y1="55" x2="288" y2="55" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="288" y1="80" x2="92" y2="80" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><text x="190" y="112" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">back up a step every time it goes clean</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Partner up, start 5 or 6 feet apart.</li><li>Pass back and forth without stopping the ball first.</li><li>String several clean ones together, then both take a step back.</li><li>If it falls apart, step back in and rebuild.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>No trap — one touch straight back</li><li>Side of the foot, not the toe</li><li>Be ready before it arrives</li><li>This is the touch that finishes a cross</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Dribbling" data-teams="5/6"
+ data-phase="Early" data-status="done" data-name="growing dribbles">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Growing Dribbles</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Dribbling</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Start with tiny touches and grow them until she takes two steps between touches.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 8/19</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Start with TINY touches — the ball barely moves.</li><li>A little bigger.</li><li>A little bigger again.</li><li>Finish where she takes two steps between touches.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Ball stays in front of you</li><li>Look up between touches</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Dribbling" data-teams="5/6|7/8"
+ data-phase="Early" data-status="done" data-name="pull backs">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Pull Backs</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Dribbling</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Foot on the ball, roll it backward, chase it down, stop it, repeat. Single, double, then continuous.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 8/19</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Put your foot on top of the ball and roll it backward.</li><li>Chase it, stop it with the bottom of your foot, pause.</li><li>Roll it back again. Then two in a row. Then keep going.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Stop it dead every time</li><li>Do not let it get away from you</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Dribbling" data-teams="5/6|7/8"
+ data-phase="Early" data-status="new" data-name="whistle taps &amp; speed taps">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Whistle Taps &amp; Speed Taps</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Dribbling</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Tapping the ball foot to foot — slow on command, then as fast as they can go.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Tap the ball side to side between both feet.</li><li>Whistle taps: one tap each time you hear the whistle.</li><li>Speed taps: as many as you can in 10 seconds.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Inside of the foot</li><li>Ball stays right under you</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Dribbling" data-teams="5/6"
+ data-phase="Early" data-status="new" data-name="red light, green light, blue light">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Red Light, Green Light, Blue Light</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Dribbling</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Green go, red stop dead, blue turn around. Dribbling control disguised as a game.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Everybody dribbles toward you on GREEN.</li><li>RED — stop the ball with the bottom of your foot.</li><li>BLUE — turn around and dribble the other way.</li><li>Anybody whose ball rolls away goes back to the start.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Stop it with the sole, not your hands</li><li>Small touches so you can stop fast</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Dribbling" data-teams="7/8"
+ data-phase="Early" data-status="new" data-name="triple dribble – pause">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Triple Dribble – Pause</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Dribbling</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Three medium touches, catch up to the ball, stop it with the sole. Relay style.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Three medium dribbles.</li><li>Catch up to the ball and stop it with the bottom of your foot.</li><li>Repeat until you reach the far cones, then hand off to the next girl going back.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Exactly three touches, then stop it</li><li>Relay — the next girl goes as soon as you arrive</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Dribbling" data-teams="7/8"
+ data-phase="Early|Mid" data-status="done" data-name="dribbling maze">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Dribbling Maze</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Dribbling</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">A tetris-shaped cone path with square turns. Relay, then timed.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/20</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="380" height="200" rx="10" fill="#F3F8EE"/><path d="M60,31 L67,46 L53,46 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M60,71 L67,86 L53,86 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M100,71 L107,86 L93,86 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M140,71 L147,86 L133,86 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M140,111 L147,126 L133,126 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M180,111 L187,126 L173,126 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M220,111 L227,126 L213,126 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M220,71 L227,86 L213,86 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M260,71 L267,86 L253,86 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M300,71 L307,86 L293,86 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M300,31 L307,46 L293,46 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M100,31 L107,46 L93,46 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M180,151 L187,166 L173,166 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M260,31 L267,46 L253,46 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M80,60 L120,60 L120,100 L160,100 L160,140 L200,140 L240,140 L240,100 L280,100 L280,60 L320,60" fill="none" stroke="#C2621A" stroke-width="2.6" stroke-linejoin="round" opacity="0.75"/><circle cx="45" cy="60" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="62" cy="60" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="62" cy="60" r="1.8" fill="#161B14"/><text x="190" y="190" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">tetris shape — square turns, stop with the sole at the end</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Lay cones in a tetris shape — straight runs with square turns, about 3 ft wide, in a 15x15 ft space.</li><li>Dribble the whole shape without knocking a cone.</li><li>Stop it with the sole at the end and hand off. Relay, next girl goes back the other way.</li><li>Once everyone is clean, start timing and let them beat their best.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Small touches through the turns, longer on the straights</li><li>Eyes up so you see the next turn</li><li>Outside foot around the corners</li><li>Knock a cone and it does not count</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Dribbling" data-teams="7/8"
+ data-phase="Mid|Late" data-status="new" data-name="dribble knockout">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Dribble Knockout</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Dribbling</span>
+     <span class="chip ph">Mid · Late season</span>
+   </div>
+   <p class="blurb">Everyone dribbles in a box and tries to kick out other balls while keeping their own.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Everybody with a ball inside a marked box.</li><li>Keep your own ball, knock other balls out.</li><li>Lose your ball and you are out — or do a lap and come back in.</li><li>Shrink the box as girls go out.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Head up — you cannot protect it looking down</li><li>Turn away from trouble</li><li>Body between her and the ball</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="5/6"
+ data-phase="Early" data-status="done" data-name="step-by-step foot placement">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Step-by-Step Foot Placement</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">The passing motion broken into three spoken steps. The foundation for everything.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 8/19, 9/16</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="320" height="170" rx="10" fill="#F3F8EE"/><circle cx="150" cy="95" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="150" cy="95" r="1.8" fill="#161B14"/><ellipse cx="118" cy="95" rx="8" ry="13" fill="none" stroke="#5E6B57" stroke-width="2"/><text x="118" y="125" text-anchor="middle" font-size="11" fill="#5E6B57" font-family="Source Sans 3,sans-serif">plant</text><path d="M144,129 Q156,115 152,103" fill="none" stroke="#C2621A" stroke-width="3" marker-end="url(#ah)"/><line x1="168" y1="95" x2="280" y2="95" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><text x="160" y="30" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">1. eyes on target   2. plant foot   3. swing side of foot</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Eyes on your target.</li><li>Step with your POINTER foot next to the ball.</li><li>Swing the SIDE of your other foot through it.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Side of the foot, never the toe</li><li>Say the three steps out loud every time</li><li>Roll it on the ground, do not lift it</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="5/6"
+ data-phase="Early" data-status="new" data-name="knock over the stuffed animal">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Knock Over the Stuffed Animal</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">A target that falls over when you hit it. Accuracy practice that gets a reaction.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Stand a stuffed animal up about 8 feet away.</li><li>Pass at it using the three steps.</li><li>Back it up a step every time somebody knocks it over.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Aim, do not blast it</li><li>Side of the foot</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="5/6"
+ data-phase="Early|Mid" data-status="done" data-name="passing through the gate">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Passing Through the Gate</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">Pairs pass through a two-cone gate, counting streaks and backing up as they improve.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 9/16</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 380 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="380" height="140" rx="10" fill="#F3F8EE"/><circle cx="60" cy="70" r="11" fill="#4E9B2F" stroke="#fff" stroke-width="2"/><text x="60" y="74" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">A</text><circle cx="320" cy="70" r="11" fill="#4E9B2F" stroke="#fff" stroke-width="2"/><text x="320" y="74" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">B</text><path d="M190,36 L197,51 L183,51 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M190,86 L197,101 L183,101 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><line x1="82" y1="62" x2="298" y2="62" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="298" y1="82" x2="82" y2="82" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><text x="190" y="125" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">five in a row → both take a step back</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Each pair gets a gate — two cones about 3 ft apart — and stands 8 ft either side.</li><li>Pass back and forth through the gate.</li><li>Count how many in a row get through.</li><li>Five in a row and they take a step back. Two misses and they step in.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Side of the foot, never the toe</li><li>Look at her before you kick it</li><li>Roll it on the ground</li><li>Stop it with the sole before you send it back</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="7/8"
+ data-phase="Early" data-status="new" data-name="four boxes">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Four Boxes</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Four small cone boxes spaced apart. Pass between them, trap inside the box, move after you pass.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 340 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="340" height="240" rx="10" fill="#F3F8EE"/><rect x="50" y="40" width="60" height="60" fill="none" stroke="#BE8D24" stroke-width="2" stroke-dasharray="5 4"/><rect x="210" y="40" width="60" height="60" fill="none" stroke="#BE8D24" stroke-width="2" stroke-dasharray="5 4"/><rect x="50" y="140" width="60" height="60" fill="none" stroke="#BE8D24" stroke-width="2" stroke-dasharray="5 4"/><rect x="210" y="140" width="60" height="60" fill="none" stroke="#BE8D24" stroke-width="2" stroke-dasharray="5 4"/><circle cx="80" cy="70" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="240" cy="70" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="80" cy="170" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="240" cy="170" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><line x1="100" y1="70" x2="220" y2="70" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="240" y1="90" x2="240" y2="155" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="220" y1="170" x2="100" y2="170" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="80" y1="155" x2="80" y2="90" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><text x="170" y="225" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">trap inside the box, then move</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Make four boxes about 4 ft square, each about 7 ft from the next.</li><li>One girl to a box. Pass across the gaps.</li><li>Trap the ball inside your box — if it rolls out, that rep does not count.</li><li>Move to a new box after you pass.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Plant foot then pass foot, QUICKLY</li><li>Aim for your teammate</li><li>Soft touch to keep it in the box</li><li>Move after you pass</li><li>Call for the ball</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="7/8"
+ data-phase="Early|Mid" data-status="done" data-name="moving triangle passing">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Moving Triangle Passing</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">Two nested squares. Three girls in the gap pass and immediately move to the open corner.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/20</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="300" height="280" rx="10" fill="#F3F8EE"/><rect x="40" y="40" width="210" height="210" fill="none" stroke="#BE8D24" stroke-width="2" stroke-dasharray="5 4"/><rect x="105" y="105" width="80" height="80" fill="none" stroke="#BE8D24" stroke-width="2" stroke-dasharray="5 4"/><circle cx="60" cy="60" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="60" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">1</text><circle cx="230" cy="60" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="230" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">2</text><circle cx="230" cy="230" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="230" y="234" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">3</text><circle cx="60" cy="230" r="11" fill="none" stroke="#5E6B57" stroke-width="2" stroke-dasharray="4 3"/><line x1="78" y1="60" x2="212" y2="60" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="60" y1="78" x2="60" y2="212" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><text x="150" y="268" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">pass →  then run to the open corner (dashed)</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Cones in two squares, one inside the other — small is about 5x5 ft, big is about 10x10 ft.</li><li>Three girls stand in three corners of the gap between them. One corner stays empty.</li><li>The girl next to the empty corner passes to the girl beside her, then moves to the open corner.</li><li>Next girl does the same, and so on around.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Precise passes, tight traps</li><li>Call for the ball when you reach the open corner</li><li>The ball cannot touch or cross the small square, or go outside the big one</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="7/8"
+ data-phase="Mid|Late" data-status="new" data-name="broken square">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Broken Square</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Mid · Late season</span>
+   </div>
+   <p class="blurb">Bigger version of the moving triangle. When the ball moves, you move.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Big square about 15x15 ft, small square about 4x4 ft in the middle.</li><li>Girls start a few feet from three of the four corners.</li><li>Pass to the girl next to you, then move to the open spot.</li><li>Ball cannot touch the middle cones or leave the big square, or the drill resets.</li><li>Time how fast the ball gets back to the first girl.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Pass and move — when the ball moves, you move</li><li>See how fast you can go without a reset</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="7/8"
+ data-phase="Mid" data-status="new" data-name="timed passing and trapping">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Timed Passing and Trapping</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">45 seconds, two girls, count every clean pass-and-trap. Beat your best round.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Rectangle about 7 ft wide by 15 ft long. Two girls at opposite ends.</li><li>On GO, start a 45-second timer and count every successful pass and trap out loud.</li><li>If the ball leaves the rectangle the round ends early.</li><li>Each round they try to beat their best.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>The receiver MUST call &#x27;ball&#x27;</li><li>Side of the foot</li><li>Go fast, but keep enough control to stay in the box</li></ul></div>
+   </div>
+   <p class="note">Resize the box after the first rounds — it should be hard but not impossible.</p>
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="7/8"
+ data-phase="Mid" data-status="new" data-name="gates drill">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Gates Drill</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Five gates scattered on a half field. Most gates passed through in 60 seconds.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Scatter 5 gates around the half.</li><li>Passer and receiver must stay at least 10 feet apart.</li><li>Get through as many gates as you can in 60 seconds.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Look for the next gate before you receive it</li><li>Spread out — 10 feet minimum</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="7/8"
+ data-phase="Mid" data-status="done" data-name="wall passes">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Wall Passes</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Beat a defender by playing it off a teammate and running past. Do not pass too early.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/3</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="380" height="230" rx="10" fill="#F3F8EE"/><line x1="0" y1="229" x2="380" y2="229" stroke="#C9DABB" stroke-width="2"/><rect x="120.0" y="0" width="140" height="52" fill="none" stroke="#C9DABB" stroke-width="2"/><rect x="160.0" y="0" width="60" height="7" fill="none" stroke="#C9DABB" stroke-width="3"/><circle cx="90" cy="180" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="90" y="184" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">A</text><circle cx="105" cy="172" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="105" cy="172" r="1.8" fill="#161B14"/><circle cx="200" cy="90" r="11" fill="#BE8D24" stroke="#fff" stroke-width="2"/><text x="200" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">W</text><circle cx="140" cy="110" r="11" fill="#8A9490" stroke="#fff" stroke-width="2"/><text x="140" y="114" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">D</text><line x1="105" y1="165" x2="185" y2="100" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="100" y1="170" x2="175" y2="70" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><line x1="205" y1="80" x2="205" y2="45" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><text x="190" y="215" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">solid = pass   ·   dashed = her run</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>One girl is the &#x27;wall&#x27; at the half line. A coach stands a few yards toward the sideline as the defender.</li><li>Attacker dribbles up from the defending goal line.</li><li>Inside 5 yards of the defender she passes to the wall, runs past, calls, and shows her hand.</li><li>The wall puts it back out in front of her and she goes to score.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Do not pass too early — make the defender commit</li><li>Pass and GO, do not watch your own pass</li><li>Call for it and show your hand</li><li>Wall: one touch, out in front, into her space</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="7/8"
+ data-phase="Mid" data-status="done" data-name="wall passes around the field">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Wall Passes Around the Field</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">The wall pass as a continuous circuit — four coaches, go around and around.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/3</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Two coaches near each half line — one is the wall, one is the defender.</li><li>Dribble up, play the wall pass around the defending coach, run past, score.</li><li>Grab your ball, dribble to the next pair, keep circling the field.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Make the defender commit first</li><li>Pass and GO</li><li>Call for it and show your hand</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="5/6"
+ data-phase="Early" data-status="new" data-name="run kicks / run freeze / run pass">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Run Kicks / Run Freeze / Run Pass</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Three-stage progression for kicking on the move instead of from a standstill.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Run kicks: jog and kick the ball ahead of you.</li><li>Run freeze: jog, then freeze on the whistle with the ball stopped.</li><li>Run pass: jog and pass to a partner while still moving.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Do not stop to pass</li><li>Side of the foot even on the move</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="5/6|7/8"
+ data-phase="Mid|Late" data-status="done" data-name="soccer islands">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Soccer Islands</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Mid · Late season</span>
+   </div>
+   <p class="blurb">Cone diamonds scattered down the field. You can only touch the ball while standing on an island.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/20, 9/1 &nbsp;·&nbsp; Slimers 9/16</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 420 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="420" height="250" rx="10" fill="#F3F8EE"/><line x1="0" y1="249" x2="420" y2="249" stroke="#C9DABB" stroke-width="2"/><rect x="140.0" y="0" width="140" height="52" fill="none" stroke="#C9DABB" stroke-width="2"/><rect x="180.0" y="0" width="60" height="7" fill="none" stroke="#C9DABB" stroke-width="3"/><path d="M60,178 L82,200 L60,222 L38,200 z" fill="#FFF6E3" stroke="#BE8D24" stroke-width="2"/><path d="M150,128 L172,150 L150,172 L128,150 z" fill="#FFF6E3" stroke="#BE8D24" stroke-width="2"/><path d="M80,78 L102,100 L80,122 L58,100 z" fill="#FFF6E3" stroke="#BE8D24" stroke-width="2"/><path d="M210,183 L232,205 L210,227 L188,205 z" fill="#FFF6E3" stroke="#BE8D24" stroke-width="2"/><path d="M250,93 L272,115 L250,137 L228,115 z" fill="#FFF6E3" stroke="#BE8D24" stroke-width="2"/><path d="M175,38 L197,60 L175,82 L153,60 z" fill="#FBEAE8" stroke="#C4342B" stroke-width="2"/><path d="M300,43 L322,65 L300,87 L278,65 z" fill="#FBEAE8" stroke="#C4342B" stroke-width="2"/><path d="M340,128 L362,150 L340,172 L318,150 z" fill="#FFF6E3" stroke="#BE8D24" stroke-width="2"/><circle cx="60" cy="200" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="150" cy="150" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="250" cy="115" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><line x1="75" y1="193" x2="136" y2="158" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="163" y1="143" x2="238" y2="122" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="258" y1="103" x2="290" y2="75" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><text x="210" y="238" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">red islands = the only place you can shoot from</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Scatter 8–10 islands down the field — 4 cones in a diamond about 5 ft across, 10–15 ft apart.</li><li>The three islands nearest the goal you are attacking are RED.</li><li>One girl starts on the island in front of our own goal with the ball. The rest start on the goal line.</li><li>On GO, everyone runs to an island. You can only touch the ball on an island — everything else is water.</li><li>Pass, then run to a new island. You can only shoot from a RED island.</li><li>Ball leaves an island: bring it back to the last one and go again.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>You cannot dribble your way out — pass and move</li><li>Get to an open island and CALL for it, loud</li><li>Look up before you pass — find the island, not just the player</li><li>Two girls never go to the same island</li><li>When the ball moves, you move</li></ul></div>
+   </div>
+   <p class="note">Timed version: start the clock on GO and stop it when the ball goes in. Let them beat their best.</p>
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Passing" data-teams="5/6"
+ data-phase="Mid" data-status="done" data-name="soccer islands — little kid version">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Soccer Islands — Little Kid Version</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Passing</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Six big islands on a half field, one girl per island, no dribbling allowed at all.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 9/16</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>6 islands on one half — 4 cones in a square about 6 ft across, spread about 10 ft apart.</li><li>Everybody starts on an island. One girl per island, nobody shares.</li><li>You can only touch the ball standing on an island.</li><li>Pass to a girl on another island, then run to a different empty one.</li><li>Start with no goal — just count passes out loud. Add a goal once they have it.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>One girl, one island</li><li>You cannot dribble — passing is the only way to move it</li><li>Yell her name before you pass</li><li>The second you pass, go find a new island</li></ul></div>
+   </div>
+   <p class="note">If the passes are too long, shrink the gaps or put a coach on an island as a helper.</p>
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Trapping" data-teams="7/8"
+ data-phase="Early|Mid" data-status="new" data-name="trapping in the circle">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Trapping in the Circle</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Trapping</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">A cone circle she has to keep the ball inside. Kicks get harder as she improves.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="300" height="200" rx="10" fill="#F3F8EE"/><circle cx="170" cy="100" r="55" fill="none" stroke="#BE8D24" stroke-width="2" stroke-dasharray="5 4"/><circle cx="170" cy="100" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><circle cx="40" cy="100" r="11" fill="#8A9490" stroke="#fff" stroke-width="2"/><text x="40" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">C</text><circle cx="58" cy="100" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="58" cy="100" r="1.8" fill="#161B14"/><line x1="62" y1="100" x2="112" y2="100" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><text x="170" y="185" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">keep every ball inside the circle</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Cone circle about 6–8 ft across with a gap to pass into.</li><li>Kick balls in progressively harder; she traps them inside the circle.</li><li>Game version: trap 5 inside before 2 escape.</li><li>Shrink the circle when everybody succeeds.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Soft foot — give with the ball</li><li>Trap it into space in front of you, not into your shins</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Shooting" data-teams="7/8"
+ data-phase="Early|Mid" data-status="done" data-name="open-net shooting">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Open-Net Shooting</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Shooting</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">Self-paced shooting at an empty net. Chase your own ball. Accuracy first, then power.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/25</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Empty net, everybody shoots at their own pace and retrieves their own ball.</li><li>Work on &#x27;passing the ball hard&#x27; into the bottom corners.</li><li>Then power: strike it on the top inside of the toe.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>SEE your target — a specific spot in the goal — before you shoot</li><li>Head down on the power shot</li><li>Do not wait too long to shoot</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Shooting" data-teams="5/6|7/8"
+ data-phase="Mid" data-status="done" data-name="finishing off rebounds">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Finishing Off Rebounds</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Shooting</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Coach shoots, keeper blocks, players crash the goal and finish the second chance.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 9/2</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Coach takes a shot on goal.</li><li>Keeper or second coach blocks or deflects it.</li><li>Two or three girls crash the goal and finish the rebound.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>React quickly — do not watch the first shot</li><li>Crash the goal every time</li><li>Finish first touch</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Shooting" data-teams="7/8"
+ data-phase="Late" data-status="new" data-name="kicking with your weak foot">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Kicking With Your Weak Foot</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Shooting</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">Weak-foot shots that start as passes into the goal and build up to real strikes.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Start as passes into the goal with the weak foot only.</li><li>Once accurate and comfortable, go harder.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Accuracy before power</li><li>Plant foot pointing where you want it</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Shooting" data-teams="7/8"
+ data-phase="Late" data-status="done" data-name="crossing — the window">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Crossing — The Window</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Shooting</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">Cross from a marked window on the wing while two runners attack the front and back of the goal.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/15</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="400" height="250" rx="10" fill="#F3F8EE"/><rect x="105.0" y="0" width="190" height="70" fill="none" stroke="#C9DABB" stroke-width="2"/><rect x="162.0" y="0" width="76" height="8" fill="none" stroke="#C9DABB" stroke-width="3"/><line x1="0" y1="0" x2="400" y2="0" stroke="#C9DABB" stroke-width="2"/><path d="M330,86 L337,101 L323,101 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><path d="M330,126 L337,141 L323,141 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><circle cx="350" cy="210" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="350" y="214" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">X</text><circle cx="362" cy="203" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="362" cy="203" r="1.8" fill="#161B14"/><line x1="355" y1="195" x2="338" y2="145" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><circle cx="175" cy="150" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="175" y="154" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">1</text><circle cx="205" cy="200" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="205" y="204" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">2</text><line x1="175" y1="140" x2="140" y2="78" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><line x1="210" y1="192" x2="190" y2="95" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><line x1="322" y1="112" x2="165" y2="80" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><text x="200" y="238" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">1 = front of goal (early)   2 = back of goal (a step behind)</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Two cones on the wing make a &#x27;window&#x27;, about even with the top of the box.</li><li>Crosser starts at the half line on the sideline and dribbles down the line.</li><li>Two runners start at the top of the box — one to the FRONT of the goal, one to the BACK.</li><li>When the crosser reaches the window, she crosses. Runners time it to arrive with the ball.</li><li>Rotate: crosser → back, back → front, front → end of line. Do both sides.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Cross when you reach the window, do not dribble into the corner</li><li>Aim for the spot in front of the goal, not at a person</li><li>Front runner goes early and hard</li><li>Back runner stays a step behind and wider — most crosses go long</li><li>One touch if you can get it</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Shooting" data-teams="7/8"
+ data-phase="Mid" data-status="new" data-name="running with a teammate for the score">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Running With a Teammate for the Score</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Shooting</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Two girls attack together — one dribbles, one runs support a step behind and finishes.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Two lines either side of the circle, one line has the balls.</li><li>Ball carrier dribbles at goal; the other girl runs alongside a little behind the ball.</li><li>Support girl calls and receives a pass in front of her, then finishes.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Run BEHIND the ball, not level with it</li><li>Call for the ball</li><li>Make an easy pass IN FRONT of your teammate</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Shooting" data-teams="5/6"
+ data-phase="Early|Mid|Late" data-status="new" data-name="two goals — relay scoring race">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Two Goals — Relay Scoring Race</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Shooting</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Two teams, two goals, race to score and get back. Pure fun with a shooting rep inside it.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Split into two lines, each with a goal.</li><li>First girl dribbles in, shoots, retrieves, dribbles back.</li><li>Tag the next girl. First team through everybody wins.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Shoot from close — get it on frame</li><li>Hustle back</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Throw-ins" data-teams="5/6|7/8"
+ data-phase="Early" data-status="done" data-name="throw-in progression">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Throw-In Progression</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Throw-ins</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">The four-step way he teaches a legal throw-in, ending with a game.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/25 &nbsp;·&nbsp; Slimers 8/19</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="300" height="180" rx="10" fill="#F3F8EE"/><line x1="40" y1="30" x2="40" y2="150" stroke="#C9DABB" stroke-width="3"/><circle cx="62" cy="90" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="62" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">T</text><path d="M75,75 Q152.5,30 230,95" fill="none" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><circle cx="245" cy="100" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="160" y="165" text-anchor="middle" font-size="11" fill="#5E6B57" font-family="Source Sans 3,sans-serif">both feet down, behind the line, ball over the head</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Demonstration.</li><li>No-throw toe drag — mimic the motion, drag the back toe, no ball released.</li><li>Practice throws all together.</li><li>Try to hit the coach.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Two hands, out in front and then over your head</li><li>Both feet stay down and behind the line</li><li>Throw it at your teammate&#x27;s feet</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Throw-ins" data-teams="7/8"
+ data-phase="Mid" data-status="done" data-name="throw-in down the line">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Throw-In Down the Line</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Throw-ins</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Chase the ball out, get back to the line fast, throw down the line to a runner who calls for it.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/25</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Roll the ball out of bounds near the half line.</li><li>Player 1 chases it down and hustles back to the line.</li><li>Player 2 runs down the sideline, stops, and calls for the ball.</li><li>Quick, legal throw down the line.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Go QUICK — get the ball and get back</li><li>Always throw down the line, not into the middle</li><li>Call for the ball and listen for your teammate</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Throw-ins" data-teams="7/8"
+ data-phase="Mid" data-status="new" data-name="throw-in to one-touch shot">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Throw-In to One-Touch Shot</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Throw-ins</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Throw-in near the goal, shooter runs onto it and finishes first touch.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Both start near the sideline, even with the middle of the goal box.</li><li>Coach rolls the ball out. One girl throws it in, aiming for the middle of the box.</li><li>The other starts outside the box, waits for the throw, and runs onto it to shoot.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Thrower: aim for the middle of the box</li><li>Shooter: wait, then run onto the ball</li><li>Shoot on the first touch</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Throw-ins" data-teams="7/8"
+ data-phase="Late" data-status="done" data-name="throw-in in front of a runner">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Throw-In In Front of a Runner</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Throw-ins</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">The advanced version — the ball goes into the space she is running to, not to her feet.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/1</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Pile of balls just out of bounds at the half line, players in a single file line there.</li><li>One girl steps about 10 yards into the field facing the thrower.</li><li>Coach taps a ball a few yards away. The next thrower runs, grabs it, and hustles back to the line.</li><li>THEN the girl in the field starts her run and the throw goes out in front of her.</li><li>That thrower immediately steps into the field to be the next runner.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Down the line or toward the goal, never back into the middle</li><li>Put it IN FRONT of her, into space — not at her feet</li><li>Go QUICK</li><li>Runner: be moving before the throw, do not stand and wait</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="7/8"
+ data-phase="Early|Mid" data-status="done" data-name="calling the clear">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Calling the Clear</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">One girl chases a ball toward the corner while a teammate shouts the decision for her.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/20</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="400" height="200" rx="10" fill="#F3F8EE"/><line x1="0" y1="199" x2="400" y2="199" stroke="#C9DABB" stroke-width="2"/><rect x="130.0" y="0" width="140" height="52" fill="none" stroke="#C9DABB" stroke-width="2"/><rect x="170.0" y="0" width="60" height="7" fill="none" stroke="#C9DABB" stroke-width="3"/><circle cx="300" cy="45" r="11" fill="#8A9490" stroke="#fff" stroke-width="2"/><text x="300" y="49" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">C</text><circle cx="285" cy="52" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="285" cy="52" r="1.8" fill="#161B14"/><line x1="280" y1="58" x2="110" y2="140" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><circle cx="230" cy="90" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="230" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">1</text><line x1="225" y1="100" x2="125" y2="140" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><circle cx="330" cy="80" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="330" y="84" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">2</text><text x="200" y="185" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">2 shouts &#x27;out of bounds&#x27; or &#x27;you have time, upfield&#x27;</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Coach and three girls start at the half line near a sideline.</li><li>Coach plays the ball down the sideline toward the corner of our defensive half.</li><li>One girl chases it. Another calls from the halfline: &#x27;out of bounds&#x27; or &#x27;you have time, upfield&#x27;.</li><li>The chaser does what she is told. Rotate one girl out each rep.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>When in doubt, clear it out</li><li>Always back up the sideline, not into the middle</li><li>Kick it hard!</li><li>The girl at the half has to make the call LOUD</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="7/8"
+ data-phase="Early|Mid" data-status="new" data-name="clearing the ball upfield">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Clearing the Ball Upfield</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">Chase a rolling ball down the sideline, pull it back, and clear it hard up the line.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Roll the ball down the sideline; she chases it down the line.</li><li>Top the ball with the bottom of the foot, pull it back.</li><li>Clear it upfield down the sideline.</li><li>After a few reps, make her listen for &#x27;out of bounds&#x27; or &#x27;upfield&#x27;.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>When in doubt, clear it out</li><li>Back up the sideline, not to the middle</li><li>Kick it hard!</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="7/8"
+ data-phase="Early|Mid" data-status="done" data-name="stay in front, then challenge">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Stay in Front, Then Challenge</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">Get goal side first, contain, and only then go win the ball.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/20</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Defender starts by running back on defense. The attacker comes at her with the ball.</li><li>She has to get goal side and stay in front, containing her.</li><li>Only then does she challenge for it.</li><li>Once she wins it, she clears it upfield. Rotate roles.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Get in front FIRST — do not swing at the ball on the run</li><li>Stay on your feet, small steps, back up with her</li><li>When you hear &#x27;challenge&#x27;, go hard and fight with your feet</li><li>Win it and clear it — do not dribble out of trouble</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="7/8"
+ data-phase="Mid" data-status="new" data-name="staggered defense">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Staggered Defense</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Two defenders, one attacker. They have to talk out who goes and who covers behind.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="320" height="200" rx="10" fill="#F3F8EE"/><circle cx="160" cy="45" r="11" fill="#8A9490" stroke="#fff" stroke-width="2"/><text x="160" y="49" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">A</text><circle cx="160" cy="63" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="160" cy="63" r="1.8" fill="#161B14"/><circle cx="110" cy="130" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="110" y="134" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">1</text><circle cx="215" cy="160" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="215" y="164" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">2</text><line x1="115" y1="118" x2="150" y2="75" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><line x1="213" y1="148" x2="195" y2="120" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><text x="160" y="188" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">1 goes to the ball, 2 covers behind</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Two girls face an attacker, 10 ft apart. The attacker is the point of the triangle.</li><li>On GO they have to communicate who challenges and who drops back.</li><li>The attacker tries to beat the first defender; only then does the second one challenge.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>TALK — say out loud who is going and who is backing up</li><li>First defender stays in front and slows her down</li><li>Second defender drops back and stays behind — never both dive in</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="7/8"
+ data-phase="Mid|Late" data-status="new" data-name="gang up!">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Gang Up!</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Mid · Late season</span>
+   </div>
+   <p class="blurb">A lone fullback contains while two midfielders sprint back and swarm the ball.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Coach dribbles at a lone fullback, who has to stay in front and contain — not dive in.</li><li>On &#x27;GANG UP&#x27;, two midfielders sprint back and swarm the ball.</li><li>Once they win it, they have to get it out.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Fullback: stay in front and buy time for your help</li><li>Mids: sprint back, do not jog</li><li>Come from different sides</li><li>Win it and clear it out</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="7/8"
+ data-phase="Late" data-status="done" data-name="3 on 2 — moving before the ball gets there">
+ <header class="chead">
+   <div class="ctop">
+     <h3>3 on 2 — Moving Before the Ball Gets There</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">Two defenders shift with the ball as three attackers swing it wing to wing, then it goes live.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/1</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 400 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="400" height="230" rx="10" fill="#F3F8EE"/><line x1="0" y1="229" x2="400" y2="229" stroke="#C9DABB" stroke-width="2"/><rect x="130.0" y="0" width="140" height="52" fill="none" stroke="#C9DABB" stroke-width="2"/><rect x="170.0" y="0" width="60" height="7" fill="none" stroke="#C9DABB" stroke-width="3"/><circle cx="70" cy="60" r="11" fill="#8A9490" stroke="#fff" stroke-width="2"/><text x="70" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">A</text><circle cx="200" cy="55" r="11" fill="#8A9490" stroke="#fff" stroke-width="2"/><text x="200" y="59" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">C</text><circle cx="330" cy="60" r="11" fill="#8A9490" stroke="#fff" stroke-width="2"/><text x="330" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">B</text><line x1="88" y1="60" x2="182" y2="57" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><line x1="218" y1="57" x2="312" y2="60" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><circle cx="130" cy="150" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="130" y="154" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">1</text><circle cx="250" cy="150" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="250" y="154" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">2</text><line x1="125" y1="138" x2="95" y2="90" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><line x1="245" y1="145" x2="205" y2="120" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><text x="200" y="215" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">ball to the wing: one goes out, one tucks into the middle</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Three attackers spread across the field with the coach as the middle one. Two defenders.</li><li>Before anything is live, the attackers pass the ball wing to wing and back. Defenders just move:</li><li>  · Ball to a wing — the defender on that side goes out to it</li><li>  · The other defender drops back and into the middle to cover behind her</li><li>  · Ball back in the middle — the two squeeze in together</li><li>Once it has gone wing to wing and back, the coach starts the live attack from the middle.</li><li>Go live until the defenders get a full clear past half. That is the only way the rep ends.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Move when the BALL moves, not when the player moves</li><li>One goes to the ball, one covers behind — never both at the ball</li><li>Ball in the middle, squeeze in together</li><li>TALK — call out who is going and who is covering</li><li>Not over until it is cleared past half</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="7/8"
+ data-phase="Late" data-status="done" data-name="lost it! — the turnover drill">
+ <header class="chead">
+   <div class="ctop">
+     <h3>LOST IT! — The Turnover Drill</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">A whistle flips possession mid-attack. Only the first five seconds are graded.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/15</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="400" height="220" rx="10" fill="#F3F8EE"/><line x1="0" y1="219" x2="400" y2="219" stroke="#C9DABB" stroke-width="2"/><rect x="130.0" y="0" width="140" height="52" fill="none" stroke="#C9DABB" stroke-width="2"/><rect x="170.0" y="0" width="60" height="7" fill="none" stroke="#C9DABB" stroke-width="3"/><circle cx="150" cy="80" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="150" y="84" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">1</text><circle cx="230" cy="110" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="230" y="114" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">2</text><circle cx="190" cy="60" r="11" fill="#8A9490" stroke="#fff" stroke-width="2"/><text x="190" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">X</text><circle cx="205" cy="55" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="205" cy="55" r="1.8" fill="#161B14"/><line x1="160" y1="72" x2="185" y2="58" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><line x1="232" y1="122" x2="270" y2="185" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><text x="200" y="207" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">1 goes to the ball   ·   2 sprints back toward our goal</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Two of our girls start with the ball at the half line and attack the goal. Three defenders wait.</li><li>At a random moment, blow the whistle, yell &#x27;LOST IT!&#x27; and play a new ball to the three.</li><li>The two who were attacking have to react instantly:</li><li>  · Whoever is CLOSEST goes at the ball right now</li><li>  · The other SPRINTS back and gets between them and our goal</li><li>Play it out until the ball is cleared past half or they score.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>The first five seconds are the whole drill</li><li>Closest girl goes immediately — do not wait, do not look for help</li><li>Everybody else sprints back between them and our goal</li><li>Talk: &#x27;I got ball!&#x27; and &#x27;I got the goal!&#x27;</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="7/8"
+ data-phase="Late" data-status="done" data-name="their goal kick — go get the ball">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Their Goal Kick — Go Get the Ball</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">Set up on their goal kick so you win it 15 yards from their goal.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/15</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>A coach plays their goalie and takes goal kicks. Three of our girls set up.</li><li>Closest girl stands 8–10 yards off the ball, to one side, so the kick gets pushed the other way.</li><li>The other two stand IN FRONT of where the short pass would go.</li><li>The second it is kicked, everybody goes. Win it and shoot right away.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Get close but do not step in the box before it is kicked</li><li>Stand in front of the girl you are covering, not behind her</li><li>Win it and shoot — we are already close to the goal</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="5/6|7/8"
+ data-phase="Early" data-status="new" data-name="fight with your feet and score!">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Fight With Your Feet and SCORE!</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Backpedal, hear &#x27;challenge&#x27;, win the ball with your feet, dribble in and finish.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Back pedal until you hear &#x27;challenge&#x27;.</li><li>Come fight with your feet to win the ball.</li><li>Dribble at the goal and score.</li><li>Alternate version: player versus coach, who eventually lets her through.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Be aggressive and fight hard for the ball</li><li>Long control dribbles to the goal</li><li>Do not wait too long to shoot</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="7/8"
+ data-phase="Early" data-status="new" data-name="first to the ball">
+ <header class="chead">
+   <div class="ctop">
+     <h3>First to the Ball</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Two girls face off 20 feet apart with a ball in the middle. Whistle, go.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Two girls line up facing each other about 20 feet apart, ball in the middle.</li><li>On the whistle they race to it and try to kick it past the other.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Do not be afraid to make contact</li><li>Do not try to dribble — just win it and clear it</li><li>Get there first</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="5/6"
+ data-phase="Early" data-status="new" data-name="give me that ball">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Give Me That Ball</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">1v1 in a small space, feet only, yelling the phrase. Then sprint back to defend a shot.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Two girls fight for the ball in a small space, feet only.</li><li>They yell &#x27;Give me that ball!&#x27; the whole time.</li><li>On the coach&#x27;s call they sprint back in front of goal and defend a quick shot with their feet.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Feet only, no hands</li><li>Be loud</li><li>Get in front of the shot</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="5/6"
+ data-phase="Early" data-status="done" data-name="steal the ball from the coach">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Steal the Ball From the Coach</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Coach dribbles, everybody tries to take it. No hands.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 8/19</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Coach dribbles around inside a marked area.</li><li>The girls try to take the ball away — feet only.</li><li>Let them win it often enough to keep it fun.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>NO HANDS</li><li>Get in front of the coach, not behind</li><li>Feet on the ball, not on the coach</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="5/6"
+ data-phase="Early" data-status="new" data-name="save the goal">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Save the Goal</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Introduces the fullback — chase the ball down and clear it, or get in front of the goal.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Girl starts at the circle. Coach rolls a ball toward the goal — she chases it and clears it.</li><li>Then: coach yells &#x27;protect the goal&#x27;, she runs in front of the goal, and the coach rolls a ball at her.</li><li>She kicks it away toward the sideline.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Get in front of it</li><li>Kick it toward the sideline, never up the middle</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Defending" data-teams="5/6"
+ data-phase="Mid" data-status="done" data-name="fighting out of a pack">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Fighting Out of a Pack</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Defending</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Getting the ball out of a crowd of bodies — exactly what a 5/6 game looks like.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 9/2</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Put four or five girls in a tight circle around one ball.</li><li>On GO everybody fights for it, feet only.</li><li>Whoever gets it out of the pack and past a cone wins the rep.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Small touches until you are out</li><li>Use your body to shield</li><li>Get your head up the second you are free</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Goalkeeping" data-teams="5/6"
+ data-phase="Early" data-status="done" data-name="goalie basics (first time)">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Goalie Basics (First Time)</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Goalkeeping</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">A first-ever introduction to playing in goal. Slow, and everybody gets a turn.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 8/19</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Walk her into the box so she can see where hands are legal and where they are not.</li><li>Roll the ball slowly from a few feet — she scoops it and pulls it into her chest.</li><li>Roll harder and wider so she has to step to it.</li><li>Soft kicks along the ground — stop it with the feet first, then pick it up.</li><li>Underhand roll it back out toward the sideline.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Hands up and ready before the ball gets there</li><li>Pull it into your chest and cover it with your arms</li><li>Roll it out toward the sideline, never up the middle</li><li>Do not be afraid of the ball — get in front of it</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Goalkeeping" data-teams="7/8"
+ data-phase="Early|Mid" data-status="done" data-name="goalie falls and pounces">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Goalie Falls and Pounces</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Goalkeeping</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">Learning to get on the ground for the ball without being afraid of it.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/25</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Start on knees, fall to the side, and grab a ball rolled to that side.</li><li>Then standing side falls both directions.</li><li>Then roll a ball into the box and she runs out and dives on it.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Dive on the ground for the ball</li><li>Pull it to your chest and cover it up</li><li>Do not be afraid to grab it off a player&#x27;s feet</li><li>Be aggressive</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Goalkeeping" data-teams="7/8"
+ data-phase="Mid" data-status="new" data-name="goalie cone obstacle">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Goalie Cone Obstacle</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Goalkeeping</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Run the cones, then beat the rolling ball to it. Reaction plus footwork.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Four cones clustered about 5 ft out from the center of the goal.</li><li>Goalie starts one step in front of the goal.</li><li>Coach rolls a ball from outside the box toward the cones.</li><li>She runs around the cones and picks the ball up before it reaches them.</li><li>Then drop kicks it upfield toward the sideline.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Be aggressive picking it up</li><li>Pull it to your chest and cover it</li><li>Always aim upfield and toward the sideline</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Goalkeeping" data-teams="7/8"
+ data-phase="Late" data-status="new" data-name="drop kicks (progressive)">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Drop Kicks (Progressive)</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Goalkeeping</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">Build the drop kick in three stages instead of asking for a full one right away.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Drop the ball onto a barely-moving foot out in front.</li><li>Standing still, drop it a little higher with the foot swinging faster.</li><li>Then a harder kick.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Always aim for the corner of the half</li><li>You can pick it back up if you miss or barely kick it</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Goalkeeping" data-teams="7/8"
+ data-phase="Late" data-status="new" data-name="pick up vs. foot clear">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Pick Up vs. Foot Clear</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Goalkeeping</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">Teaching the decision — hands or feet — instead of freezing.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Coach rolls the ball toward the box.</li><li>Goalie comes out and decides whether to pick it up or clear it with her feet.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Do not be afraid to foot clear</li><li>Decide early and commit</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Goalkeeping" data-teams="7/8"
+ data-phase="Late" data-status="done" data-name="the arc">
+ <header class="chead">
+   <div class="ctop">
+     <h3>The Arc</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Goalkeeping</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">A cone arc she slides along to stay in line with the ball — even when it&#x27;s at the far end.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/1</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="360" height="220" rx="10" fill="#F3F8EE"/><rect x="70.0" y="0" width="220" height="86" fill="none" stroke="#C9DABB" stroke-width="2"/><rect x="135.0" y="0" width="90" height="9" fill="none" stroke="#C9DABB" stroke-width="3.5"/><path d="M85,85 Q180,195 275,85" fill="none" stroke="#BE8D24" stroke-width="2.6" stroke-dasharray="7 5"/><circle cx="180" cy="140" r="11" fill="#BE8D24" stroke="#fff" stroke-width="2"/><text x="180" y="144" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">GK</text><line x1="155" y1="138" x2="110" y2="120" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><line x1="205" y1="138" x2="250" y2="120" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><circle cx="60" cy="180" r="11" fill="#8A9490" stroke="#fff" stroke-width="2"/><text x="60" y="184" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">C</text><circle cx="75" cy="175" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="75" cy="175" r="1.8" fill="#161B14"/><text x="180" y="207" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">slide along the arc with the ball, even from far away</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Arc of cones from one post to the other, bowed out into the box.</li><li>Goalie steps onto her arc and follows the ball along it as coaches move and pass across the field.</li><li>The second a coach dribbles into the box, she times it and commits — pounces, dives, whatever it takes.</li><li>If the coach pulls the ball back out before she gets it, she QUICKLY recovers to the arc.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Stay on your arc and stay in line with the ball</li><li>Move when the ball moves — do not wait until it is in the box</li><li>Time it, then COMMIT all the way</li><li>Recover fast, do not stay on the ground</li><li>Be aggressive</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Goalkeeping" data-teams="5/6|7/8"
+ data-phase="Mid" data-status="new" data-name="overhand throw / underhand roll">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Overhand Throw / Underhand Roll</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Goalkeeping</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">Getting the ball back into play safely once she has it in her hands.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Overhand throw toward the corner of the half.</li><li>Underhand roll toward the corner of the half.</li><li>Everybody takes a turn at both.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Always aim upfield and to the sideline</li><li>Never roll it across the front of our own goal</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Set pieces" data-teams="7/8"
+ data-phase="Mid" data-status="new" data-name="goal kicks">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Goal Kicks</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Set pieces</span>
+     <span class="chip ph">Mid season</span>
+   </div>
+   <p class="blurb">A quick, organized restart instead of a scramble.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Roll the ball out of bounds past the goal.</li><li>Goalie or fullback hustles to get it.</li><li>A midfielder runs toward the sideline, upfield, stops, and calls for the ball.</li><li>Goalie/fullback places it and passes quickly.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Go QUICK</li><li>Call for the ball</li><li>Listen for your teammate</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Set pieces" data-teams="7/8"
+ data-phase="Late" data-status="new" data-name="corner kicks">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Corner Kicks</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Set pieces</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">Aim, don&#x27;t blast. Two targets waiting off the corners of the box.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   <div class="diawrap"><svg class="dg" viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="drill diagram"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#161B14"/></marker><marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 z" fill="#5E6B57"/></marker></defs><rect x="0" y="0" width="380" height="230" rx="10" fill="#F3F8EE"/><rect x="95.0" y="0" width="190" height="70" fill="none" stroke="#C9DABB" stroke-width="2"/><rect x="152.0" y="0" width="76" height="8" fill="none" stroke="#C9DABB" stroke-width="3"/><line x1="0" y1="0" x2="380" y2="0" stroke="#C9DABB" stroke-width="2"/><circle cx="340" cy="40" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="340" y="44" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">K</text><circle cx="330" cy="48" r="5.5" fill="#fff" stroke="#161B14" stroke-width="1.8"/><circle cx="330" cy="48" r="1.8" fill="#161B14"/><path d="M325,55 Q237.5,10 150,110" fill="none" stroke="#161B14" stroke-width="2.4" marker-end="url(#ah)"/><path d="M140,101 L147,116 L133,116 z" fill="#BE8D24" stroke="#fff" stroke-width="1.2"/><circle cx="195" cy="150" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="195" y="154" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">1</text><circle cx="115" cy="165" r="11" fill="#C2621A" stroke="#fff" stroke-width="2"/><text x="115" y="169" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Source Sans 3,sans-serif">2</text><line x1="192" y1="140" x2="160" y2="118" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><line x1="118" y1="155" x2="138" y2="122" stroke="#5E6B57" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#ahd)"/><text x="190" y="215" text-anchor="middle" font-size="12" fill="#5E6B57" font-family="Source Sans 3,sans-serif">aim for the far corner of the box (cone)</text></svg></div>
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Two girls set up two big steps back from the corners of the box; one takes the corner.</li><li>Kicker backs up and takes a running start.</li><li>Aim for the opposite corner of the box — put a cone there as a target.</li><li>Shooters wait until it is struck, then attack it and shoot first touch.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Aim, do not just kick it hard</li><li>Wait for the strike before you move</li><li>Shoot first touch</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Games" data-teams="7/8"
+ data-phase="Early|Mid|Late" data-status="done" data-name="soccer choreography">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Soccer Choreography</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Games</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Small groups invent and then perform their own set play. The teaching happens while they argue about it.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 9/3</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Groups of 2, each sent to its own sideline — left and right on each half, four spots.</li><li>Each group makes up a play that must have: at least 2 passes, somebody calling for the ball, somebody moving without the ball, and a goal.</li><li>Work on it, then bring everyone in and have each group perform for the team.</li><li>Then do it again in groups of 4 — same four requirements, bigger play.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Name your play — you have to be able to call it out</li><li>Everybody has a job, nobody just stands there</li><li>Call for the ball out loud, even in practice runs</li><li>Not finished until it ends in a goal</li></ul></div>
+   </div>
+   <p class="note">Let them be silly with it. The point is that they are talking to each other about where to move and why.</p>
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Games" data-teams="7/8"
+ data-phase="Early|Mid|Late" data-status="done" data-name="weighted scrimmage">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Weighted Scrimmage</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Games</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Normal scrimmage where passing is worth points, so they stop dribbling into crowds.</p>
+   <div class="ran"><b>Run this season</b> · Pumpkins 8/25</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Split the team and play.</li><li>1 point per successful pass and trap.</li><li>3 points per goal.</li><li>5 points per goal that comes directly after a pass.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Count out loud so they hear the passes adding up</li><li>Add bonuses for whatever you worked on that day</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Games" data-teams="5/6"
+ data-phase="Mid|Late" data-status="done" data-name="pass-first scrimmage">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Pass-First Scrimmage</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Games</span>
+     <span class="chip ph">Mid · Late season</span>
+   </div>
+   <p class="blurb">One rule: a goal only counts if somebody passed first. Fixes bunching without a lecture.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 9/16</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Normal scrimmage with one rule change.</li><li>A goal does not count unless somebody on your team passed the ball first.</li><li>Do not explain the strategy — let them work out that somebody has to go stand somewhere else.</li><li>If it becomes one big pile, freeze everybody and ask &#x27;Is anybody in her own spot?&#x27; Then restart.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Stop everything and celebrate when a girl runs to space and gets a pass</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Games" data-teams="5/6"
+ data-phase="Early|Mid|Late" data-status="new" data-name="sharks and minnows">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Sharks and Minnows</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Games</span>
+     <span class="chip ph">Early · Mid · Late season</span>
+   </div>
+   <p class="blurb">Classic dribbling game — get across without losing your ball.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Minnows line up on one side with a ball each. One or two sharks in the middle with no ball.</li><li>On GO the minnows dribble across; sharks try to kick their balls out.</li><li>Anybody who loses her ball becomes a shark.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Head up</li><li>Change direction, do not run straight at a shark</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Games" data-teams="5/6"
+ data-phase="Late" data-status="new" data-name="trick or treat">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Trick or Treat</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Games</span>
+     <span class="chip ph">Late season</span>
+   </div>
+   <p class="blurb">Halloween-week dribbling game. Pure fun for the last practices of October.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Same shape as sharks and minnows with a Halloween wrapper.</li><li>Coach calls &#x27;trick&#x27; or &#x27;treat&#x27; to change what they do.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Keep it silly</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Games" data-teams="5/6"
+ data-phase="Early" data-status="new" data-name="learn to celebrate">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Learn to Celebrate</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Games</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">Teaching them how to be happy for each other — high fives and a team goal celebration.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>High fives and &#x27;Great job!&#x27;</li><li>Practice a team celebration for a goal.</li><li>Show them video of the women&#x27;s national team celebrating.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Everybody joins in, not just the scorer</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Games" data-teams="5/6"
+ data-phase="Early" data-status="done" data-name="game rules walkthrough">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Game Rules Walkthrough</h3>
+     <span class="status done">✓</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span>
+     <span class="chip cat">Games</span>
+     <span class="chip ph">Early season</span>
+   </div>
+   <p class="blurb">The whole game explained in one standing huddle, in their words.</p>
+   <div class="ran"><b>Run this season</b> · Slimers 8/19</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>NO HANDS — except the goalie, inside the box.</li><li>Work with your teammates to kick the ball into the other net (shooting is passing to the net).</li><li>Keep the other team from kicking it into your net.</li><li>Ball out of bounds across the white line: the game stops and a coach or ref restarts it.</li><li>Call for the ball, cheer for your teammates, cheer for yourselves.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Say it in their words, not rulebook words</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+<article class="card" data-cat="Games" data-teams="5/6|7/8"
+ data-phase="Early|Mid" data-status="new" data-name="game situation walkthroughs">
+ <header class="chead">
+   <div class="ctop">
+     <h3>Game Situation Walkthroughs</h3>
+     <span class="status new">–</span>
+   </div>
+   <div class="chips"><span class="chip t56">Slimers 5/6</span><span class="chip t78">Pumpkins 7/8</span>
+     <span class="chip cat">Games</span>
+     <span class="chip ph">Early · Mid season</span>
+   </div>
+   <p class="blurb">Walking through the moments that repeat every game so nobody freezes.</p>
+   <div class="ran notyet">Not used yet this season</div>
+ </header>
+ <div class="cbody">
+   
+   <div class="cols">
+     <div><h4>How it runs</h4><ol><li>Kickoff — who stands where and how we start.</li><li>Quarter change — take your new position and reset.</li><li>Goal kicks — spread out, short passes.</li><li>Throw-ins — time the run, throw to feet.</li></ol></div>
+     <div><h4>Keys</h4><ul class="keys"><li>Walk it first, then jog it, then live</li></ul></div>
+   </div>
+   
+ </div>
+ <button class="more" type="button">Show the drill</button>
+</article>
+  </div>
+  <div class="empty" id="empty" hidden>Nothing matches those filters. Hit <b>Clear all</b> and try again.</div>
+
+  <footer>Slimers 5/6 &nbsp;·&nbsp; Smashing Pumpkins 7/8 &nbsp;·&nbsp; Hughson United Soccer League</footer>
+</div>
+
+<script>
+(function(){
+  var F={team:null,cat:null,phase:null,status:null},q='';
+  var cards=[].slice.call(document.querySelectorAll('.card'));
+  function apply(){
+    var n=0;
+    cards.forEach(function(c){
+      var ok=true,d=c.dataset;
+      if(F.team   && d.teams.split('|').indexOf(F.team)<0) ok=false;
+      if(F.cat    && d.cat!==F.cat) ok=false;
+      if(F.phase  && d.phase.split('|').indexOf(F.phase)<0) ok=false;
+      if(F.status && d.status!==F.status) ok=false;
+      if(q && d.name.indexOf(q)<0) ok=false;
+      c.classList.toggle('hide',!ok); if(ok) n++;
+    });
+    document.getElementById('count').textContent=n+' of '+cards.length+' drills';
+    document.getElementById('empty').hidden = n>0;
+  }
+  document.querySelectorAll('button.f[data-k]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var k=b.dataset.k,v=b.dataset.v;
+      F[k] = (F[k]===v) ? null : v;
+      document.querySelectorAll('button.f[data-k="'+k+'"]').forEach(function(o){
+        o.classList.toggle('on',o.dataset.v===F[k]);});
+      apply();
+    });
+  });
+  document.getElementById('q').addEventListener('input',function(e){
+    q=e.target.value.toLowerCase().trim();apply();});
+  document.getElementById('clear').addEventListener('click',function(){
+    F={team:null,cat:null,phase:null,status:null};q='';
+    document.getElementById('q').value='';
+    document.querySelectorAll('button.f').forEach(function(o){o.classList.remove('on');});
+    apply();});
+  document.querySelectorAll('button.more').forEach(function(b){
+    var body=b.parentNode.querySelector('.cbody');
+    body.hidden=true;
+    b.setAttribute('aria-expanded','false');
+    b.addEventListener('click',function(){
+      var open=body.hidden;
+      body.hidden=!open;
+      b.setAttribute('aria-expanded',String(open));
+      b.textContent=open?'Hide':'Show the drill';
+    });
+  });
+  apply();
+})();
+</script>
