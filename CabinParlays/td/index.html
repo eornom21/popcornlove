@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anytime TD — Weekend Slate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --field: #1B4332;
+    --field-deep: #0F2A1E;
+    --field-light: #2D6A4F;
+    --chalk: #F5F3EC;
+    --ink: #14181A;
+    --gold: #C9A227;
+    --red: #A63D40;
+    --slate: #6B7280;
+    --line: #D8D3C4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--chalk);
+    color:var(--ink);
+    font-family:'Source Sans 3', sans-serif;
+    line-height:1.45;
+  }
+  .display{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+  }
+  header.hero{
+    background: linear-gradient(180deg, var(--field-deep) 0%, var(--field) 55%, var(--field-light) 100%);
+    color:var(--chalk);
+    padding:28px 20px 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 48px);
+    pointer-events:none;
+  }
+  .hero-inner{ max-width:640px; margin:0 auto; position:relative; }
+  .eyebrow{ font-size:13px; color:var(--gold); font-weight:600; margin:0 0 4px; }
+  h1{ font-size:clamp(34px, 8vw, 46px); margin:0 0 2px; line-height:0.95; }
+  .sub{ font-size:15px; color:#D7D2C2; margin:0 0 4px; }
+  .crew{ font-size:13.5px; color:var(--gold); font-weight:600; margin:0 0 20px; }
+  .scoreboard{ display:flex; gap:0; border-top:1px solid rgba(245,243,236,0.25); border-bottom:1px solid rgba(245,243,236,0.25); flex-wrap:wrap; }
+  .score-cell{ flex:1; min-width:120px; padding:14px 12px; border-right:1px solid rgba(245,243,236,0.18); }
+  .score-cell:last-child{ border-right:none; }
+  .score-label{ font-size:11.5px; color:#B9C9BE; margin-bottom:3px; }
+  .score-value{ font-size:24px; font-family:'Big Shoulders Display', sans-serif; font-weight:700; }
+  .score-value.gold{ color:var(--gold); }
+
+  main{ max-width:640px; margin:0 auto; padding:24px 20px 60px; }
+
+  .day-heading{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:700;
+    font-size:22px;
+    color:var(--field);
+    margin:32px 0 4px;
+    padding-bottom:6px;
+    border-bottom:2px solid var(--gold);
+  }
+  .day-heading.first{ margin-top:0; }
+  .day-sub{ font-size:12.5px; color:var(--slate); margin:0 0 12px; }
+
+  .ticket{ border-bottom:1px solid var(--line); padding:18px 0; }
+  .ticket.first{ padding-top:0; }
+  .ticket-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px; }
+  .ticket-name{ font-family:'Big Shoulders Display', sans-serif; font-weight:700; font-size:20px; margin:0; }
+  .ticket-time{ font-size:12.5px; color:var(--slate); margin-top:2px; }
+  .stake-line{ text-align:right; white-space:nowrap; font-size:14px; }
+  .stake-line b{ font-weight:700; }
+  .arrow{ color:var(--slate); margin:0 3px; }
+
+  .status-pill{
+    display:inline-block; font-size:11px; font-weight:700; padding:3px 9px;
+    border-radius:3px; margin-top:6px; letter-spacing:0.02em;
+  }
+  .status-pending{ background:#EAE7DB; color:var(--slate); }
+  .status-won{ background:#E4EFE8; color:var(--field); }
+  .status-lost{ background:#F3E4E4; color:var(--red); }
+  .status-push{ background:#EFE8D4; color:var(--gold); }
+
+  .legs{ margin-top:10px; }
+  .leg{ display:flex; justify-content:space-between; align-items:baseline; padding:6px 0; font-size:14.5px; border-top:1px dashed var(--line); }
+  .leg.first{ border-top:none; }
+  .leg-desc{ flex:1; padding-right:10px; }
+  .leg-game{ display:block; font-size:12px; color:var(--slate); margin-top:1px; }
+  .leg-status{ font-size:12px; font-weight:700; white-space:nowrap; color:var(--slate); }
+
+  footer{ max-width:640px; margin:0 auto; padding:0 20px 40px; font-size:12.5px; color:var(--slate); }
+  footer p{ margin:4px 0; }
+
+  .nav{ display:flex; gap:18px; margin:0 0 18px; font-size:13.5px; font-weight:600; }
+  .nav a{ color:#D7D2C2; text-decoration:none; border-bottom:2px solid transparent; padding-bottom:2px; }
+  .nav a.on{ color:var(--gold); border-color:var(--gold); }
+  .tabs{ display:flex; gap:8px; margin:0 0 20px; flex-wrap:wrap; }
+  .tabs a{ font-size:13px; font-weight:600; color:var(--field); text-decoration:none; padding:6px 12px; border:1px solid var(--line); border-radius:3px; background:#fff; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; margin:0 0 6px; }
+  th{ text-align:left; font-size:11.5px; color:var(--slate); font-weight:600; padding:6px 6px 6px 0; border-bottom:2px solid var(--gold); }
+  td{ padding:9px 6px 9px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td.num{ white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums; }
+  th.num{ text-align:right; }
+  .mine{ display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--gold); margin-left:6px; vertical-align:middle; }
+  .note{ font-size:12.5px; color:var(--slate); margin:10px 0 28px; }
+  .game{ font-weight:600; }
+  .game small{ display:block; font-weight:400; font-size:12px; color:var(--slate); }
+  h2.day-heading{ scroll-margin-top:12px; }
+
+  .banner{ background:var(--gold); color:var(--field-deep); font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:22px; text-align:center; padding:8px 12px; letter-spacing:0.02em; }
+
+  .tabs a.on{ background:var(--field); color:#fff; border-color:var(--field); }
+  .sec{ display:none; } .sec.show{ display:block; }
+  .nojs .sec{ display:block; }
+
+  .g{ margin:0 0 26px; }
+  .g h3{ font-family:'Big Shoulders Display', sans-serif; font-weight:700; font-size:19px; margin:0 0 2px; color:var(--ink); }
+  .g .k{ font-size:12px; color:var(--slate); margin:0 0 8px; }
+  .g table{ margin:0; }
+  .g td{ padding:6px 6px 6px 0; }
+  .na{ color:#A9A48D; font-size:12px; }
+</style></head><body class="nojs">
+<div class="banner">Brad sucks balls</div>
+<header class="hero"><div class="hero-inner">
+<div class="nav"><a href="../">Board</a><a href="../odds/">Odds</a><a href="../props/">Props</a><a class="on" href="./">TD</a></div>
+<p class="eyebrow">Sunday NFL — Anytime Touchdown</p>
+<h1 class="display">Who Scores</h1>
+<p class="sub">Every skill player, every Sunday game · gold dot = already on our parlay</p>
+<p class="crew">Priced where a number was published; "check Bovada" = it's on the board, we just don't have the price yet</p>
+</div></header>
+<main>
+<div class="tabs"><a href="#early" class="tab on" data-t="early">10:00 AM games</a><a href="#late" class="tab" data-t="late">1:25 PM games</a><a href="#all" class="tab" data-t="all">All priced</a><a href="#night" class="tab" data-t="night">SNF / MNF</a></div>
+<div id="early" class="sec show"><h2 class="day-heading first">10:00 AM PT — early window</h2><p class="day-sub">8 games · every option</p><div class="g"><h3>Falcons @ Steelers</h3><p class="k">10:00 AM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Bijan Robinson<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">-143</td></tr><tr><td class="game">Drake London<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Kyle Pitts<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Tyler Allgeier<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Tua Tagovailoa<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Rico Dowdle<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">DK Metcalf<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jaylen Warren<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Pat Freiermuth<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Aaron Rodgers<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Ravens @ Colts</h3><p class="k">10:00 AM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Derrick Henry<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">-213</td></tr><tr><td class="game">Zay Flowers<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Mark Andrews<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Lamar Jackson<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Justice Hill<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jonathan Taylor<small>RB</small></td><td class="num">-185</td></tr><tr><td class="game">Alec Pierce<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Josh Downs<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Tyler Warren<span class="mine" title="on our card"></span><small>TE</small></td><td class="num">+195</td></tr><tr><td class="game">Michael Pittman Jr.<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Bills @ Texans</h3><p class="k">10:00 AM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">James Cook<small>RB</small></td><td class="num">+100</td></tr><tr><td class="game">Josh Allen<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Dalton Kincaid<small>TE</small></td><td class="num">+340</td></tr><tr><td class="game">DJ Moore<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Keon Coleman<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">David Montgomery<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">-122</td></tr><tr><td class="game">Nico Collins<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jo'Quavious Marks<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Dalton Schultz<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">C.J. Stroud<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Bears @ Panthers</h3><p class="k">10:00 AM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">D'Andre Swift<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">-143</td></tr><tr><td class="game">Luther Burden<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Rome Odunze<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Colston Loveland<span class="mine" title="on our card"></span><small>TE</small></td><td class="num">+160</td></tr><tr><td class="game">Caleb Williams<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Tetairoa McMillan<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Chuba Hubbard<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Bryce Young<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Browns @ Jaguars</h3><p class="k">10:00 AM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Bhayshul Tuten<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">+145</td></tr><tr><td class="game">Brian Thomas Jr.<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Parker Washington<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Travis Hunter<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Chris Rodriguez Jr.<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Trevor Lawrence<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Quinshon Judkins<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jerry Jeudy<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">David Njoku<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Saints @ Lions</h3><p class="k">10:00 AM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Jahmyr Gibbs<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">-315</td></tr><tr><td class="game">Amon-Ra St. Brown<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jameson Williams<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Sam LaPorta<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Chris Olave<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Travis Etienne Jr.<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Juwan Johnson<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Tyler Shough<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Jets @ Titans</h3><p class="k">10:00 AM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Breece Hall<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">+115</td></tr><tr><td class="game">Garrett Wilson<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Braelon Allen<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Geno Smith<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Tony Pollard<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Carnell Tate<small>WR</small></td><td class="num">+270</td></tr><tr><td class="game">Calvin Ridley<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Tyjae Spears<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Cameron Ward<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Bucs @ Bengals</h3><p class="k">10:00 AM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Chase Brown<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">-132</td></tr><tr><td class="game">Ja'Marr Chase<small>WR</small></td><td class="num">-130</td></tr><tr><td class="game">Tee Higgins<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Joe Burrow<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Samaje Perine<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Bucky Irving<small>RB</small></td><td class="num">+110</td></tr><tr><td class="game">Emeka Egbuka<small>WR</small></td><td class="num">+170</td></tr><tr><td class="game">Kenneth Gainwell<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Cade Otton<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Baker Mayfield<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div></div>
+<div id="late" class="sec"><h2 class="day-heading first">1:25 PM PT — late window</h2><p class="day-sub">4 games · every option</p><div class="g"><h3>Cardinals @ Chargers</h3><p class="k">1:25 PM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Omarion Hampton<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">-162</td></tr><tr><td class="game">Ladd McConkey<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Keaton Mitchell<small>RB</small></td><td class="num">+340</td></tr><tr><td class="game">Quentin Johnston<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Justin Herbert<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Trey McBride<span class="mine" title="on our card"></span><small>TE</small></td><td class="num">+185</td></tr><tr><td class="game">Marvin Harrison Jr.<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Tyler Allgeier<small>RB</small></td><td class="num">+220</td></tr><tr><td class="game">Jacoby Brissett<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Packers @ Vikings</h3><p class="k">1:25 PM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Marshawn Lloyd<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">+120</td></tr><tr><td class="game">Josh Jacobs<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Matthew Golden<small>WR</small></td><td class="num">+330</td></tr><tr><td class="game">Christian Watson<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Tucker Kraft<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jordan Love<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Justin Jefferson<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jordan Mason<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Aaron Jones<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Kyler Murray<small>QB</small></td><td class="num">+275</td></tr><tr><td class="game">T.J. Hockenson<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Dolphins @ Raiders</h3><p class="k">1:25 PM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Ashton Jeanty<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">-148</td></tr><tr><td class="game">Brock Bowers<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jakobi Meyers<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Kirk Cousins<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">De'Von Achane<small>RB</small></td><td class="num">+110</td></tr><tr><td class="game">Tyreek Hill<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Malik Willis<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jonnu Smith<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Commanders @ Eagles</h3><p class="k">1:25 PM PT</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Saquon Barkley<span class="mine" title="on our card"></span><small>RB</small></td><td class="num">-122</td></tr><tr><td class="game">DeVonta Smith<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Dallas Goedert<small>TE</small></td><td class="num">+210</td></tr><tr><td class="game">Jalen Hurts<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">A.J. Brown<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Terry McLaurin<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jacory Merritt<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Rachaad White<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jayden Daniels<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Zach Ertz<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div></div>
+<div id="all" class="sec"><h2 class="day-heading first">All Sunday — priced players</h2><p class="day-sub">25 with a published number · shortest to longest</p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Jahmyr Gibbs<span class="mine" title="on our card"></span><small>RB · Saints @ Lions</small></td><td class="num">-315</td></tr><tr><td class="game">Derrick Henry<span class="mine" title="on our card"></span><small>RB · Ravens @ Colts</small></td><td class="num">-213</td></tr><tr><td class="game">Jonathan Taylor<small>RB · Ravens @ Colts</small></td><td class="num">-185</td></tr><tr><td class="game">Omarion Hampton<span class="mine" title="on our card"></span><small>RB · Cardinals @ Chargers</small></td><td class="num">-162</td></tr><tr><td class="game">Ashton Jeanty<span class="mine" title="on our card"></span><small>RB · Dolphins @ Raiders</small></td><td class="num">-148</td></tr><tr><td class="game">Bijan Robinson<span class="mine" title="on our card"></span><small>RB · Falcons @ Steelers</small></td><td class="num">-143</td></tr><tr><td class="game">D'Andre Swift<span class="mine" title="on our card"></span><small>RB · Bears @ Panthers</small></td><td class="num">-143</td></tr><tr><td class="game">Chase Brown<span class="mine" title="on our card"></span><small>RB · Bucs @ Bengals</small></td><td class="num">-132</td></tr><tr><td class="game">Ja'Marr Chase<small>WR · Bucs @ Bengals</small></td><td class="num">-130</td></tr><tr><td class="game">David Montgomery<span class="mine" title="on our card"></span><small>RB · Bills @ Texans</small></td><td class="num">-122</td></tr><tr><td class="game">Saquon Barkley<span class="mine" title="on our card"></span><small>RB · Commanders @ Eagles</small></td><td class="num">-122</td></tr><tr><td class="game">James Cook<small>RB · Bills @ Texans</small></td><td class="num">+100</td></tr><tr><td class="game">Bucky Irving<small>RB · Bucs @ Bengals</small></td><td class="num">+110</td></tr><tr><td class="game">De'Von Achane<small>RB · Dolphins @ Raiders</small></td><td class="num">+110</td></tr><tr><td class="game">Breece Hall<span class="mine" title="on our card"></span><small>RB · Jets @ Titans</small></td><td class="num">+115</td></tr><tr><td class="game">Marshawn Lloyd<span class="mine" title="on our card"></span><small>RB · Packers @ Vikings</small></td><td class="num">+120</td></tr><tr><td class="game">Bhayshul Tuten<span class="mine" title="on our card"></span><small>RB · Browns @ Jaguars</small></td><td class="num">+145</td></tr><tr><td class="game">Emeka Egbuka<small>WR · Bucs @ Bengals</small></td><td class="num">+170</td></tr><tr><td class="game">Dallas Goedert<small>TE · Commanders @ Eagles</small></td><td class="num">+210</td></tr><tr><td class="game">Tyler Allgeier<small>RB · Cardinals @ Chargers</small></td><td class="num">+220</td></tr><tr><td class="game">Carnell Tate<small>WR · Jets @ Titans</small></td><td class="num">+270</td></tr><tr><td class="game">Kyler Murray<small>QB · Packers @ Vikings</small></td><td class="num">+275</td></tr><tr><td class="game">Matthew Golden<small>WR · Packers @ Vikings</small></td><td class="num">+330</td></tr><tr><td class="game">Dalton Kincaid<small>TE · Bills @ Texans</small></td><td class="num">+340</td></tr><tr><td class="game">Keaton Mitchell<small>RB · Cardinals @ Chargers</small></td><td class="num">+340</td></tr></table></div>
+<div id="night" class="sec"><h2 class="day-heading first">Sunday &amp; Monday night</h2><p class="day-sub">Outside our parlay window</p><div class="g"><h3>Cowboys @ Giants · SNF</h3><p class="k"></p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Javonte Williams<small>RB</small></td><td class="num">-140</td></tr><tr><td class="game">CeeDee Lamb<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">George Pickens<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Dak Prescott<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Cam Skattebo<small>RB</small></td><td class="num">+100</td></tr><tr><td class="game">Malik Nabers<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jaxson Dart<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div><div class="g"><h3>Broncos @ Chiefs · MNF</h3><p class="k"></p><table><tr><th>Player</th><th class="num">Anytime TD</th></tr><tr><td class="game">Kenneth Walker III<small>RB</small></td><td class="num">-120</td></tr><tr><td class="game">Rashee Rice<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Travis Kelce<small>TE</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Patrick Mahomes<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">J.K. Dobbins<small>RB</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Jaylen Waddle<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Courtland Sutton<small>WR</small></td><td class="num"><span class=na>check Bovada</span></td></tr><tr><td class="game">Bo Nix<small>QB</small></td><td class="num"><span class=na>check Bovada</span></td></tr></table></div></div>
+</main>
+<footer><p>Send a Bovada screenshot of any game's TD board and the "check Bovada" gaps get filled.</p></footer>
+<script>
+document.body.classList.remove('nojs');
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',e=>{e.preventDefault();
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); t.classList.add('on');
+ document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('show', s.id===t.dataset.t));
+ history.replaceState(null,'','#'+t.dataset.t);}));
+if(location.hash){const t=document.querySelector('.tab[data-t="'+location.hash.slice(1)+'"]'); if(t) t.click();}
+</script>
+</body></html>
