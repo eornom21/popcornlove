@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Irrigation Parlays</title>
+<meta name="robots" content="noindex">
+<style>
+:root{
+  --bg:#f3f1ea; --card:#ffffff; --ink:#1d2320; --muted:#5f6b64; --line:#dcd8cc;
+  --water:#1f6f9a; --field:#3f7d3a; --won:#2f7d32; --lost:#b3322b; --live:#b7791f; --gold:#8a6400;
+  --banner:#1f6f9a; --banner-ink:#fff;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121614; --card:#1b211e; --ink:#e8ece9; --muted:#9aa7a0; --line:#2c3531;
+    --water:#5fb3e0; --field:#7fc073; --won:#6fcf73; --lost:#f07268; --live:#f0b24f; --gold:#e8c35a;
+    --banner:#17506f; --banner-ink:#fff;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121614; --card:#1b211e; --ink:#e8ece9; --muted:#9aa7a0; --line:#2c3531;
+  --water:#5fb3e0; --field:#7fc073; --won:#6fcf73; --lost:#f07268; --live:#f0b24f; --gold:#e8c35a;
+  --banner:#17506f; --banner-ink:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.banner{background:var(--banner);color:var(--banner-ink);text-align:center;font-weight:800;letter-spacing:.04em;padding:8px 16px;font-size:14px;text-transform:uppercase}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:30px;margin:4px 0 2px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 4px}
+.tag{font-style:italic;color:var(--water);margin:6px 0 16px}
+.game{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.score{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.team{font-size:15px;color:var(--muted)}
+.team b{display:block;font-size:34px;color:var(--ink);line-height:1.1}
+.mid{text-align:center;flex:1}
+.clock{font-weight:700;font-size:17px}
+.small{font-size:13px;color:var(--muted)}
+.lastplay{margin-top:10px;font-size:14px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+.totals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.tot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.tot span{display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tot b{font-size:19px}
+@media (max-width:560px){.totals{grid-template-columns:repeat(2,1fr)}}
+.ticket{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--live);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.ticket.won{border-left-color:var(--won)} .ticket.lost{border-left-color:var(--lost);opacity:.85}
+.thead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.tname{font-weight:800;font-size:17px}
+.stake{font-weight:800}
+.status{font-weight:800;font-size:13px;letter-spacing:.03em;margin:4px 0 8px}
+.status.live{color:var(--live)} .status.won{color:var(--won)} .status.lost{color:var(--lost)}
+.quip{font-size:13px;font-style:italic;color:var(--muted);margin:-4px 0 8px}
+.leg{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.dot{flex:0 0 22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;background:var(--live);margin-top:2px}
+.dot.won{background:var(--won)} .dot.lost{background:var(--lost)}
+.legtxt b{font-weight:700}
+.need{color:var(--gold);font-size:14px;font-weight:600}
+h2{font-size:18px;margin:22px 0 8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:15px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+tr.watch td{font-weight:800;color:var(--water)}
+.foot{margin-top:18px;font-size:13px;color:var(--muted);text-align:center}
+.err{color:var(--lost)}
+</style>
+</head>
+<body>
+<div class="banner">Arjuna, you're my boy, Blue!</div>
+<div class="wrap">
+  <h1>Irrigation Parlays</h1>
+  <p class="sub">Eagles @ Bears · Monday Night Football · Sep 28, 2026 · Nate &amp; Arjuna</p>
+  <p class="tag" id="tagline">Time is a flat circle. So is a center pivot.</p>
+
+  <div class="game">
+    <div class="score">
+      <div class="team">Eagles<b id="phi">–</b></div>
+      <div class="mid"><div class="clock" id="clock">Kickoff 5:15 PM PT</div><div class="small" id="line">Line: PHI –3.5 · O/U 42.5</div></div>
+      <div class="team" style="text-align:right">Bears<b id="chi">–</b></div>
+    </div>
+    <div class="lastplay" id="lastplay">Waiting on kickoff. Go move a pipe.</div>
+  </div>
+
+  <div class="totals">
+    <div class="tot"><span>Risked</span><b>$100.00</b></div>
+    <div class="tot"><span>Max win</span><b>$312.44</b></div>
+    <div class="tot"><span>Booked P/L</span><b id="pl">$0.00</b></div>
+    <div class="tot"><span>Bovada bal.</span><b>$393.19</b></div>
+  </div>
+
+  <div id="tickets"></div>
+
+  <h2>Rushing yards (live)</h2>
+  <table><thead><tr><th>Player</th><th>Car</th><th>Yds</th><th>TD</th></tr></thead><tbody id="rush"><tr><td colspan="4" class="small">Populates at kickoff.</td></tr></tbody></table>
+
+  <h2>Touchdowns</h2>
+  <table><thead><tr><th>Scoring play</th><th>Qtr</th></tr></thead><tbody id="tds"><tr><td colspan="2" class="small">None yet.</td></tr></tbody></table>
+
+  <p class="foot" id="foot">Live from ESPN every 30 seconds · <span id="upd">loading…</span></p>
+</div>
+
+<script>
+const EVENT_ID = '401872963';
+const BALANCE = 393.19;
+
+// ---- Tickets (edit here) ----
+const TICKETS = [
+  { name:'Eagles cover + Under', placed:'3:25 PM', stake:40, win:104.92,
+    legs:[ {type:'spread', team:'PHI', line:-3.5, label:'Eagles –3.5'},
+           {type:'under', line:42.5, label:'Under 42.5 total points'} ] },
+  { name:'DeVonta + Hurts TDs', placed:'3:27 PM', stake:20, win:129.92,
+    legs:[ {type:'atd', player:'DeVonta Smith', team:'PHI', label:'DeVonta Smith anytime TD'},
+           {type:'atd', player:'Jalen Hurts', team:'PHI', label:'Jalen Hurts anytime TD'} ] },
+  { name:'QB Legs', placed:'3:34 PM', stake:40, win:77.60,
+    legs:[ {type:'rush_over', player:'Case Keenum', line:3.5, label:'Keenum over 3.5 rushing yds'},
+           {type:'rush_over', player:'Jalen Hurts', line:21.5, label:'Hurts over 21.5 rushing yds'} ] },
+];
+
+const QUIPS = {
+  live:['Yeah… if the Eagles could go ahead and cover, that\'d be great.',
+        'Sweating like Rust Cohle in the interview room.',
+        'Rule #76: no excuses. Bet like a champion.',
+        'Still alive. Like Frank the Tank before the tranquilizer dart.',
+        'Sixty percent of the time, it hits every time.'],
+  won:['You\'re my boy, Blue!','Erection? I mean… collection. Cash it.','We\'re going streaking… through the almond rows.'],
+  lost:['PC LOAD LETTER?! What does that even mean?','Ma! The meatloaf! …is gone.','Know how I know it\'s dead? It\'s on the dead list.']
+};
+const TAGLINES = ['Time is a flat circle. So is a center pivot.',
+  'Rule #76: no excuses. Bet like a champion.',
+  'I believe you have my stapler… and my parlay money.',
+  'Frank the Tank is irrigating tonight.',
+  'Bet you Brad\'s at home crashing a wedding.'];
+function pick(a,seed){return a[Math.abs(seed)%a.length];}
+
+const $ = id => document.getElementById(id);
+const money = n => (n<0?'–':'')+'$'+Math.abs(n).toFixed(2);
+const norm = s => (s||'').toLowerCase().replace(/[^a-z ]/g,'').trim();
+
+function statIdx(cat, key, label){
+  let i = (cat.keys||[]).indexOf(key); if(i<0) i=(cat.labels||[]).indexOf(label); return i;
+}
+function playerStats(d){
+  const out={}; // name -> {team, car, ryd, rtd, rectd}
+  (d.boxscore?.players||[]).forEach(tp=>{
+    const team=tp.team?.abbreviation;
+    (tp.statistics||[]).forEach(cat=>{
+      (cat.athletes||[]).forEach(a=>{
+        const nm=a.athlete?.displayName; if(!nm) return;
+        const p=out[nm]||(out[nm]={team,car:0,ryd:0,rtd:0,rectd:0});
+        const s=a.stats||[];
+        if(cat.name==='rushing'){
+          p.car=+s[statIdx(cat,'rushingAttempts','CAR')]||0;
+          p.ryd=+s[statIdx(cat,'rushingYards','YDS')]||0;
+          p.rtd=+s[statIdx(cat,'rushingTouchdowns','TD')]||0;
+          p.rushed=true;
+        }
+        if(cat.name==='receiving'){ p.rectd=+s[statIdx(cat,'receivingTouchdowns','TD')]||0; }
+      });
+    });
+  });
+  return out;
+}
+function findPlayer(ps,name){
+  const n=norm(name); if(ps[name]) return ps[name];
+  for(const k in ps) if(norm(k)===n) return ps[k];
+  const last=n.split(' ').pop(), first=n[0];
+  for(const k in ps){const kn=norm(k); if(kn.endsWith(' '+last)&&kn[0]===first) return ps[k];}
+  return null;
+}
+
+function grade(leg,g){
+  const {state,phi,chi,tds,h1,h1done,ps}=g, final=state==='post', pre=state==='pre';
+  if(pre) return {st:'live',need:'Pregame'};
+  if(leg.type==='spread'){
+    const m=phi-chi, need=Math.floor(-leg.line)+1;
+    if(final) return {st:m+leg.line>0?'won':'lost',need:`Final margin: PHI ${m>=0?'+':''}${m}`};
+    return {st:'live',need: m+leg.line>0?`Covering: PHI by ${m}`:`PHI ${m>=0?'up':'down'} ${Math.abs(m)} · needs to win by ${need}+`};
+  }
+  if(leg.type==='under'){
+    const t=phi+chi;
+    if(t>leg.line) return {st:'lost',need:`${t} points · busted`};
+    if(final) return {st:'won',need:`${t} points · cashed`};
+    return {st:'live',need:`${t} points · room for ${Math.ceil(leg.line)-1-t} more`};
+  }
+  if(leg.type==='atd'){
+    const p=findPlayer(ps,leg.player), n=p?(p.rtd+p.rectd):0;
+    if(n>0) return {st:'won',need:`Scored ✔ (${n} TD)`};
+    if(final) return {st:'lost',need:'No TD'};
+    const line=p?`${p.car?p.car+' car, '+p.ryd+' rush yds':'no carries'} · no TD yet`:'No touches yet';
+    return {st:'live',need:line};
+  }
+  if(leg.type==='rush_over'){
+    const p=findPlayer(ps,leg.player), y=p?p.ryd:0, need=Math.floor(leg.line)+1;
+    if(y>=need) return {st:'won',need:`${y} rush yds ✔`};
+    if(final) return {st:'lost',need:`${y} rush yds`};
+    return {st:'live',need:`${y} rush yds${p&&p.car?' on '+p.car+' car':''} · need ${need-y} more`};
+  }
+  if(leg.type==='tds_over'){
+    const need=Math.floor(leg.line)+1;
+    if(tds>=need) return {st:'won',need:`${tds} TDs ✔`};
+    if(final) return {st:'lost',need:`${tds} TDs`};
+    return {st:'live',need:`${tds} TDs · need ${need-tds} more`};
+  }
+  if(leg.type==='h1_over'){
+    const need=Math.floor(leg.line)+1;
+    if(h1>=need) return {st:'won',need:`${h1} 1H points ✔`};
+    if(h1done) return {st:'lost',need:`${h1} 1H points`};
+    return {st:'live',need:`${h1} 1H points · need ${need-h1} more by halftime`};
+  }
+  return {st:'live',need:''};
+}
+
+function render(g){
+  let pl=0, html='';
+  TICKETS.forEach((t,i)=>{
+    const gs=t.legs.map(l=>grade(l,g));
+    const lost=gs.some(x=>x.st==='lost'), won=gs.every(x=>x.st==='won');
+    const nWon=gs.filter(x=>x.st==='won').length;
+    const st=lost?'lost':won?'won':'live';
+    if(lost) pl-=t.stake; if(won) pl+=t.win;
+    const statusTxt = lost?`DEAD — ${nWon} of ${t.legs.length} legs in`:won?`WON — ${money(t.win)} coming home`:`LIVE — ${nWon} of ${t.legs.length} legs in`;
+    const seed=i+g.tick;
+    html+=`<div class="ticket ${st}"><div class="thead"><span class="tname">${t.name}</span><span class="stake">${money(t.stake)} → wins ${money(t.win)}</span></div>
+      <div class="small">Placed ${t.placed}</div>
+      <div class="status ${st}">${statusTxt}</div><div class="quip">${pick(QUIPS[st],seed)}</div>
+      ${t.legs.map((l,j)=>`<div class="leg"><div class="dot ${gs[j].st}">${gs[j].st==='won'?'✓':gs[j].st==='lost'?'✕':'•'}</div><div class="legtxt"><b>${l.label}</b><div class="need">${gs[j].need}</div></div></div>`).join('')}
+    </div>`;
+  });
+  $('tickets').innerHTML=html;
+  $('pl').textContent=(pl>0?'+':'')+money(pl);
+}
+
+let tick=0;
+async function load(){
+  tick++;
+  try{
+    const r=await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=${EVENT_ID}&_=${Date.now()}`);
+    const d=await r.json();
+    const comp=d.header.competitions[0], s=comp.status;
+    const byT={}; comp.competitors.forEach(c=>byT[c.team.abbreviation]=c);
+    const phi=+(byT.PHI?.score||0), chi=+(byT.CHI?.score||0), state=s.type.state;
+    const ls=c=>(c?.linescores||[]).slice(0,2).reduce((a,x)=>a+(+(x.displayValue??x.value)||0),0);
+    const h1=ls(byT.PHI)+ls(byT.CHI);
+    const h1done = state==='post' || (s.period>=3) || (s.period===2 && /half/i.test(s.type.detail||''));
+    const sp=d.scoringPlays||[];
+    const tdPlays=sp.filter(p=>/touchdown/i.test((p.type?.text||'')+' '+(p.text||'')) && !/field goal|safety/i.test(p.type?.text||''));
+    const ps=playerStats(d);
+
+    if(state!=='pre'){ $('phi').textContent=phi; $('chi').textContent=chi; }
+    $('clock').textContent = state==='pre' ? 'Kickoff 5:15 PM PT' : (s.type.shortDetail||s.type.detail);
+    const last = d.drives?.current?.plays?.slice(-1)[0]?.text || (sp.length?sp[sp.length-1].text:'');
+    if(state!=='pre') $('lastplay').textContent = last ? 'Last: '+last : 'In progress.';
+    if(state==='post') $('lastplay').textContent = 'Final. Time is a flat circle. We\'ll do it all again Sunday.';
+
+    // rushing table
+    const rushers=Object.entries(ps).filter(([,p])=>p.rushed).sort((a,b)=>b[1].ryd-a[1].ryd);
+    const watch=new Set(TICKETS.flatMap(t=>t.legs.filter(l=>l.player).map(l=>norm(l.player))));
+    if(rushers.length) $('rush').innerHTML=rushers.map(([n,p])=>`<tr class="${watch.has(norm(n))?'watch':''}"><td>${n} <span class="small">${p.team}</span></td><td>${p.car}</td><td>${p.ryd}</td><td>${p.rtd}</td></tr>`).join('');
+    if(tdPlays.length) $('tds').innerHTML=tdPlays.map(p=>`<tr><td style="text-align:left">${p.team?.abbreviation||''} · ${p.text||p.type?.text}</td><td>Q${p.period?.number||''}</td></tr>`).join('');
+
+    render({state,phi,chi,tds:tdPlays.length,h1,h1done,ps,tick});
+    $('tagline').textContent=pick(TAGLINES,Math.floor(tick/4));
+    $('upd').textContent='updated '+new Date().toLocaleTimeString('en-US',{timeZone:'America/Los_Angeles',hour:'numeric',minute:'2-digit',second:'2-digit'})+' PT';
+  }catch(e){
+    $('upd').innerHTML='<span class="err">ESPN feed hiccup, retrying…</span>';
+    if(!$('tickets').innerHTML) render({state:'pre',phi:0,chi:0,tds:0,h1:0,h1done:false,ps:{},tick});
+  }
+}
+load(); setInterval(load,30000);
+</script>
+</body>
+</html>
