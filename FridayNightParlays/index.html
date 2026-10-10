@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Friday Night Parlays</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  --bg:#f4f2ec; --card:#fff; --ink:#1c1f1d; --muted:#616b66; --line:#dcd8cc;
+  --accent:#8a2f1f; --won:#2f7d32; --lost:#b3322b; --live:#b7791f; --push:#5f6b64; --gold:#8a6400;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121414; --card:#1b1f1e; --ink:#e9ece9; --muted:#9aa49f; --line:#2c3331;
+    --accent:#e0775f; --won:#6fcf73; --lost:#f07268; --live:#f0b24f; --push:#9aa49f; --gold:#e8c35a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121414; --card:#1b1f1e; --ink:#e9ece9; --muted:#9aa49f; --line:#2c3331;
+  --accent:#e0775f; --won:#6fcf73; --lost:#f07268; --live:#f0b24f; --push:#9aa49f; --gold:#e8c35a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.banner{background:var(--accent);color:#fff;text-align:center;font-weight:800;letter-spacing:.05em;padding:7px 16px;font-size:13px;text-transform:uppercase}
+.wrap{max-width:720px;margin:0 auto;padding:16px 16px 40px}
+h1{font-size:26px;margin:2px 0 0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 12px;font-size:14px}
+.totals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.tot{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.tot span{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tot b{font-size:18px}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+@media (max-width:520px){.games{grid-template-columns:1fr}.totals{grid-template-columns:repeat(2,1fr)}}
+.game{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.game .row{display:flex;justify-content:space-between;align-items:baseline}
+.game .row b{font-size:22px;font-variant-numeric:tabular-nums}
+.game .nm{font-weight:600}
+.game .meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+.game .fade{color:var(--accent);font-weight:700}
+.note{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:14px}
+.note b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:3px}
+.ticket{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--live);border-radius:10px;padding:9px 12px;margin-bottom:8px}
+.ticket.won{border-left-color:var(--won)} .ticket.lost{border-left-color:var(--lost);opacity:.8}
+.thead{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.tname{font-weight:800;font-size:15px}
+.tname small{font-weight:600;color:var(--muted);font-size:12px;margin-left:4px}
+.stake{font-weight:700;font-size:13px;white-space:nowrap}
+.status{font-weight:800;font-size:12px;letter-spacing:.03em;margin:2px 0 4px}
+.status.live{color:var(--live)} .status.won{color:var(--won)} .status.lost{color:var(--lost)}
+.legs{display:flex;flex-wrap:wrap;gap:4px 10px}
+.leg{display:flex;gap:6px;align-items:center;font-size:13px}
+.dot{flex:0 0 16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;background:var(--live)}
+.dot.won{background:var(--won)} .dot.lost{background:var(--lost)} .dot.push{background:var(--push)}
+.leg .need{color:var(--muted);font-size:12px}
+h2{font-size:15px;margin:16px 0 6px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.foot{margin-top:16px;font-size:12px;color:var(--muted);text-align:center}
+.err{color:var(--lost)}
+</style>
+</head>
+<body>
+<div class="banner">Anyone but BYU</div>
+<div class="wrap">
+  <h1>Friday Night Parlays</h1>
+  <p class="sub">College football · Fri Oct 9, 2026 · 9 tickets, $100 on Bovada · all times Pacific</p>
+
+  <div class="totals">
+    <div class="tot"><span>Risked</span><b>$100.00</b></div>
+    <div class="tot"><span>Still live</span><b id="liveamt">$100.00</b></div>
+    <div class="tot"><span>Booked P/L</span><b id="pl">$0.00</b></div>
+    <div class="tot"><span>Tickets</span><b id="tally">0W · 0L · 9 live</b></div>
+  </div>
+
+  <div class="games" id="games"></div>
+
+  <div class="note"><b>Latest from Nate's desk</b><div id="notes">All nine tickets are in. Rooting guide: Utah State and San Jose State winning helps the most (four tickets each). Washington is a two-way sweat — three tickets need the Huskies, two need Iowa. Points everywhere for Goals Galore. And at 7:15, it's Iowa State all the way.</div></div>
+
+  <h2>Tickets</h2>
+  <div id="tickets"></div>
+
+  <p class="foot">Scores from ESPN every 30 seconds · <span id="upd">loading…</span></p>
+</div>
+
+<script>
+// ---- Games (ESPN event ids) ----
+const GAMES = {
+  IOWA_WASH:{ id:'401858487', away:'IOWA', home:'WASH', awayName:'Iowa', homeName:'Washington', kick:'6:00 PM', line:'WASH -3 · O/U 40.5' },
+  WSU_USU:  { id:'401860922', away:'WSU',  home:'USU',  awayName:'Wash State', homeName:'Utah State', kick:'6:00 PM', line:'USU -4 · O/U 43.5' },
+  WYO_SJSU: { id:'401864519', away:'WYO',  home:'SJSU', awayName:'Wyoming', homeName:'San Jose St', kick:'6:00 PM', line:'SJSU -4 · O/U 43' },
+  ISU_BYU:  { id:'401856826', away:'ISU',  home:'BYU',  awayName:'Iowa State', homeName:'BYU', kick:'7:15 PM', line:'BYU -11.5 · O/U 47', fade:true },
+};
+
+// ---- Tickets (win = profit as shown on Bovada) ----
+// leg types: ml (team wins), spread (team + line covers), over (total > line)
+const TICKETS = [
+  { n:1, name:'Three-fav moneyline', stake:25, win:75.82, legs:[
+      {g:'IOWA_WASH', type:'ml', team:'WASH', label:'Washington ML'},
+      {g:'WSU_USU',  type:'ml', team:'USU',  label:'Utah State ML'},
+      {g:'WYO_SJSU', type:'ml', team:'SJSU', label:'San Jose St ML'} ] },
+  { n:2, name:'Favorites cover', stake:10, win:61.16, legs:[
+      {g:'IOWA_WASH', type:'spread', team:'WASH', line:-3, label:'Washington -3'},
+      {g:'WSU_USU',  type:'spread', team:'USU',  line:-4, label:'Utah State -4'},
+      {g:'WYO_SJSU', type:'spread', team:'SJSU', line:-4, label:'San Jose St -4'} ] },
+  { n:3, name:'Chalk start', stake:20, win:28.40, legs:[
+      {g:'WSU_USU',  type:'ml', team:'USU',  label:'Utah State ML'},
+      {g:'WYO_SJSU', type:'ml', team:'SJSU', label:'San Jose St ML'} ] },
+  { n:4, name:'Goals galore', stake:10, win:59.58, legs:[
+      {g:'IOWA_WASH', type:'over', line:40.5, label:'Over 40.5 (IOWA-WASH)'},
+      {g:'WSU_USU',  type:'over', line:43.5, label:'Over 43.5 (WSU-USU)'},
+      {g:'WYO_SJSU', type:'over', line:43,   label:'Over 43 (WYO-SJSU)'} ] },
+  { n:5, name:'Cyclones hang around', stake:10, win:39.49, legs:[
+      {g:'IOWA_WASH', type:'ml', team:'WASH', label:'Washington ML'},
+      {g:'WSU_USU',  type:'ml', team:'USU',  label:'Utah State ML'},
+      {g:'ISU_BYU',  type:'spread', team:'ISU', line:11.5, label:'Iowa State +11.5'} ] },
+  { n:6, name:'Dogs keep it close', stake:10, win:120.08, legs:[
+      {g:'IOWA_WASH', type:'spread', team:'IOWA', line:3,   label:'Iowa +3'},
+      {g:'WSU_USU',  type:'spread', team:'WSU',  line:4,   label:'Wash State +4'},
+      {g:'WYO_SJSU', type:'spread', team:'WYO',  line:4,   label:'Wyoming +4'},
+      {g:'ISU_BYU',  type:'spread', team:'ISU',  line:11.5,label:'Iowa State +11.5'} ] },
+  { n:7, name:'Upset special', stake:5, win:24.32, legs:[
+      {g:'IOWA_WASH', type:'ml', team:'IOWA', label:'Iowa ML'},
+      {g:'WSU_USU',  type:'ml', team:'WSU',  label:'Wash State ML'} ] },
+  { n:8, name:'Double upset', stake:5, win:51.74, legs:[
+      {g:'WYO_SJSU', type:'ml', team:'WYO', label:'Wyoming ML'},
+      {g:'ISU_BYU',  type:'ml', team:'ISU', label:'Iowa State ML'} ] },
+  { n:9, name:'Moonshot', stake:5, win:327.77, legs:[
+      {g:'IOWA_WASH', type:'ml', team:'IOWA', label:'Iowa ML'},
+      {g:'WSU_USU',  type:'ml', team:'WSU',  label:'Wash State ML'},
+      {g:'WYO_SJSU', type:'ml', team:'WYO',  label:'Wyoming ML'},
+      {g:'ISU_BYU',  type:'ml', team:'ISU',  label:'Iowa State ML'} ] },
+];
+
+const $ = id => document.getElementById(id);
+const money = n => (n<0?'–':'')+'$'+Math.abs(n).toFixed(2);
+
+function grade(leg, s){
+  // s = {state, scores:{ABBR:n}, detail}
+  const g = GAMES[leg.g], pre = s.state==='pre', final = s.state==='post';
+  if(pre) return {st:'live', need:'pregame'};
+  const home=s.scores[g.home]||0, away=s.scores[g.away]||0;
+  const me = leg.team, opp = me===g.home?g.away:g.home;
+  const my = s.scores[me]||0, their = s.scores[opp]||0, m = my-their;
+  if(leg.type==='ml'){
+    if(final) return {st:m>0?'won':'lost', need:`final ${my}-${their}`};
+    return {st:'live', need:m>0?`up ${m}`:m<0?`down ${-m}`:'tied'};
+  }
+  if(leg.type==='spread'){
+    const adj = m+leg.line;
+    if(final) return {st:adj>0?'won':adj<0?'lost':'push', need:adj===0?'push':`margin ${m>=0?'+':''}${m}`};
+    return {st:'live', need:adj>0?`covering by ${adj}`:adj<0?`behind the number by ${-adj}`:'on the number'};
+  }
+  if(leg.type==='over'){
+    const t=home+away;
+    if(t>leg.line) return {st:'won', need:`${t} pts ✓`};
+    if(final) return {st:'lost', need:`${t} pts`};
+    return {st:'live', need:`${t} pts · need ${Math.ceil(leg.line+0.5)-t} more`};
+  }
+  return {st:'live', need:''};
+}
+
+function render(S){
+  let pl=0, liveAmt=0, w=0, l=0, html='';
+  TICKETS.forEach(t=>{
+    const gs=t.legs.map(x=>grade(x, S[x.g]||{state:'pre',scores:{}}));
+    const lost=gs.some(x=>x.st==='lost');
+    const won=!lost && gs.every(x=>x.st==='won'||x.st==='push');
+    const nIn=gs.filter(x=>x.st==='won').length;
+    const st=lost?'lost':won?'won':'live';
+    if(lost){pl-=t.stake;l++;} else if(won){pl+=t.win;w++;} else liveAmt+=t.stake;
+    const pushes=gs.filter(x=>x.st==='push').length;
+    const stTxt= lost?`DEAD · ${nIn}/${t.legs.length} legs`:won?`WON · +${money(t.win)}${pushes?' (push leg, payout reduced)':''}`:`LIVE · ${nIn}/${t.legs.length} legs in`;
+    html+=`<div class="ticket ${st}"><div class="thead"><span class="tname">#${t.n} ${t.name}</span><span class="stake">${money(t.stake)} → ${money(t.win)}</span></div>
+      <div class="status ${st}">${stTxt}</div>
+      <div class="legs">${t.legs.map((x,j)=>`<span class="leg"><span class="dot ${gs[j].st}">${gs[j].st==='won'?'✓':gs[j].st==='lost'?'✕':gs[j].st==='push'?'=':'•'}</span><span>${x.label} <span class="need">${gs[j].need}</span></span></span>`).join('')}</div></div>`;
+  });
+  $('tickets').innerHTML=html;
+  $('pl').textContent=(pl>0?'+':'')+money(pl);
+  $('liveamt').textContent=money(liveAmt);
+  $('tally').textContent=`${w}W · ${l}L · ${9-w-l} live`;
+}
+
+function renderGames(S){
+  $('games').innerHTML=Object.keys(GAMES).map(k=>{
+    const g=GAMES[k], s=S[k]||{state:'pre',scores:{}};
+    const sc=a=>s.state==='pre'?'–':(s.scores[a]??'–');
+    const clock=s.state==='pre'?`Kickoff ${g.kick}`:(s.detail||'');
+    return `<div class="game">
+      <div class="row"><span class="nm">${g.awayName}</span><b>${sc(g.away)}</b></div>
+      <div class="row"><span class="nm${g.fade?' fade':''}">${g.homeName}${g.fade?' (fade)':''}</span><b>${sc(g.home)}</b></div>
+      <div class="meta"><span>${clock}</span><span>${g.line}</span></div></div>`;
+  }).join('');
+}
+
+async function load(){
+  try{
+    const r=await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?dates=20261009&groups=80&limit=100&_=${Date.now()}`);
+    const d=await r.json();
+    const byId={}; (d.events||[]).forEach(e=>byId[e.id]=e);
+    const S={};
+    Object.keys(GAMES).forEach(k=>{
+      const e=byId[GAMES[k].id]; if(!e) return;
+      const c=e.competitions[0], scores={};
+      c.competitors.forEach(x=>scores[x.team.abbreviation]=+x.score||0);
+      S[k]={state:c.status.type.state, scores, detail:c.status.type.shortDetail};
+    });
+    renderGames(S); render(S);
+    $('upd').textContent='updated '+new Date().toLocaleTimeString('en-US',{timeZone:'America/Los_Angeles',hour:'numeric',minute:'2-digit'})+' PT';
+  }catch(e){
+    $('upd').innerHTML='<span class="err">ESPN feed hiccup, retrying…</span>';
+    if(!$('tickets').innerHTML){ renderGames({}); render({}); }
+  }
+}
+load(); setInterval(load,30000);
+</script>
+</body>
+</html>
