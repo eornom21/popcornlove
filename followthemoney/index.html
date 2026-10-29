@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Follow the Money: Make Your Calls</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F6F3EC; --paper:#FFFDF8; --ink:#1B2A41; --body:#3D4A5C; --muted:#6B7280;
+  --line:#DCD5C8; --accent:#1B2A41; --accent-ink:#F6F3EC; --dem:#2E5E9E; --rep:#B5451B; --teal:#2E6F8E;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#11161F; --paper:#18202C; --ink:#EEF1F5; --body:#C9D3DC; --muted:#93A0B0;
+  --line:#2C3747; --accent:#0E1520; --accent-ink:#EEF1F5; --dem:#6D9FE0; --rep:#E07E58; --teal:#6FB3CF;
+}}
+:root[data-theme="dark"]{
+  --bg:#11161F; --paper:#18202C; --ink:#EEF1F5; --body:#C9D3DC; --muted:#93A0B0;
+  --line:#2C3747; --accent:#0E1520; --accent-ink:#EEF1F5; --dem:#6D9FE0; --rep:#E07E58; --teal:#6FB3CF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--body);font:17px/1.5 'IBM Plex Sans',system-ui,sans-serif}
+header{background:var(--accent);color:var(--accent-ink);padding:28px 16px 22px;text-align:center}
+h1{font-family:'Source Serif 4',Georgia,serif;font-weight:700;font-size:clamp(30px,7vw,44px);line-height:1.1}
+.sub{opacity:.85;margin-top:6px}
+nav{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+nav a{color:var(--accent-ink);text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 14px;font-weight:500}
+main{max-width:860px;margin:0 auto;padding:20px 16px 64px}
+h2{font-family:'Source Serif 4',Georgia,serif;font-weight:700;font-size:28px;color:var(--ink);margin:30px 0 8px}
+.lede{color:var(--muted);margin-bottom:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.race-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.race-name{font-weight:600;color:var(--ink);font-size:19px}
+.race-note{color:var(--muted);font-size:14px}
+.picks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.pick{border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:12px 8px;font:600 16px 'IBM Plex Sans',sans-serif;cursor:pointer;min-height:56px}
+.pick small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.pick.d.on{border-color:var(--dem);background:var(--dem);color:#fff}
+.pick.r.on{border-color:var(--rep);background:var(--rep);color:#fff}
+.pick.on small{color:#fff;opacity:.9}
+.bar{display:flex;height:30px;border-radius:8px;overflow:hidden;margin-top:10px;background:var(--line)}
+.bar span{display:flex;align-items:center;font-size:14px;font-weight:600;color:#fff;padding:0 8px;white-space:nowrap}
+.bar .bd{background:var(--dem)} .bar .br{background:var(--rep);justify-content:flex-end}
+.tallynote{color:var(--muted);font-size:14px;margin-top:6px}
+.status{font-size:14px;color:var(--muted);text-align:center;margin:8px 0}
+select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font:500 17px 'IBM Plex Sans',sans-serif}
+.big{font-family:'Source Serif 4',Georgia,serif;font-size:44px;font-weight:700;color:var(--ink);line-height:1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:12px 0}
+.stat .lbl{color:var(--muted);font-size:14px}
+.tiles{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:10px}
+.tile{aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:clamp(8px,2.2vw,13px);font-weight:600;color:var(--ink)}
+.tile.home{outline:3px solid var(--ink);outline-offset:-3px}
+.legend{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:120px;height:12px;border-radius:6px;background:linear-gradient(to right,var(--paper),var(--teal));border:1px solid var(--line)}
+.toplist{margin-top:10px;font-size:15px}
+.toplist div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:4px 0}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:0 16px 32px}
+@media (min-width:700px){.picks{gap:14px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Who Steers the Money?</h1>
+  <div class="sub">Make your calls on Tuesday’s closest House races, then see where each race’s money comes from.</div>
+  <nav><a href="#calls">Make your calls</a><a href="#tally">Room’s calls</a><a href="#explore">Race explorer</a></nav>
+</header>
+<main>
+  <section id="calls">
+    <h2>Make your calls</h2>
+    <p class="lede">Tap the candidate you think wins. You can change your mind; your last pick counts. Anonymous.</p>
+    <div id="raceCards"></div>
+    <div class="status" id="sendStatus"></div>
+  </section>
+  <section id="tally">
+    <h2>The room’s calls</h2>
+    <p class="lede" id="tallyLede">Updates every few seconds.</p>
+    <div id="tallyCards"></div>
+  </section>
+  <section id="explore">
+    <h2>Race explorer</h2>
+    <p class="lede">Where does each campaign’s money come from? Itemized gifts from individuals, 2025–26 cycle, as filed with the FEC.</p>
+    <select id="raceSel" aria-label="Choose a candidate"></select>
+    <div id="explorer"></div>
+  </section>
+</main>
+<footer id="foot"></footer>
+<script>
+/* ---------- data (filled by the build) ---------- */
+const RACES = /*RACES*/[{"id": "CA13", "label": "CA-13 · Central Valley", "rating": "Cook Lean D · Sabato Likely D · Inside Tilt D", "d": "Adam Gray", "r": "Kevin Lincoln", "blurb": "Won by 187 votes in 2024; new lines lean Democratic"}, {"id": "CA22", "label": "CA-22 · Central Valley", "rating": "Cook Toss-up · Sabato Lean D · Inside Toss-up", "d": "Randy Villegas", "r": "David Valadao", "blurb": "Republican incumbent on redrawn, bluer lines"}, {"id": "AZ6", "label": "AZ-6 · Tucson", "rating": "Cook Lean D · Sabato Lean D · Inside Toss-up", "d": "JoAnna Mendoza", "r": "Juan Ciscomani", "blurb": "Challenger has outraised the incumbent"}, {"id": "PA10", "label": "PA-10 · Harrisburg", "rating": "Cook Lean D · Sabato Lean D · Inside Toss-up", "d": "Janelle Stelson", "r": "Scott Perry", "blurb": "Rematch of 2024"}, {"id": "NC1", "label": "NC-1 · Northeast NC", "rating": "Cook Toss-up · Sabato Lean D · Inside Toss-up", "d": "Don Davis", "r": "Laurie Buckhout", "blurb": "Redrawn to be more Republican; a rematch"}, {"id": "AL2", "label": "AL-2 · Mobile to Montgomery", "rating": "Cook Lean R · Sabato Toss-up · Inside Lean R", "d": "Shomari Figures", "r": "Rhett Marques", "blurb": "Older map reinstated after a Supreme Court ruling"}, {"id": "TX15", "label": "TX-15 · Rio Grande Valley", "rating": "Cook Toss-up · Sabato Lean D · Inside Toss-up", "d": "Bobby Pulido", "r": "Monica De La Cruz", "blurb": "A test of Republican gains with Latino voters"}, {"id": "NY17", "label": "NY-17 · Hudson Valley", "rating": "Toss-up for all three", "d": "Cait Conley", "r": "Mike Lawler", "blurb": "All three handicappers call it a coin flip"}];
+const MONEY = /*MONEY*/{};
+const META = /*META*/{asof:"", source:""};
+/* ---------- poll over ntfy.sh (public, no sign-in) ---------- */
+const TOPIC = "ucm-ftm-2026-k7q3vz";
+const BASE = "https://ntfy.sh/" + TOPIC;
+let voter = null;
+try { voter = localStorage.getItem("ftm_voter"); } catch(e) {}
+if (!voter) { voter = Math.random().toString(36).slice(2, 10); try { localStorage.setItem("ftm_voter", voter); } catch(e) {} }
+let mine = {};
+try { mine = JSON.parse(localStorage.getItem("ftm_mine") || "{}"); } catch(e) {}
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function renderCards() {
+  const box = document.getElementById("raceCards");
+  box.innerHTML = RACES.map(r => `
+    <div class="card">
+      <div class="race-h"><span class="race-name">${esc(r.label)}</span><span class="race-note">${esc(r.rating)}</span></div>
+      <div class="race-note">${esc(r.blurb || "")}</div>
+      <div class="picks">
+        <button class="pick d ${mine[r.id]==='D'?'on':''}" data-r="${esc(r.id)}" data-p="D">${esc(r.d)}<small>Democrat</small></button>
+        <button class="pick r ${mine[r.id]==='R'?'on':''}" data-r="${esc(r.id)}" data-p="R">${esc(r.r)}<small>Republican</small></button>
+      </div>
+    </div>`).join("");
+  box.querySelectorAll(".pick").forEach(b => b.addEventListener("click", () => vote(b.dataset.r, b.dataset.p)));
+}
+async function vote(race, pick) {
+  mine[race] = pick;
+  try { localStorage.setItem("ftm_mine", JSON.stringify(mine)); } catch(e) {}
+  renderCards();
+  const st = document.getElementById("sendStatus");
+  try {
+    const res = await fetch(BASE, {method: "POST", body: JSON.stringify({v: voter, r: race, p: pick})});
+    st.textContent = res.ok ? "Saved." : "Couldn’t send; try again.";
+  } catch(e) { st.textContent = "Couldn’t send; check your connection."; }
+  pollTally();
+}
+async function pollTally() {
+  let lines = [];
+  try {
+    const res = await fetch(BASE + "/json?poll=1&since=all");
+    const txt = await res.text();
+    lines = txt.split("\n").filter(Boolean).map(l => { try { return JSON.parse(l); } catch(e) { return null; } }).filter(Boolean);
+  } catch(e) { document.getElementById("tallyLede").textContent = "Tally unavailable right now."; return; }
+  const latest = {};
+  lines.filter(m => m.event === "message").sort((a, b) => a.time - b.time).forEach(m => {
+    let x; try { x = JSON.parse(m.message); } catch(e) { return; }
+    if (!x || !x.v || !x.r || (x.p !== "D" && x.p !== "R")) return;
+    latest[x.v + "|" + x.r] = x;
+  });
+  const t = {}; const voters = new Set();
+  Object.values(latest).forEach(x => { t[x.r] = t[x.r] || {D: 0, R: 0}; t[x.r][x.p]++; voters.add(x.v); });
+  document.getElementById("tallyLede").textContent = voters.size + (voters.size === 1 ? " person has" : " people have") + " made calls. Updates every few seconds.";
+  document.getElementById("tallyCards").innerHTML = RACES.map(r => {
+    const c = t[r.id] || {D: 0, R: 0}; const n = c.D + c.R;
+    const pd = n ? Math.round(100 * c.D / n) : 50;
+    return `<div class="card"><div class="race-h"><span class="race-name">${esc(r.label)}</span><span class="race-note">${n} call${n === 1 ? "" : "s"}</span></div>
+      <div class="bar"><span class="bd" style="width:${pd}%">${n ? esc(r.d.split(" ").slice(-1)[0]) + " " + pd + "%" : ""}</span><span class="br" style="width:${100 - pd}%">${n ? esc(r.r.split(" ").slice(-1)[0]) + " " + (100 - pd) + "%" : ""}</span></div></div>`;
+  }).join("");
+}
+/* ---------- explorer: tile map of donor states ---------- */
+const GRID = {AK:[0,0],ME:[0,11],VT:[1,10],NH:[1,11],WA:[2,1],ID:[2,2],MT:[2,3],ND:[2,4],MN:[2,5],IL:[2,6],WI:[2,7],MI:[2,8],NY:[2,9],RI:[2,10],MA:[2,11],OR:[3,1],NV:[3,2],WY:[3,3],SD:[3,4],IA:[3,5],IN:[3,6],OH:[3,7],PA:[3,8],NJ:[3,9],CT:[3,10],CA:[4,1],UT:[4,2],CO:[4,3],NE:[4,4],MO:[4,5],KY:[4,6],WV:[4,7],VA:[4,8],MD:[4,9],DE:[4,10],AZ:[5,2],NM:[5,3],KS:[5,4],AR:[5,5],TN:[5,6],NC:[5,7],SC:[5,8],DC:[5,9],OK:[6,4],LA:[6,5],MS:[6,6],AL:[6,7],GA:[6,8],HI:[7,0],TX:[7,4],FL:[7,9]};
+function fmt$(x) { return x >= 1e6 ? "$" + (x / 1e6).toFixed(1) + "M" : "$" + Math.round(x / 1e3) + "K"; }
+function renderExplorer() {
+  const sel = document.getElementById("raceSel");
+  const keys = Object.keys(MONEY);
+  if (!keys.length) { document.getElementById("explorer").innerHTML = '<p class="lede">Money data loads here.</p>'; sel.style.display = "none"; return; }
+  sel.innerHTML = keys.map(k => `<option value="${esc(k)}">${esc(MONEY[k].label)}</option>`).join("");
+  let saved = null; try { saved = localStorage.getItem("ftm_sel"); } catch(e) {}
+  if (saved && MONEY[saved]) sel.value = saved;
+  sel.onchange = () => { try { localStorage.setItem("ftm_sel", sel.value); } catch(e) {} draw(sel.value); };
+  draw(sel.value);
+}
+function draw(k) {
+  const m = MONEY[k]; const tot = m.total || 1;
+  const max = Math.max(...Object.entries(m.states).filter(([s]) => s !== m.home).map(([, v]) => v), 1);
+  const cells = [];
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 12; c++) {
+    const st = Object.keys(GRID).find(s => GRID[s][0] === r && GRID[s][1] === c);
+    if (!st) { cells.push('<div></div>'); continue; }
+    const v = m.states[st] || 0; const home = st === m.home;
+    const a = home ? 1 : Math.sqrt(v / max);
+    const bg = home ? "var(--line)" : `color-mix(in srgb, var(--teal) ${Math.round(a * 100)}%, var(--paper))`;
+    const fg = !home && a > 0.55 ? "#fff" : "var(--ink)";
+    cells.push(`<div class="tile ${home ? "home" : ""}" style="background:${bg};color:${fg}" title="${st}: ${fmt$(v)}">${st}</div>`);
+  }
+  const top = Object.entries(m.states).filter(([s]) => s !== m.home).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  document.getElementById("explorer").innerHTML = `
+    <div class="card">
+      <div class="stats">
+        <div class="stat"><div class="big">${fmt$(m.total)}</div><div class="lbl">itemized from individuals</div></div>
+        <div class="stat"><div class="big">${Math.round(100 * m.out / tot)}%</div><div class="lbl">from outside ${esc(m.home)}</div></div>
+        <div class="stat"><div class="big">${m.nstates}</div><div class="lbl">states and DC giving</div></div>
+      </div>
+      <div class="tiles">${cells.join("")}</div>
+      <div class="legend">Less <i></i> More · outlined: home state</div>
+      <div class="toplist"><strong>Top states outside ${esc(m.home)}</strong>${top.map(([s, v]) => `<div><span>${s}</span><span>${fmt$(v)}</span></div>`).join("")}</div>
+    </div>`;
+}
+document.getElementById("foot").textContent = META.asof ? ("Money: FEC filings through " + META.asof + ". " + META.source) : "";
+renderCards(); pollTally(); setInterval(pollTally, 6000); renderExplorer();
+</script>
+</body>
+</html>
