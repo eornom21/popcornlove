@@ -46,6 +46,18 @@ h2{font-family:'Source Serif 4',Georgia,serif;font-weight:700;font-size:27px;col
 .race-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
 .race-name{font-weight:600;color:var(--ink);font-size:19px}
 .race-note{color:var(--muted);font-size:14px}
+.race-h.tap{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.race-h.tap .race-name::after{content:" \25B8";color:var(--teal);font-size:15px}
+.race-h.tap.open .race-name::after{content:" \25BE"}
+.more-hint{color:var(--teal);font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
+.cases{display:none;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.cases.on{display:grid}
+.case{border-top:4px solid var(--line);padding-top:8px}
+.case.d{border-color:var(--dem)} .case.r{border-color:var(--rep)}
+.case b{display:block;font-size:14px;margin-bottom:4px}
+.case.d b{color:var(--dem)} .case.r b{color:var(--rep)}
+.case ul{margin:0;padding-left:18px;color:var(--body);font-size:14px;line-height:1.35}
+.case li{margin:0 0 6px}
 .picks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .pick{border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:12px 8px;font:600 16px 'IBM Plex Sans',sans-serif;cursor:pointer;min-height:56px}
 .pick small{display:block;font-weight:400;color:var(--muted);font-size:13px}
@@ -156,14 +168,21 @@ function renderWho() {
   document.querySelectorAll("#whoOpts .opt").forEach(b => b.addEventListener("click", () => { mine.who = b.dataset.k; ls.set("ftm_mine", mine); renderWho(); send({q: "who", a: b.dataset.k}, document.getElementById("whoStatus")); }));
 }
 /* step 3 */
+const open = {};
 function renderCards() {
   document.getElementById("raceCards").innerHTML = RACES.map(r => `
-    <div class="card"><div class="race-h"><span class="race-name">${esc(r.label)}</span><span class="race-note">${esc(r.rating)}</span></div>
+    <div class="card"><div class="race-h tap ${open[r.id] ? "open" : ""}" data-x="${esc(r.id)}" role="button" aria-expanded="${open[r.id] ? "true" : "false"}"><span class="race-name">${esc(r.label)}</span><span class="race-note">${esc(r.rating)}</span></div>
       <div class="race-note">${esc(r.blurb || "")}</div>
+      ${r.d_case ? `<div class="more-hint" data-x="${esc(r.id)}">${open[r.id] ? "Hide each side’s case" : "Tap for each side’s case"}</div>
+      <div class="cases ${open[r.id] ? "on" : ""}">
+        <div class="case d"><b>Why ${esc(r.d)} wins</b><ul>${r.d_case.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>
+        <div class="case r"><b>Why ${esc(r.r)} wins</b><ul>${r.r_case.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>
+      </div>` : ""}
       <div class="picks">
         <button class="pick d ${mine["r_" + r.id] === "D" ? "on" : ""}" data-r="${esc(r.id)}" data-p="D">${esc(r.d)}<small>Democrat</small></button>
         <button class="pick r ${mine["r_" + r.id] === "R" ? "on" : ""}" data-r="${esc(r.id)}" data-p="R">${esc(r.r)}<small>Republican</small></button>
       </div></div>`).join("");
+  document.querySelectorAll("#raceCards [data-x]").forEach(h => h.addEventListener("click", () => { open[h.dataset.x] = !open[h.dataset.x]; renderCards(); }));
   document.querySelectorAll(".pick").forEach(b => b.addEventListener("click", () => { mine["r_" + b.dataset.r] = b.dataset.p; ls.set("ftm_mine", mine); renderCards(); send({q: "race", r: b.dataset.r, a: b.dataset.p}); }));
 }
 /* tallies */
