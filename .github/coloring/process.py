@@ -21,9 +21,9 @@ def resolve(day, hint, uuid):
     """File names carry the job's creation second. Probe seconds near the hint until the file is found."""
     base = datetime.datetime.strptime(day + hint, "%Y%m%d%H%M%S")
     offs = [0]
-    for d in range(1, 241):
+    for d in range(1, 121):
         offs.append(d)
-        if d <= 60:
+        if d <= 25:
             offs.append(-d)
     conn = http.client.HTTPSConnection(HOST, timeout=30)
     try:
@@ -161,9 +161,10 @@ def main(queue, out):
         for (kind, pid, uuid, day, hint), stamp, p, err in ex.map(work, todo):
             if err:
                 missing.append(kind + ":" + pid)
-                print("MISSING", kind, pid, uuid, err)
+                print("MISSING", kind, pid, uuid, err, flush=True)
                 continue
             done[kind + ":" + pid] = stamp + "|" + VER
+            print("ok", kind, pid, flush=True)
             if kind == "C":
                 pal[pid] = p
     json.dump(pal, open(ppath, "w"), separators=(",", ":"), sort_keys=True)
