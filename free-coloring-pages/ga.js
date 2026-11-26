@@ -1,5 +1,6 @@
 /* Visitor counts for Free Coloring Pages. Put the Google Analytics ID (G-XXXXXXXXXX) in GA_ID to switch it on. */
 (function(){
+  if(location.hostname==='popcornlove.net'||location.hostname==='www.popcornlove.net'){location.replace('https://makeacoloringbook.com'+(location.pathname.replace(/^\/free-coloring-pages/,'')||'/')+location.search+location.hash);return}
   var GA_ID='G-E9C00BTERY';
   window.dataLayer=window.dataLayer||[];
   window.gtag=function(){dataLayer.push(arguments)};
