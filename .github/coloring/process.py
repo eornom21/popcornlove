@@ -3,13 +3,46 @@
 
 queue.tsv lines:  KIND <tab> PAGE_ID <tab> STAMP     (KIND = L line art, C colored guide)
 """
-import sys, os, io, json, colorsys, urllib.request
+import sys, os, io, json, colorsys, datetime, http.client, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 from PIL import Image
 
 BASE = "https://d8j0ntlcm91z4.cloudfront.net/user_3Li4lvndXgW9T9W9DVxjFmcIsMm/hf_%s.png"
 W, H, M = 1800, 2400, 66
+VER = "v2"
+
+
+HOST = "d8j0ntlcm91z4.cloudfront.net"
+PATH = "/user_3Li4lvndXgW9T9W9DVxjFmcIsMm/hf_%s.png"
+
+
+def resolve(day, hint, uuid):
+    """File names carry the job's creation second. Probe seconds near the hint until the file is found."""
+    base = datetime.datetime.strptime(day + hint, "%Y%m%d%H%M%S")
+    offs = [0]
+    for d in range(1, 241):
+        offs.append(d)
+        if d <= 60:
+            offs.append(-d)
+    conn = http.client.HTTPSConnection(HOST, timeout=30)
+    try:
+        for d in offs:
+            stamp = (base + datetime.timedelta(seconds=d)).strftime("%Y%m%d_%H%M%S") + "_" + uuid
+            for attempt in range(3):
+                try:
+                    conn.request("HEAD", PATH % stamp, headers={"User-Agent": "Mozilla/5.0"})
+                    r = conn.getresponse(); r.read()
+                    break
+                except Exception:
+                    conn.close(); conn = http.client.HTTPSConnection(HOST, timeout=30)
+            else:
+                continue
+            if r.status == 200:
+                return stamp
+    finally:
+        conn.close()
+    return None
 
 
 def fetch(stamp):
@@ -46,7 +79,7 @@ def line_art(data, out, pid):
     q = (np.round(q * 5) / 5 * 255).astype(np.uint8)
     page = Image.fromarray(q, "L")
     page.save(os.path.join(out, "art", pid + ".webp"), lossless=True, method=6)
-    page.resize((420, 560), Image.LANCZOS).save(os.path.join(out, "thumb", pid + ".webp"), quality=80, method=6)
+    page.resize((390, 520), Image.LANCZOS).save(os.path.join(out, "thumb", pid + ".webp"), quality=62, method=6)
 
 
 def palette(rgb):
@@ -84,55 +117,62 @@ def palette(rgb):
 
 def guide(data, out, pid):
     rgb = flat(data)
-    rgb.resize((600, 800), Image.LANCZOS).save(os.path.join(out, "guide", pid + ".webp"), quality=80, method=6)
+    rgb.resize((510, 680), Image.LANCZOS).save(os.path.join(out, "guide", pid + ".webp"), quality=74, method=6)
     return palette(rgb)
 
 
 def main(queue, out):
+    here = os.path.dirname(os.path.abspath(__file__))
+    ids = {str(p["i"]): p["id"] for p in json.load(open(os.path.join(here, "prompts.json")))}
     for d in ("art", "thumb", "guide"):
         os.makedirs(os.path.join(out, d), exist_ok=True)
     ppath = os.path.join(out, "palettes.json")
     pal = json.load(open(ppath)) if os.path.exists(ppath) else {}
-    jobs = {}
-    for line in open(queue):
-        parts = line.split()
-        if len(parts) != 3 or parts[0] not in ("L", "C"):
-            continue
-        kind, pid, stamp = parts
-        jobs[(kind, pid)] = stamp  # later lines replace earlier ones
     donepath = os.path.join(out, "done.json")
     done = json.load(open(donepath)) if os.path.exists(donepath) else {}
-    todo = [(k, pid, st) for (k, pid), st in jobs.items() if done.get(k + ":" + pid) != st]
+    jobs = {}
+    day = None
+    for line in open(queue):
+        parts = line.split()
+        if len(parts) == 2 and parts[0] == "D":
+            day = parts[1]
+        elif len(parts) == 4 and parts[0] in ("L", "C"):
+            kind, idx, uuid, hint = parts
+            jobs[(kind, ids[idx])] = (uuid, day, hint)  # later lines replace earlier ones
+    todo = [(k, pid) + v for (k, pid), v in jobs.items() if done.get(k + ":" + pid, "").split("|")[0][-36:] != v[0] or not done[k + ":" + pid].endswith("|" + VER)]
     print("to process:", len(todo))
 
     def work(job):
-        kind, pid, stamp = job
+        kind, pid, uuid, day, hint = job
         try:
+            stamp = resolve(day, hint, uuid)
+            if not stamp:
+                return job, None, None, "not found near " + hint
             data = fetch(stamp)
             if kind == "L":
                 line_art(data, out, pid)
-                return job, None, None
-            return job, guide(data, out, pid), None
+                return job, stamp, None, None
+            return job, stamp, guide(data, out, pid), None
         except Exception as e:  # noqa
-            return job, None, repr(e)
+            return job, None, None, repr(e)
 
-    failed = 0
-    with ThreadPoolExecutor(4) as ex:
-        for (kind, pid, stamp), p, err in ex.map(work, todo):
+    missing = []
+    with ThreadPoolExecutor(8) as ex:
+        for (kind, pid, uuid, day, hint), stamp, p, err in ex.map(work, todo):
             if err:
-                failed += 1
-                print("FAILED", kind, pid, err)
+                missing.append(kind + ":" + pid)
+                print("MISSING", kind, pid, uuid, err)
                 continue
-            done[kind + ":" + pid] = stamp
+            done[kind + ":" + pid] = stamp + "|" + VER
             if kind == "C":
                 pal[pid] = p
-            print("ok", kind, pid)
     json.dump(pal, open(ppath, "w"), separators=(",", ":"), sort_keys=True)
     json.dump(done, open(donepath, "w"), separators=(",", ":"), sort_keys=True)
-    have = sorted(k[2:] for k in done if k.startswith("L:"))
-    json.dump({"art": have, "guide": sorted(k[2:] for k in done if k.startswith("C:"))},
+    json.dump({"art": sorted(k[2:] for k in done if k.startswith("L:")),
+               "guide": sorted(k[2:] for k in done if k.startswith("C:")),
+               "missing": sorted(missing)},
               open(os.path.join(out, "ready.json"), "w"), separators=(",", ":"))
-    print("failed:", failed)
+    print("done:", len(todo) - len(missing), "missing:", len(missing))
 
 
 if __name__ == "__main__":
