@@ -26,7 +26,19 @@ h1 span{display:block;font-size:.58em;color:#F25C3B;letter-spacing:0;margin-top:
 <div class="back"></div><div class="sheet"><img src="../art/%(id)s.webp"></div>
 <div class="col"><img src="../guide/%(id)s.webp"></div><div class="tag">color guide included</div>
 <div class="foot"><span>Print · PDF · Color online</span><b>makeacoloringbook.com</b></div></body></html>'''
+def serve():
+    import http.server, socketserver, threading, functools
+    h = functools.partial(http.server.SimpleHTTPRequestHandler, directory=os.path.dirname(ROOT))
+    h.log_message = lambda *a, **k: None
+    socketserver.TCPServer.allow_reuse_address = True
+    try:
+        srv = socketserver.TCPServer(("127.0.0.1", PORT), h)
+    except OSError:
+        return  # something is already serving the repo on this port
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+
 async def main(only=None):
+    serve()
     async with async_playwright() as p:
         b = await p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox','--no-proxy-server'])
         pg = await (await b.new_context(viewport={'width':1000,'height':1500}, device_scale_factor=0.8)).new_page()
@@ -37,7 +49,7 @@ async def main(only=None):
             lines=1 if len(t)*fs*0.5<880 else 2
             top=128+fs*lines+fs*0.58+60
             open(ROOT+'/_build/_pin_tmp.html','w').write(TPL%dict(col=STY[q['s']][1],sname=STY[q['s']][0],fs=fs,title=html.escape(t),id=q['id'],top=int(top),tagb=150+480+6))
-            await pg.goto('http://127.0.0.1:8765/free-coloring-pages/_build/_pin_tmp.html?n=%d'%n)
+            await pg.goto('http://127.0.0.1:%d/%s/_build/_pin_tmp.html?n=%d'%(PORT,SITE,n))
             await pg.wait_for_function("document.fonts.ready.then(()=>Array.from(document.images).every(i=>i.complete&&i.naturalWidth>0))")
             await pg.screenshot(path=f"{OUT}/{q['id']}.jpg", type='jpeg', quality=72)
             n+=1

@@ -138,7 +138,7 @@ def main(queue, out):
             day = parts[1]
         elif len(parts) == 4 and parts[0] in ("L", "C"):
             kind, idx, uuid, hint = parts
-            jobs[(kind, ids[idx])] = (uuid, day, hint)  # later lines replace earlier ones
+            jobs[(kind, ids.get(idx, idx))] = (uuid, day, hint)  # later lines replace earlier ones
     todo = [(k, pid) + v for (k, pid), v in jobs.items() if done.get(k + ":" + pid, "").split("|")[0][-36:] != v[0] or not done[k + ":" + pid].endswith("|" + VER)]
     print("to process:", len(todo))
 

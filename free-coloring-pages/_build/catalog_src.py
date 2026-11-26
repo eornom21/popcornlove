@@ -452,9 +452,18 @@ P["fantasy"] = {
 
 STYLE_ORDER = ["easy", "whimsical", "realistic", "intricate"]
 
+# Pages made from visitor requests live in requests.json next to this file:
+# [{"id": "requests-001", "style": "whimsical", "title": "...", "subject": "..."}]
+_REQ = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requests.json")
+REQUESTS = json.load(open(_REQ)) if os.path.exists(_REQ) else []
+if REQUESTS:
+    THEMES.append(("requests", "By Request", "✏️"))
+
 def build():
     pages = []
     for key, name, emoji in THEMES:
+        if key not in P:
+            continue
         n = 0
         # interleave styles so each theme grid mixes styles
         for i in range(6):
@@ -462,6 +471,8 @@ def build():
                 title, subject = P[key][st][i]
                 n += 1
                 pages.append({"id": f"{key}-{n:02d}", "theme": key, "style": st, "title": title, "subject": subject})
+    for r in REQUESTS:
+        pages.append({"id": r["id"], "theme": "requests", "style": r["style"], "title": r["title"], "subject": r["subject"]})
     return pages
 
 def prompt_for(p):
@@ -470,8 +481,7 @@ def prompt_for(p):
 if __name__ == "__main__":
     out = sys.argv[1]
     pages = build()
-    assert len(pages) == 288, len(pages)
-    assert len({p['id'] for p in pages}) == 288
+    assert len({p['id'] for p in pages}) == len(pages)
     for k in P:
         for st in STYLE_ORDER:
             assert len(P[k][st]) == 6, (k, st)

@@ -39,6 +39,7 @@ THEME_SEO = {
     "ocean": ("Ocean Animal Coloring Pages", "Whales, sharks, sea turtles, octopuses, mermaids and coral reefs, in easy cartoon pages and detailed underwater scenes."),
     "animals": ("Animal Coloring Pages", "Farm animals, pets, jungle and safari animals and forest wildlife, including realistic foxes, tigers, wolves and owls."),
     "space": ("Space and Robot Coloring Pages", "Rockets, astronauts, planets, aliens and robots, with realistic rocket launches and rovers for space fans of any age."),
+    "requests": ("Coloring Pages by Request", "Pages our visitors asked for, drawn fresh. Have an idea of your own? Ask for it on the home page, free."),
     "fantasy": ("Dragon and Unicorn Coloring Pages", "Dragons, unicorns, fairies, castles, knights and wizards, from baby dragons for little kids to ornate fantasy art for adults."),
 }
 CLEAN = [r"\s*No people in the scene\.", r"\s*The locomotive is an ordinary machine[^.]*\.", r"\s*It is a utility machine[^.]*\.",
@@ -164,6 +165,8 @@ def main():
         sections = []
         for st in C.STYLE_ORDER:
             grp = [p for p in items if p["style"] == st]
+            if not grp:
+                continue
             sections.append('<section><h2>%s</h2><p class="blurb">%s</p><div class="grid">%s</div></section>' % (
                 esc(STYLE_HEAD[st]), esc(STYLE_BLURB[st]), "".join(card(p, root) for p in grp)))
         ld = {"@context": "https://schema.org", "@graph": [
@@ -175,7 +178,7 @@ def main():
                 {"@type": "ListItem", "position": 2, "name": seo, "item": url}]}]}
         body = HEAD.format(title=esc("Free %s (Printable PDF)" % seo),
                            ogtitle=esc("Free " + seo), desc=esc("Free printable %s. %s Print, save a PDF or color online." % (seo.lower().replace("valentine's day", "Valentine's Day").replace("4th of july", "4th of July").replace("thanksgiving", "Thanksgiving").replace("christmas", "Christmas").replace("halloween", "Halloween").replace("easter", "Easter"), intro)),
-                           url=url, image=BASE + "pin/" + items[1]["id"] + ".jpg", root=root, jsonld=json.dumps(ld, ensure_ascii=False), tabs=tabs(root, key))
+                           url=url, image=BASE + "pin/" + items[min(1, len(items) - 1)]["id"] + ".jpg", root=root, jsonld=json.dumps(ld, ensure_ascii=False), tabs=tabs(root, key))
         body += '<nav class="crumbs"><a href="%s">Free Coloring Pages</a> › <span>%s</span></nav>\n' % (root, esc(name))
         body += '<h1>Free %s</h1>\n<p class="lede">%s Every page is free to print. Tap one to print it, save a PDF, add a small color guide, or color it on your screen.</p>\n' % (esc(seo), esc(intro))
         body += '<p class="cta"><a class="btn pri" href="%s#t=%s">Open in the coloring app</a></p>\n' % (root, key)
@@ -205,7 +208,7 @@ def main():
                     {"@type": "ListItem", "position": 2, "name": seo, "item": BASE + key + "/"},
                     {"@type": "ListItem", "position": 3, "name": h1, "item": url}]}]}
             prev, nxt = items[i - 1], items[(i + 1) % len(items)]
-            more = [items[(i + k) % len(items)] for k in (2, 5, 9, 13, 17, 21)]
+            more = list({q["id"]: q for q in (items[(i + k) % len(items)] for k in (2, 5, 9, 13, 17, 21)) if q["id"] != p["id"]}.values())
             same = [q for q in pages if q["style"] == p["style"] and q["theme"] != key]
             same = [same[(i * 7 + k * 11) % len(same)] for k in range(4)]
             pinurl = "https://www.pinterest.com/pin/create/button/?url=%s&media=%s&description=%s" % (
@@ -271,7 +274,7 @@ def main():
     sm.append("</urlset>")
     write(os.path.join(ROOT, "sitemap.xml"), "\n".join(sm) + "\n")
     import csv, email.utils, time
-    order = ["christmas", "holidays", "valentines", "animals", "dinosaurs", "fantasy", "ocean", "space", "easter", "summer", "halloween", "thanksgiving"]
+    order = (["requests"] if "requests" in by_theme else []) + ["christmas", "holidays", "valentines", "animals", "dinosaurs", "fantasy", "ocean", "space", "easter", "summer", "halloween", "thanksgiving"]
     feed = ['<?xml version="1.0" encoding="UTF-8"?>', '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel>',
             "<title>Free Coloring Pages</title><link>%s</link><description>Free printable coloring pages for kids and adults.</description>" % BASE]
     rows = []
