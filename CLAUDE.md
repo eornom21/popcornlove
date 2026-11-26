@@ -16,6 +16,6 @@ Nate's public page host. GitHub Pages, custom domain popcornlove.net, branch `ma
 - Updating a page: edit it in place, push, same URL. Deleting a page: only after Nate says yes.
 
 ## Existing pages
-BVK (podcast), CabinParlays, HUSL (board portal), IrrigationParlays, drills (soccer drill book). `followthemoney/` only forwards to lab.nathanwmonroe.com/followthemoney.
+BVK (podcast), CabinParlays, HUSL (board portal), IrrigationParlays, drills (soccer drill book). free-coloring-pages (288 printable coloring pages; `coloring/` forwards to it). Its art comes from Higgsfield: add a line to `.github/coloring/queue.tsv` and the `Coloring assets` workflow downloads and sizes the image into `free-coloring-pages/`; page titles live in `free-coloring-pages/catalog.json`. `followthemoney/` only forwards to lab.nathanwmonroe.com/followthemoney.
 
 Work and professional pages (talks, dashboards, research) go on lab.nathanwmonroe.com (repo eornom21/lab), not here (Nate, 10/29).
