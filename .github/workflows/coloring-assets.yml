@@ -1,0 +1,34 @@
+name: Coloring assets
+on:
+  push:
+    branches: [main]
+    paths: ['.github/coloring/queue.tsv']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: coloring-assets
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet pillow numpy
+      - run: python .github/coloring/process.py .github/coloring/queue.tsv free-coloring-pages
+      - name: Commit assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add free-coloring-pages
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -q -m "Coloring page assets"
+          for i in 1 2 3 4 5 6; do
+            git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0
+            sleep 6
+          done
+          exit 1
