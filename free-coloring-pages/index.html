@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow">
-<title>Free Coloring Pages: print, save or color online</title>
+<title>Free Coloring Pages: 288 Printable Pages for Kids and Adults</title>
+<link rel="canonical" href="https://popcornlove.net/free-coloring-pages/">
 <meta name="description" content="288 free coloring pages for kids and grown-ups. Holidays, dinosaurs, ocean, space, dragons and more. Print, download a PDF, or color right in your browser.">
 <meta property="og:title" content="Free Coloring Pages">
 <meta property="og:description" content="288 free pages for kids and grown-ups. Print, save as PDF, or color online.">
 <meta property="og:image" content="https://popcornlove.net/free-coloring-pages/og.jpg">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://popcornlove.net/free-coloring-pages/">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFF6E5">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FFC53D'/%3E%3Cpath d='M18 46l6-22 16-10 8 8-10 16z' fill='%23F25C3B' stroke='%231D1B2F' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M18 46l8-3-5-5z' fill='%231D1B2F'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap">
+<link rel="preload" href="fonts/fredoka-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Free Coloring Pages","url":"https://popcornlove.net/free-coloring-pages/","description":"288 free printable coloring pages for kids and adults: holidays, dinosaurs, ocean animals, space, dragons and unicorns. Print, save a PDF, or color online."}</script>
 <style>
 :root{
   --paper:#FFF6E5; --card:#FFFFFF; --ink:#1D1B2F; --body:#3B3852; --muted:#77738F; --line:#E9DCC3;
@@ -164,6 +166,8 @@ h1 .squig svg{position:absolute;left:-2%;bottom:-.18em;width:104%;height:.3em;ov
 .fab.show{display:inline-flex}
 footer{border-top:2.5px solid var(--ink);padding:24px 18px 34px;text-align:center;color:var(--muted);font-size:14px;font-weight:700}
 footer b{color:var(--ink)}
+.footnav{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;max-width:900px;margin:0 auto 16px}.footnav a{color:var(--ink);font-weight:800}
+.meta h3 a{color:inherit;text-decoration:none}
 #printHost{display:none}
 
 @media (max-width:860px){
@@ -235,6 +239,7 @@ footer b{color:var(--ink)}
 </main>
 
 <footer>
+  <nav class="footnav" aria-label="All themes"><a href="thanksgiving/">Thanksgiving Coloring Pages</a><a href="christmas/">Christmas Coloring Pages</a><a href="halloween/">Halloween Coloring Pages</a><a href="easter/">Easter and Spring Coloring Pages</a><a href="valentines/">Valentine's Day Coloring Pages</a><a href="summer/">Summer and 4th of July Coloring Pages</a><a href="holidays/">Holiday Coloring Pages</a><a href="dinosaurs/">Dinosaur Coloring Pages</a><a href="ocean/">Ocean Animal Coloring Pages</a><a href="animals/">Animal Coloring Pages</a><a href="space/">Space and Robot Coloring Pages</a><a href="fantasy/">Dragon and Unicorn Coloring Pages</a></nav>
   <p><b>Free for home, classroom, church and party use.</b> Print as many as you like.</p>
   <p>popcornlove.net/free-coloring-pages</p>
 </footer>
@@ -344,9 +349,11 @@ footer b{color:var(--ink)}
 <div class="busy" id="busy"><div><div class="spin"></div><div id="busyMsg">Getting it ready…</div></div></div>
 <div id="printHost"></div>
 
+<script src="ga.js"></script>
 <script>
 (function(){
 'use strict';
+function T(n,p){try{if(window.track)track(n,p||{})}catch(e){}}
 var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var STYLES={easy:'Little Kids',whimsical:'Whimsical',realistic:'Realistic',intricate:'Intricate'};
 var STYLE_HINT={easy:'bold & easy',whimsical:'storybook fun',realistic:'true to life',intricate:'for grown-ups'};
@@ -369,6 +376,7 @@ function idle(){$('#busy').classList.remove('on')}
 function tick(){return new Promise(function(r){setTimeout(r,30)})}
 var imgCache={};
 function loadImg(src){if(imgCache[src])return imgCache[src];var p=new Promise(function(res,rej){var i=new Image();i.onload=function(){res(i)};i.onerror=function(){delete imgCache[src];rej(new Error('Could not load '+src))};i.src=src});imgCache[src]=p;return p}
+function pageUrl(p){return p.theme+'/'+p.title.toLowerCase().replace(/['\u2019]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'/'}
 function themeName(k){var t=S.themes.filter(function(t){return t.key===k})[0];return t?t.name:''}
 function hasGuide(id){return !!S.ready.guide[id]}
 function seasonal(){var m=new Date().getMonth()+1,d=new Date().getDate();if(m===11)return 'thanksgiving';if(m===12)return 'christmas';if(m===10)return 'halloween';if(m===2&&d<=15)return 'valentines';if(m===3||m===4)return 'easter';if(m===6||m===7)return 'summer';return null}
@@ -385,13 +393,14 @@ Promise.all([getJSON('catalog.json'),getJSON('ready.json').catch(function(){retu
   var se=seasonal();var h=location.hash.match(/t=([a-z]+)/);
   S.theme=(h&&themeName(h[1]))?h[1]:(se||'all');
   buildTabs(se);buildChips();render();counts();
-  var m=location.hash.match(/p=([a-z]+-\d+)/);if(m&&S.byId[m[1]])openDetail(m[1]);
+  var m=location.hash.match(/p=([a-z]+-\d+)/);if(m&&S.byId[m[1]]){var wantColor=/color=1/.test(location.hash);openDetail(m[1]);if(wantColor)openStudio(S.byId[m[1]])}
+  if(location.hash==='#book')openBook();
 }).catch(function(e){$('#grid').innerHTML='<div class="empty">The pages did not load. Please refresh.</div>';console.error(e)});
 
 /* ---------- browse ---------- */
 function buildTabs(se){var el=$('#tabs');var tabs=[{key:'all',name:'All pages',emoji:'✨'}].concat(S.themes);
   el.innerHTML=tabs.map(function(t){return '<button class="tab" role="tab" data-t="'+t.key+'" aria-selected="'+(t.key===S.theme)+'"><span aria-hidden="true">'+t.emoji+'</span>'+t.name+(t.key===se?'<span class="now">now</span>':'')+'</button>'}).join('');
-  el.addEventListener('click',function(e){var b=e.target.closest('.tab');if(!b)return;S.theme=b.dataset.t;S.onlyFav=false;$$('.tab',el).forEach(function(x){x.setAttribute('aria-selected',x===b)});render();b.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})});
+  el.addEventListener('click',function(e){var b=e.target.closest('.tab');if(!b)return;S.theme=b.dataset.t;S.onlyFav=false;T('theme_tab',{theme:S.theme});$$('.tab',el).forEach(function(x){x.setAttribute('aria-selected',x===b)});render();b.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})});
   var a=$('.tab[aria-selected="true"]',el);if(a)a.scrollIntoView({inline:'center',block:'nearest'})}
 function buildChips(){var el=$('#chips');el.innerHTML='<button class="chip" data-s="all" aria-pressed="true">All styles</button>'+Object.keys(STYLES).map(function(k){return '<button class="chip" data-s="'+k+'" aria-pressed="false" title="'+STYLE_HINT[k]+'"><i style="background:'+STYLE_COL[k]+'"></i>'+STYLES[k]+'</button>'}).join('');
   el.addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;S.style=b.dataset.s;$$('.chip',el).forEach(function(x){x.setAttribute('aria-pressed',x===b)});render()})}
@@ -402,7 +411,7 @@ function filtered(){return S.pages.filter(function(p){
   if(S.q){var hay=(p.title+' '+themeName(p.theme)+' '+STYLES[p.style]).toLowerCase();if(S.q.split(/\s+/).some(function(w){return hay.indexOf(w)<0}))return false}
   return true})}
 function cardHTML(p){var f=S.favs.indexOf(p.id)>=0,b=S.book.indexOf(p.id)>=0;
-  return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="thumb/'+p.id+'.webp" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3>'+p.title+'</h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Favorite" aria-pressed="'+f+'">♥</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button></div></article>'}
+  return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="thumb/'+p.id+'.webp" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3><a href="'+pageUrl(p)+'" data-open>'+p.title+'</a></h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Favorite" aria-pressed="'+f+'">♥</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button></div></article>'}
 function render(){S.list=filtered();var g=$('#grid');
   $('#secTitle').textContent=S.onlyFav?'Your favorites':(S.q?'Search results':(S.theme==='all'?'All coloring pages':themeName(S.theme)));
   $('#secCount').textContent=S.list.length+(S.list.length===1?' page':' pages');
@@ -411,13 +420,13 @@ $('#grid').addEventListener('click',function(e){var c=e.target.closest('.card');
   if(e.target.closest('[data-fav]')){toggleFav(id);return}
   if(e.target.closest('[data-add]')){toggleBook(id);return}
   if(e.target.closest('[data-peek]')){var im=$('.peek',c);if(im&&!im.src)im.src=im.dataset.src;c.classList.toggle('peeking');return}
-  if(e.target.closest('[data-open]'))openDetail(id)});
+  if(e.target.closest('[data-open]')){e.preventDefault();openDetail(id)}});
 function syncCard(id){var c=$('.card[data-id="'+id+'"]');if(!c)return;var f=S.favs.indexOf(id)>=0,b=S.book.indexOf(id)>=0;var fb=$('[data-fav]',c),ab=$('[data-add]',c);fb.classList.toggle('on',f);fb.setAttribute('aria-pressed',f);ab.classList.toggle('on',b);ab.setAttribute('aria-pressed',b);ab.textContent=b?'✓ In book':'＋ Book'}
-function toggleFav(id){var i=S.favs.indexOf(id);if(i>=0)S.favs.splice(i,1);else S.favs.push(id);store.set('favs',S.favs);syncCard(id);counts();syncDetail();if(S.onlyFav)render()}
-function toggleBook(id){var i=S.book.indexOf(id);if(i>=0)S.book.splice(i,1);else{if(S.book.length>=60){toast('A book holds up to 60 pages.');return}S.book.push(id);toast('Added to your book ('+S.book.length+')')}store.set('book',S.book);syncCard(id);counts();syncDetail()}
+function toggleFav(id){var i=S.favs.indexOf(id);if(i>=0)S.favs.splice(i,1);else{S.favs.push(id);T('favorite',{page_id:id})}store.set('favs',S.favs);syncCard(id);counts();syncDetail();if(S.onlyFav)render()}
+function toggleBook(id){var i=S.book.indexOf(id);if(i>=0)S.book.splice(i,1);else{if(S.book.length>=60){toast('A book holds up to 60 pages.');return}S.book.push(id);T('add_to_book',{page_id:id});toast('Added to your book ('+S.book.length+')')}store.set('book',S.book);syncCard(id);counts();syncDetail()}
 function counts(){$('#favCount').textContent=S.favs.length;$('#bookCount').textContent=S.book.length;$('#fabCount').textContent=S.book.length;$('#fab').classList.toggle('show',S.book.length>0)}
 $('#favBtn').addEventListener('click',function(){S.onlyFav=true;S.q='';$('#q').value='';$$('.tab').forEach(function(x){x.setAttribute('aria-selected',false)});render();$('.bar').scrollIntoView()});
-$('#surprise').addEventListener('click',function(){var pool=S.style==='all'?S.pages:S.pages.filter(function(p){return p.style===S.style});if(!pool.length)return;S.list=pool;openDetail(pool[Math.floor(Math.random()*pool.length)].id)});
+$('#surprise').addEventListener('click',function(){var pool=S.style==='all'?S.pages:S.pages.filter(function(p){return p.style===S.style});if(!pool.length)return;T('surprise');S.list=pool;openDetail(pool[Math.floor(Math.random()*pool.length)].id)});
 
 /* ---------- overlays ---------- */
 function open(id){$(id).classList.add('open');document.body.style.overflow='hidden'}
@@ -466,7 +475,7 @@ function run(msg,fn){busy(msg);return tick().then(fn).catch(function(e){console.
 
 /* ---------- detail ---------- */
 var pvTok=0;
-function openDetail(id){S.cur=S.byId[id];if(!S.cur)return;if(S.list.indexOf(S.cur)<0)S.list=S.pages.filter(function(p){return p.theme===S.cur.theme});open('#ovDetail');history.replaceState(null,'','#p='+id);fillDetail()}
+function openDetail(id){S.cur=S.byId[id];if(!S.cur)return;T('open_page',{page_id:id,theme:S.cur.theme,style:S.cur.style});T('page_view',{page_title:S.cur.title+' Coloring Page',page_location:location.origin+location.pathname.replace(/index\.html$/,'')+pageUrl(S.cur)});if(S.list.indexOf(S.cur)<0)S.list=S.pages.filter(function(p){return p.theme===S.cur.theme});open('#ovDetail');history.replaceState(null,'','#p='+id);fillDetail()}
 function fillDetail(){var p=S.cur;$('#dTitle').textContent=p.title;var b=$('#dBadge');b.className='badge s-'+p.style;b.textContent=STYLES[p.style];$('#dTheme').textContent=themeName(p.theme)+' · '+STYLE_HINT[p.style];
   var g=hasGuide(p.id);$('#optGuide').style.display=g?'':'none';
   $('#dSw').innerHTML=(g&&S.opts.guide==='full')?(S.pal[p.id]||[]).map(function(h){return '<span class="sw" style="background:'+h+'" title="'+nameOf(h)+'"></span>'}).join(''):'';
@@ -478,13 +487,13 @@ function preview(){var tok=++pvTok,p=S.cur;sheetFor(p,S.opts).then(function(c){i
 function step(d){var i=S.list.indexOf(S.cur);if(i<0)return;var n=S.list[(i+d+S.list.length)%S.list.length];S.cur=n;history.replaceState(null,'','#p='+n.id);fillDetail()}
 window.addEventListener('hashchange',function(){var m=location.hash.match(/p=([a-z]+-\d+)/);if(m&&S.byId[m[1]]&&(!S.cur||S.cur.id!==m[1]||!$('#ovDetail').classList.contains('open')))openDetail(m[1])});
 $('#dPrev').addEventListener('click',function(){step(-1)});$('#dNext').addEventListener('click',function(){step(1)});
-$('#ovDetail').addEventListener('click',function(e){var b=e.target.closest('.seg button');if(b){var k=b.parentNode.dataset.opt;S.opts[k]=b.dataset.v;store.set('opts',S.opts);fillDetail()}});
+$('#ovDetail').addEventListener('click',function(e){var b=e.target.closest('.seg button');if(b){var k=b.parentNode.dataset.opt;S.opts[k]=b.dataset.v;store.set('opts',S.opts);if(k==='guide')T('guide_option',{value:b.dataset.v});fillDetail()}});
 $('#ovDetail').addEventListener('change',function(e){var i=e.target;if(i.dataset&&i.dataset.opt){S.opts[i.dataset.opt]=i.checked;store.set('opts',S.opts);preview()}});
-$('#dPrint').addEventListener('click',function(){var p=S.cur;run('Sending to your printer…',function(){return sheetFor(p,S.opts).then(function(c){idle();return printCanvases([c],S.opts.paper)})})});
-$('#dPdf').addEventListener('click',function(){var p=S.cur;run('Making your PDF…',function(){return sheetFor(p,S.opts).then(function(c){return makePdf([c],S.opts.paper,slug(p))}).then(function(){toast('PDF saved')})})});
-$('#dPng').addEventListener('click',function(){var p=S.cur;run('Saving the image…',function(){return sheetFor(p,S.opts).then(function(c){return toBlob(c)}).then(function(b){saveBlob(b,slug(p)+'.png');toast('Image saved')})})});
-$('#dShare').addEventListener('click',function(){var p=S.cur,url=location.origin+location.pathname+'#p='+p.id,data={title:p.title+' coloring page',text:'Free coloring page: '+p.title,url:url};
-  if(navigator.share){navigator.share(data).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast('Link copied')})}else{prompt('Copy this link',url)}});
+$('#dPrint').addEventListener('click',function(){var p=S.cur;T('print',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Sending to your printer…',function(){return sheetFor(p,S.opts).then(function(c){idle();return printCanvases([c],S.opts.paper)})})});
+$('#dPdf').addEventListener('click',function(){var p=S.cur;T('pdf',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Making your PDF…',function(){return sheetFor(p,S.opts).then(function(c){return makePdf([c],S.opts.paper,slug(p))}).then(function(){toast('PDF saved')})})});
+$('#dPng').addEventListener('click',function(){var p=S.cur;T('image',{page_id:p.id});run('Saving the image…',function(){return sheetFor(p,S.opts).then(function(c){return toBlob(c)}).then(function(b){saveBlob(b,slug(p)+'.png');toast('Image saved')})})});
+$('#dShare').addEventListener('click',function(){var p=S.cur,url=location.origin+location.pathname.replace(/index\.html$/,'')+pageUrl(p),data={title:p.title+' coloring page',text:'Free coloring page: '+p.title,url:url};
+  T('share',{page_id:p.id});if(navigator.share){navigator.share(data).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast('Link copied')})}else{prompt('Copy this link',url)}});
 $('#dFav').addEventListener('click',function(){toggleFav(S.cur.id)});
 $('#dAdd').addEventListener('click',function(){toggleBook(S.cur.id)});
 $('#dColor').addEventListener('click',function(){openStudio(S.cur)});
@@ -499,7 +508,7 @@ function setTool(t){ST.tool=t;$$('#stTools .ico').forEach(function(b){b.setAttri
 function setZoom(z){ST.zoom=z;var e=$('#easel'),base=Math.min(e.clientWidth-30,(Math.min(window.innerHeight*.84,900))*CW/CH);stC.style.width=Math.round(base*z)+'px';$$('#stZoom button').forEach(function(b){b.setAttribute('aria-pressed',+b.dataset.v===z)})}
 function redraw(){stX.globalCompositeOperation='source-over';stX.fillStyle='#fff';stX.fillRect(0,0,CW,CH);stX.drawImage(paint,0,0);stX.globalCompositeOperation='multiply';stX.drawImage(artW,0,0);stX.globalCompositeOperation='source-over'}
 function snap(){try{ST.undo.push(pX.getImageData(0,0,CW,CH));if(ST.undo.length>6)ST.undo.shift()}catch(e){}}
-function openStudio(page){run('Opening the crayons…',function(){return loadImg('art/'+page.id+'.webp').then(function(art){ST.page=page;ST.art=art;ST.undo=[];
+function openStudio(page){T('color_online',{page_id:page.id});run('Opening the crayons…',function(){return loadImg('art/'+page.id+'.webp').then(function(art){ST.page=page;ST.art=art;ST.undo=[];
   var ax=artW.getContext('2d',{willReadFrequently:true});ax.fillStyle='#fff';ax.fillRect(0,0,CW,CH);ax.imageSmoothingQuality='high';ax.drawImage(art,0,0,CW,CH);
   var d=ax.getImageData(0,0,CW,CH).data,m=new Uint8Array(CW*CH);for(var i=0,j=0;i<m.length;i++,j+=4)m[i]=d[j]>=196?1:0;ST.mask=m;
   pX.clearRect(0,0,CW,CH);$('#stTitle').textContent=page.title;
@@ -528,10 +537,10 @@ $('#stZoom').addEventListener('click',function(e){var b=e.target.closest('button
 $('#stUndo').addEventListener('click',function(){var u=ST.undo.pop();if(!u){toast('Nothing to undo');return}pX.putImageData(u,0,0);redraw()});
 $('#stClear').addEventListener('click',function(){snap();pX.clearRect(0,0,CW,CH);redraw()});
 function colored(){var c=document.createElement('canvas');c.width=ST.art.width;c.height=ST.art.height;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.imageSmoothingQuality='high';x.drawImage(paint,0,0,c.width,c.height);x.globalCompositeOperation='multiply';x.drawImage(ST.art,0,0);return c}
-$('#stSave').addEventListener('click',function(){run('Saving your picture…',function(){var c=colored();return toBlob(c,'image/jpeg',.92).then(function(b){var name=slug(ST.page).replace('-coloring-page','')+'-colored.jpg';var f=null;try{f=new File([b],name,{type:'image/jpeg'})}catch(e){}
+$('#stSave').addEventListener('click',function(){T('save_colored',{page_id:ST.page.id});run('Saving your picture…',function(){var c=colored();return toBlob(c,'image/jpeg',.92).then(function(b){var name=slug(ST.page).replace('-coloring-page','')+'-colored.jpg';var f=null;try{f=new File([b],name,{type:'image/jpeg'})}catch(e){}
   if(f&&navigator.canShare&&navigator.canShare({files:[f]})&&/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){idle();return navigator.share({files:[f],title:ST.page.title}).catch(function(){})}
   saveBlob(b,name);toast('Picture saved')})})});
-$('#stPrint').addEventListener('click',function(){run('Sending to your printer…',function(){var src=colored(),P=PAPER[S.opts.paper],c=document.createElement('canvas');c.width=P.w;c.height=P.h;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,P.w,P.h);x.imageSmoothingQuality='high';var s=Math.min((P.w-144)/src.width,(P.h-144)/src.height);x.drawImage(src,(P.w-src.width*s)/2,(P.h-src.height*s)/2,src.width*s,src.height*s);idle();return printCanvases([c],S.opts.paper)})});
+$('#stPrint').addEventListener('click',function(){T('print_colored',{page_id:ST.page.id});run('Sending to your printer…',function(){var src=colored(),P=PAPER[S.opts.paper],c=document.createElement('canvas');c.width=P.w;c.height=P.h;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,P.w,P.h);x.imageSmoothingQuality='high';var s=Math.min((P.w-144)/src.width,(P.h-144)/src.height);x.drawImage(src,(P.w-src.width*s)/2,(P.h-src.height*s)/2,src.width*s,src.height*s);idle();return printCanvases([c],S.opts.paper)})});
 window.addEventListener('resize',function(){if($('#ovStudio').classList.contains('open'))setZoom(ST.zoom)});
 
 /* ---------- book ---------- */
@@ -556,9 +565,9 @@ function bookSheets(each){var paper=$('#bA4').checked?'a4':'letter',pages=S.book
   if($('#bCover').checked)chain=chain.then(function(){note();return cover(paper,pages)}).then(each).then(tick);
   pages.forEach(function(p){chain=chain.then(function(){note();return compose(p,o)}).then(each).then(tick)});
   return chain.then(function(){return paper})}
-$('#bPdf').addEventListener('click',function(){run('Building your book…',function(){return needPdf().then(function(jsPDF){var paper=$('#bA4').checked?'a4':'letter',doc=new jsPDF({unit:'pt',format:PAPER[paper].fmt,orientation:'portrait',compress:true}),first=true;
+$('#bPdf').addEventListener('click',function(){T('book_pdf',{pages:S.book.length});run('Building your book…',function(){return needPdf().then(function(jsPDF){var paper=$('#bA4').checked?'a4':'letter',doc=new jsPDF({unit:'pt',format:PAPER[paper].fmt,orientation:'portrait',compress:true}),first=true;
   return bookSheets(function(c){if(!first)doc.addPage(PAPER[paper].fmt,'portrait');first=false;var w=doc.internal.pageSize.getWidth(),h=doc.internal.pageSize.getHeight();doc.addImage(c.toDataURL('image/jpeg',.88),'JPEG',0,0,w,h,undefined,'FAST');c.width=c.height=1}).then(function(){var nm=($('#bName').value||'my-coloring-book').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'my-coloring-book';doc.save(nm+'.pdf');toast('Your book is saved')})})})});
-$('#bPrint').addEventListener('click',function(){run('Building your book…',function(){var host=$('#printHost');host.innerHTML='';var imgs=[];
+$('#bPrint').addEventListener('click',function(){T('book_print',{pages:S.book.length});run('Building your book…',function(){var host=$('#printHost');host.innerHTML='';var imgs=[];
   return bookSheets(function(c){var i=new Image();i.src=c.toDataURL('image/jpeg',.9);host.appendChild(i);imgs.push(i);c.width=c.height=1}).then(function(paper){$('#pageRule').textContent='@page{size:'+PAPER[paper].css+';margin:0}';return Promise.all(imgs.map(function(i){return i.decode?i.decode().catch(function(){}):null}))}).then(tick).then(function(){idle();window.print()})})});
 })();
 </script>
