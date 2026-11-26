@@ -476,6 +476,7 @@ function fillDetail(){var p=S.cur;$('#dTitle').textContent=p.title;var b=$('#dBa
 function syncDetail(){if(!S.cur)return;var f=S.favs.indexOf(S.cur.id)>=0,b=S.book.indexOf(S.cur.id)>=0;$('#dFav').textContent=f?'♥ Favorited':'♥ Favorite';$('#dFav').classList.toggle('pri',f);$('#dAdd').textContent=b?'✓ In my book':'＋ Add to my book'}
 function preview(){var tok=++pvTok,p=S.cur;sheetFor(p,S.opts).then(function(c){if(tok!==pvTok)return;var v=$('#pvCanvas'),k=Math.min(1,1100/Math.max(c.width,c.height));v.width=Math.round(c.width*k);v.height=Math.round(c.height*k);var x=v.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(c,0,0,v.width,v.height)}).catch(function(e){console.error(e)})}
 function step(d){var i=S.list.indexOf(S.cur);if(i<0)return;var n=S.list[(i+d+S.list.length)%S.list.length];S.cur=n;history.replaceState(null,'','#p='+n.id);fillDetail()}
+window.addEventListener('hashchange',function(){var m=location.hash.match(/p=([a-z]+-\d+)/);if(m&&S.byId[m[1]]&&(!S.cur||S.cur.id!==m[1]||!$('#ovDetail').classList.contains('open')))openDetail(m[1])});
 $('#dPrev').addEventListener('click',function(){step(-1)});$('#dNext').addEventListener('click',function(){step(1)});
 $('#ovDetail').addEventListener('click',function(e){var b=e.target.closest('.seg button');if(b){var k=b.parentNode.dataset.opt;S.opts[k]=b.dataset.v;store.set('opts',S.opts);fillDetail()}});
 $('#ovDetail').addEventListener('change',function(e){var i=e.target;if(i.dataset&&i.dataset.opt){S.opts[i.dataset.opt]=i.checked;store.set('opts',S.opts);preview()}});
