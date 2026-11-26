@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Free Coloring Pages: Hundreds of Printable Pages for Kids and Adults</title>
-<link rel="canonical" href="https://popcornlove.net/free-coloring-pages/">
+<link rel="canonical" href="https://makeacoloringbook.com/">
 <link rel="alternate" type="application/rss+xml" title="Free Coloring Pages" href="feed.xml">
 <meta name="description" content="Hundreds of free coloring pages for kids and grown-ups. Holidays, dinosaurs, ocean, space, dragons and more. Print, download a PDF, or color right in your browser.">
 <meta property="og:title" content="Free Coloring Pages">
 <meta property="og:description" content="Hundreds of free pages for kids and grown-ups. Print, save as PDF, or color online.">
-<meta property="og:image" content="https://popcornlove.net/free-coloring-pages/og.jpg">
+<meta property="og:image" content="https://makeacoloringbook.com/og.jpg">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://popcornlove.net/free-coloring-pages/">
+<meta property="og:url" content="https://makeacoloringbook.com/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFF6E5">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FFC53D'/%3E%3Cpath d='M18 46l6-22 16-10 8 8-10 16z' fill='%23F25C3B' stroke='%231D1B2F' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M18 46l8-3-5-5z' fill='%231D1B2F'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/fredoka-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Free Coloring Pages","url":"https://popcornlove.net/free-coloring-pages/","description":"Hundreds of free printable coloring pages for kids and adults: holidays, dinosaurs, ocean animals, space, dragons and unicorns. Print, save a PDF, or color online."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Free Coloring Pages","url":"https://makeacoloringbook.com/","description":"Hundreds of free printable coloring pages for kids and adults: holidays, dinosaurs, ocean animals, space, dragons and unicorns. Print, save a PDF, or color online."}</script>
 <style>
 :root{
   --paper:#FFF6E5; --card:#FFFFFF; --ink:#1D1B2F; --body:#3B3852; --muted:#77738F; --line:#E9DCC3;
@@ -218,6 +218,8 @@ footer b{color:var(--ink)}
         <button class="btn pri" id="surprise">🎲 Surprise me</button>
         <button class="btn" id="favBtn">♥ Favorites <span class="count" id="favCount">0</span></button>
         <button class="btn sun" id="bookBtn">📚 My book <span class="count" id="bookCount">0</span></button>
+        <button class="btn" id="reqBtn">✏️ Request a page</button>
+        <a class="btn leaf" id="adventBtn" href="advent/" style="display:none;text-decoration:none">🎁 Advent calendar</a>
       </div>
     </div>
     <div class="stage" aria-hidden="true">
@@ -235,14 +237,14 @@ footer b{color:var(--ink)}
     <div class="chips" id="chips"></div>
     <label class="search"><span aria-hidden="true">🔎</span><input id="q" type="search" placeholder="Search: turkey, dragon, mandala…" autocomplete="off" aria-label="Search coloring pages"></label>
   </div>
-  <div class="sechead"><h2 id="secTitle">Coloring pages</h2><span id="secCount"></span></div>
+  <div class="sechead"><h2 id="secTitle">Coloring pages</h2><span><button class="btn sm" id="packBtn" style="display:none;margin-right:10px">⬇ All as one PDF</button><span id="secCount"></span></span></div>
   <section class="grid" id="grid" aria-live="polite"></section>
 </main>
 
 <footer>
   <nav class="footnav" aria-label="All themes"><a href="thanksgiving/">Thanksgiving Coloring Pages</a><a href="christmas/">Christmas Coloring Pages</a><a href="halloween/">Halloween Coloring Pages</a><a href="easter/">Easter and Spring Coloring Pages</a><a href="valentines/">Valentine's Day Coloring Pages</a><a href="summer/">Summer and 4th of July Coloring Pages</a><a href="holidays/">Holiday Coloring Pages</a><a href="dinosaurs/">Dinosaur Coloring Pages</a><a href="ocean/">Ocean Animal Coloring Pages</a><a href="animals/">Animal Coloring Pages</a><a href="space/">Space and Robot Coloring Pages</a><a href="fantasy/">Dragon and Unicorn Coloring Pages</a></nav>
   <p><b>Free for home, classroom, church and party use.</b> Print as many as you like.</p>
-  <p>popcornlove.net/free-coloring-pages</p>
+  <p>makeacoloringbook.com</p>
 </footer>
 
 <button class="btn sun fab" id="fab">📚 My book <span class="count" id="fabCount">0</span></button>
@@ -273,6 +275,7 @@ footer b{color:var(--ink)}
         <div class="opt"><label>Lines</label><div class="seg" data-opt="lines"><button data-v="dark">Bold</button><button data-v="light">Light</button></div></div>
       </div>
       <div class="opt"><label>Layout</label><div class="seg" data-opt="layout"><button data-v="full">Full page</button><button data-v="half">2 per sheet</button></div></div>
+      <div class="opt"><label for="dWho">Put a name on it (optional)</label><input class="field" id="dWho" maxlength="22" placeholder="Charlie" autocomplete="off"></div>
       <div class="checks">
         <label class="check"><input type="checkbox" data-opt="title"> Title on top</label>
         <label class="check"><input type="checkbox" data-opt="name"> Name line</label>
@@ -346,6 +349,26 @@ footer b{color:var(--ink)}
   </div>
 </div>
 
+<!-- request -->
+<div class="ov" id="ovReq" role="dialog" aria-modal="true" aria-labelledby="rTitle">
+  <div class="panel drawer">
+    <button class="x" data-close aria-label="Close">✕</button>
+    <div class="in" id="rForm">
+      <h2 id="rTitle">Request a coloring page</h2>
+      <p class="hint">Tell us what to draw. If we can draw it, we'll add it to the site for free. We make a batch of new pages every day.</p>
+      <div class="opt" style="margin-top:12px"><label for="rIdea">What should we draw?</label><textarea class="field" id="rIdea" rows="3" maxlength="200" placeholder="A corgi riding a skateboard past a taco truck" style="resize:vertical;line-height:1.35"></textarea></div>
+      <div class="opt" style="margin-top:12px"><label>Style</label><div class="seg" id="rStyle"><button data-v="Little Kids">Little Kids</button><button data-v="Whimsical" aria-pressed="true">Whimsical</button><button data-v="Realistic">Realistic</button><button data-v="Intricate">Intricate</button></div></div>
+      <p class="hint" style="margin-top:12px">We can't draw characters from movies, shows or games, or real people. Please leave out names and personal details.</p>
+      <div class="cta"><button class="btn pri wide" id="rSend">Send my request</button></div>
+    </div>
+    <div class="in" id="rDone" style="display:none">
+      <h2>Got it!</h2>
+      <p class="hint" style="font-size:16px;margin:10px 0 16px">Your idea is in line. New pages show up under the <b>By Request</b> tab, usually within a few days.</p>
+      <div class="cta"><button class="btn wide" data-close>Back to coloring</button></div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status"></div>
 <div class="busy" id="busy"><div><div class="spin"></div><div id="busyMsg">Getting it ready…</div></div></div>
 <div id="printHost"></div>
@@ -388,6 +411,7 @@ Promise.all([getJSON('catalog.json'),getJSON('ready.json').catch(function(){retu
   S.themes=a[0].themes;(a[1].art||[]).forEach(function(i){S.ready.art[i]=1});(a[1].guide||[]).forEach(function(i){S.ready.guide[i]=1});S.pal=a[2]||{};
   S.pages=a[0].pages.filter(function(p){return S.ready.art[p.id]}).map(function(p){return {id:p.id,theme:p.t,style:p.s,title:p.n}});
   S.pages.forEach(function(p){S.byId[p.id]=p});
+  S.themes=S.themes.filter(function(t){return S.pages.some(function(p){return p.theme===t.key})});
   S.favs=S.favs.filter(function(i){return S.byId[i]});S.book=S.book.filter(function(i){return S.byId[i]});
   if(hasGuide('thanksgiving-02'))$('#heroCol').src='guide/thanksgiving-02.webp';
   var se=seasonal();var h=location.hash.match(/t=([a-z]+)/);
@@ -415,6 +439,7 @@ function cardHTML(p){var f=S.favs.indexOf(p.id)>=0,b=S.book.indexOf(p.id)>=0;
 function render(){S.list=filtered();var g=$('#grid');
   $('#secTitle').textContent=S.onlyFav?'Your favorites':(S.q?'Search results':(S.theme==='all'?'All coloring pages':themeName(S.theme)));
   $('#secCount').textContent=S.list.length+(S.list.length===1?' page':' pages');
+  $('#packBtn').style.display=(!S.q&&(S.onlyFav||S.theme!=='all')&&S.list.length>1&&S.list.length<=60)?'':'none';
   g.innerHTML=S.list.length?S.list.map(cardHTML).join(''):'<div class="empty">'+(S.onlyFav?'No favorites yet. Tap ♥ on a page to save it here.':'Nothing matches that. Try another word or style.')+'</div>'}
 $('#grid').addEventListener('click',function(e){var c=e.target.closest('.card');if(!c)return;var id=c.dataset.id;
   if(e.target.closest('[data-fav]')){toggleFav(id);return}
@@ -440,7 +465,8 @@ function compose(page,o){return Promise.all([loadImg('art/'+page.id+'.webp'),(o.
   var art=r[0],gimg=r[1],P=PAPER[o.paper]||PAPER.letter,c=document.createElement('canvas');c.width=P.w;c.height=P.h;var x=c.getContext('2d');
   x.fillStyle='#fff';x.fillRect(0,0,P.w,P.h);x.imageSmoothingQuality='high';
   var m=72,top=m,bottom=P.h-m,ink='#1D1B2F';
-  if(o.title){x.fillStyle=ink;x.textAlign='center';x.textBaseline='middle';x.font='700 76px Fredoka, "Trebuchet MS", sans-serif';x.fillText(page.title,P.w/2,top+52,P.w-2*m);top+=112}
+  var who=(o.who||'').trim(),head=who?(who+(/s$/i.test(who)?'\u2019 ':'\u2019s ')+(o.title?page.title:'Coloring Page')):(o.title?page.title:'');
+  if(head){x.fillStyle=ink;x.textAlign='center';x.textBaseline='middle';x.font='700 76px Fredoka, "Trebuchet MS", sans-serif';x.fillText(head,P.w/2,top+52,P.w-2*m);top+=112}
   var foot=gimg?456:(o.name?92:0);bottom-=foot;
   var s=Math.min((P.w-2*m)/art.width,(bottom-top)/art.height),aw=art.width*s,ah=art.height*s,ax=(P.w-aw)/2,ay=top+((bottom-top)-ah)/2;
   if(o.lines==='light')x.globalAlpha=.36;x.drawImage(art,ax,ay,aw,ah);x.globalAlpha=1;
@@ -457,7 +483,7 @@ function compose(page,o){return Promise.all([loadImg('art/'+page.id+'.webp'),(o.
       x.font='800 24px Nunito, sans-serif';x.fillStyle='#55516d';x.fillText('TRY THESE COLORS',left,sy-72);
       pal.forEach(function(h,i){var cx=sx+i*step;x.beginPath();x.arc(cx,sy,44,0,6.2832);x.fillStyle=h;x.fill();x.lineWidth=4;x.strokeStyle=ink;x.stroke();x.fillStyle=ink;x.font='700 23px Nunito, sans-serif';x.textAlign='center';x.fillText(nameOf(h),cx,sy+80,step-8)});x.textAlign='left'}
   }else if(o.name){nameLine(fy+62,right-330);x.fillStyle=ink;x.font='700 40px Nunito, sans-serif';x.fillText('Age',right-290,fy+62);x.beginPath();x.moveTo(right-200,fy+68);x.lineTo(right,fy+68);x.lineWidth=3;x.strokeStyle=ink;x.stroke()}
-  x.fillStyle='#9a96ad';x.font='700 20px Nunito, sans-serif';x.textAlign='center';x.fillText('popcornlove.net/free-coloring-pages',P.w/2,P.h-30);
+  x.fillStyle='#9a96ad';x.font='700 20px Nunito, sans-serif';x.textAlign='center';x.fillText('makeacoloringbook.com',P.w/2,P.h-30);
   return c})}
 function twoUp(c){var o=document.createElement('canvas');o.width=c.height;o.height=c.width;var x=o.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,o.width,o.height);x.imageSmoothingQuality='high';var hw=o.width/2,s=Math.min(hw/c.width,o.height/c.height),w=c.width*s,h=c.height*s,y=(o.height-h)/2;x.drawImage(c,(hw-w)/2,y,w,h);x.drawImage(c,hw+(hw-w)/2,y,w,h);x.setLineDash([14,14]);x.strokeStyle='#bbb';x.lineWidth=3;x.beginPath();x.moveTo(hw,40);x.lineTo(hw,o.height-40);x.stroke();return o}
 function sheetFor(page,o){return compose(page,o).then(function(c){return o.layout==='half'?twoUp(c):c})}
@@ -480,7 +506,7 @@ function fillDetail(){var p=S.cur;$('#dTitle').textContent=p.title;var b=$('#dBa
   var g=hasGuide(p.id);$('#optGuide').style.display=g?'':'none';
   $('#dSw').innerHTML=(g&&S.opts.guide==='full')?(S.pal[p.id]||[]).map(function(h){return '<span class="sw" style="background:'+h+'" title="'+nameOf(h)+'"></span>'}).join(''):'';
   $$('#ovDetail .seg').forEach(function(seg){var k=seg.dataset.opt;$$('button',seg).forEach(function(bt){bt.setAttribute('aria-pressed',String(S.opts[k])===bt.dataset.v)})});
-  $$('#ovDetail input[data-opt]').forEach(function(i){i.checked=!!S.opts[i.dataset.opt]});
+  $$('#ovDetail input[data-opt]').forEach(function(i){i.checked=!!S.opts[i.dataset.opt]});$('#dWho').value=S.opts.who||'';
   syncDetail();preview()}
 function syncDetail(){if(!S.cur)return;var f=S.favs.indexOf(S.cur.id)>=0,b=S.book.indexOf(S.cur.id)>=0;$('#dFav').textContent=f?'♥ Favorited':'♥ Favorite';$('#dFav').classList.toggle('pri',f);$('#dAdd').textContent=b?'✓ In my book':'＋ Add to my book'}
 function preview(){var tok=++pvTok,p=S.cur;sheetFor(p,S.opts).then(function(c){if(tok!==pvTok)return;var v=$('#pvCanvas'),k=Math.min(1,1100/Math.max(c.width,c.height));v.width=Math.round(c.width*k);v.height=Math.round(c.height*k);var x=v.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(c,0,0,v.width,v.height)}).catch(function(e){console.error(e)})}
@@ -489,6 +515,19 @@ window.addEventListener('hashchange',function(){var m=location.hash.match(/p=([a
 $('#dPrev').addEventListener('click',function(){step(-1)});$('#dNext').addEventListener('click',function(){step(1)});
 $('#ovDetail').addEventListener('click',function(e){var b=e.target.closest('.seg button');if(b){var k=b.parentNode.dataset.opt;S.opts[k]=b.dataset.v;store.set('opts',S.opts);if(k==='guide')T('guide_option',{value:b.dataset.v});fillDetail()}});
 $('#ovDetail').addEventListener('change',function(e){var i=e.target;if(i.dataset&&i.dataset.opt){S.opts[i.dataset.opt]=i.checked;store.set('opts',S.opts);preview()}});
+var whoT;$('#dWho').addEventListener('input',function(e){S.opts.who=e.target.value;store.set('opts',S.opts);clearTimeout(whoT);whoT=setTimeout(function(){if(S.opts.who)T('name_on_page');preview()},350)});
+$('#packBtn').addEventListener('click',function(){var pages=S.list.slice(0,60),name=((S.onlyFav?'my favorites':themeName(S.theme))||'coloring').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-coloring-pages';T('pack_pdf',{theme:S.onlyFav?'favorites':S.theme,pages:pages.length});
+  run('Building the pack…',function(){return needPdf().then(function(jsPDF){var paper=S.opts.paper,doc=new jsPDF({unit:'pt',format:PAPER[paper].fmt,orientation:'portrait',compress:true}),first=true,k=0,chain=Promise.resolve(),o={paper:paper,guide:'off',lines:'dark',layout:'full',title:false,name:false};
+    pages.forEach(function(p){chain=chain.then(function(){k++;$('#busyMsg').textContent='Building the pack… page '+k+' of '+pages.length;return compose(p,o)}).then(function(c){if(!first)doc.addPage(PAPER[paper].fmt,'portrait');first=false;doc.addImage(c.toDataURL('image/jpeg',.88),'JPEG',0,0,doc.internal.pageSize.getWidth(),doc.internal.pageSize.getHeight(),undefined,'FAST');c.width=c.height=1}).then(tick)});
+    return chain.then(function(){doc.save(name+'.pdf');toast('Pack saved')})})})});
+var REQ_URL='https://docs.google.com/forms/d/e/1FAIpQLScuLAeL6MpKQ0uUqwoBmW_egAuAbt4hk_n7tBOJu72J89s6rw/formResponse',REQ_FIELD='entry.1860724256',reqStyle='Whimsical';
+$('#reqBtn').addEventListener('click',function(){$('#rForm').style.display='';$('#rDone').style.display='none';open('#ovReq');T('request_open')});
+$('#rStyle').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;reqStyle=b.dataset.v;$$('#rStyle button').forEach(function(x){x.setAttribute('aria-pressed',x===b)})});
+$('#rSend').addEventListener('click',function(){var t=$('#rIdea').value.replace(/\s+/g,' ').trim();if(t.length<4){toast('Tell us a little more about what to draw.');return}
+  var day=new Date().toISOString().slice(0,10),log=store.get('req',{d:day,n:0});if(log.d!==day)log={d:day,n:0};if(log.n>=3){toast('That is 3 requests today. Come back tomorrow!');return}
+  var fd=new FormData();fd.append(REQ_FIELD,'['+reqStyle+'] '+t);$('#rSend').disabled=true;
+  fetch(REQ_URL,{method:'POST',mode:'no-cors',body:fd}).catch(function(){}).then(function(){$('#rSend').disabled=false;log.n++;store.set('req',log);T('request_page',{style:reqStyle});$('#rIdea').value='';$('#rForm').style.display='none';$('#rDone').style.display=''})});
+(function(){var d=new Date(),m=d.getMonth(),day=d.getDate();if((m===10&&day>=20)||(m===11&&day<=25))$('#adventBtn').style.display=''})();
 $('#dPrint').addEventListener('click',function(){var p=S.cur;T('print',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Sending to your printer…',function(){return sheetFor(p,S.opts).then(function(c){idle();return printCanvases([c],S.opts.paper)})})});
 $('#dPdf').addEventListener('click',function(){var p=S.cur;T('pdf',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Making your PDF…',function(){return sheetFor(p,S.opts).then(function(c){return makePdf([c],S.opts.paper,slug(p))}).then(function(){toast('PDF saved')})})});
 $('#dPng').addEventListener('click',function(){var p=S.cur;T('image',{page_id:p.id});run('Saving the image…',function(){return sheetFor(p,S.opts).then(function(c){return toBlob(c)}).then(function(b){saveBlob(b,slug(p)+'.png');toast('Image saved')})})});
@@ -558,7 +597,7 @@ function cover(paper,pages){return Promise.all(pages.slice(0,4).map(function(p){
   var who=$('#bFor').value.trim();x.font='700 64px Nunito, sans-serif';x.fillText(who?('Made for '+who):(pages.length+' pages to color'),P.w/2,590);
   var n=Math.min(4,pages.length),cols=n>1?2:1,rows=Math.ceil(n/cols),gap=64,y0=720,avail=P.h-y0-300,th=Math.min((avail-(rows-1)*gap)/rows,rows>1?880:1500),tw=th*.75,gy=y0+(avail-(rows*th+(rows-1)*gap))/2;
   for(var i=0;i<n;i++){var row=Math.floor(i/cols),inRow=Math.min(cols,n-row*cols),gx=(P.w-(inRow*tw+(inRow-1)*gap))/2,cx=gx+(i%cols)*(tw+gap),cy=gy+row*(th+gap);x.save();x.translate(cx+tw/2,cy+th/2);x.rotate((i%2?1:-1)*.035);x.fillStyle='#fff';x.fillRect(-tw/2,-th/2,tw,th);x.drawImage(im[i],-tw/2+10,-th/2+10,tw-20,th-20);x.lineWidth=7;x.strokeStyle=ink;x.strokeRect(-tw/2,-th/2,tw,th);x.restore()}
-  x.fillStyle='#77738F';x.font='700 34px Nunito, sans-serif';x.fillText('popcornlove.net/free-coloring-pages',P.w/2,P.h-190);return c})}
+  x.fillStyle='#77738F';x.font='700 34px Nunito, sans-serif';x.fillText('makeacoloringbook.com',P.w/2,P.h-190);return c})}
 function bookSheets(each){var paper=$('#bA4').checked?'a4':'letter',pages=S.book.map(function(id){return S.byId[id]}),o={paper:paper,guide:$('#bGuide').checked?'full':'off',lines:'dark',layout:'full',title:false,name:false};
   var chain=Promise.resolve(),n=pages.length+($('#bCover').checked?1:0),k=0;
   function note(){k++;$('#busyMsg').textContent='Building your book… page '+k+' of '+n}

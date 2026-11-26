@@ -11,7 +11,7 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import catalog_src as C  # noqa
 
-BASE = "https://popcornlove.net/free-coloring-pages/"
+BASE = "https://makeacoloringbook.com/"
 TODAY = datetime.date.today().isoformat()
 
 STYLE_NAME = {"easy": "Little Kids", "whimsical": "Whimsical", "realistic": "Realistic", "intricate": "Intricate"}
@@ -106,7 +106,7 @@ FOOT = """</main>
 <footer>
   <nav class="footnav" aria-label="All themes">{footlinks}</nav>
   <p><b>Free for home, classroom, church and party use.</b> Print as many as you like.</p>
-  <p><a href="{root}">popcornlove.net/free-coloring-pages</a></p>
+  <p><a href="{root}">makeacoloringbook.com</a></p>
 </footer>
 <script src="{root}ga.js"></script>
 {script}
@@ -237,6 +237,29 @@ def main():
             body += FOOT.format(root=root, footlinks=footlinks(root), script=script)
             write(os.path.join(ROOT, key, p["slug"], "index.html"), body)
             urls.append((url, [(art, h1)], "0.6"))
+
+    # advent calendar (the 24 Christmas pages, one per day)
+    root = "../"
+    url = BASE + "advent/"
+    xmas = by_theme["christmas"]
+    doors = "".join('<a class="door" data-day="%d" href="%schristmas/%s/"><span class="num">%d</span><img alt="%s coloring page" data-src="%sthumb/%s.webp" width="390" height="520"><span class="cap">%s</span></a>' % (
+        n + 1, root, p["slug"], n + 1, esc(p["title"]), root, p["id"], esc(p["title"])) for n, p in enumerate(xmas))
+    ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Christmas Coloring Advent Calendar", "url": url,
+          "description": "A free Christmas coloring page to print every day from December 1 to 24."}
+    body = HEAD.format(title=esc("Christmas Coloring Advent Calendar: A Free Page Every Day"), ogtitle=esc("Christmas Coloring Advent Calendar"),
+                       desc=esc("A free printable Christmas coloring page every day from December 1 to 24. Open today's door, print it, and color."),
+                       url=url, image=BASE + "pin/" + xmas[1]["id"] + ".jpg", root=root, jsonld=json.dumps(ld, ensure_ascii=False), tabs=tabs(root, "christmas"))
+    body += '<style>.doors{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin:22px 0}.door{position:relative;display:block;aspect-ratio:3/4;border:2.5px solid var(--ink);border-radius:14px;background:#fff;box-shadow:4px 4px 0 var(--ink);overflow:hidden;text-decoration:none}.door img{width:100%;height:100%;object-fit:contain;display:none}.door .num{position:absolute;left:8px;top:6px;z-index:2;font:700 22px/1 var(--display);background:var(--sun);border:2px solid var(--ink);border-radius:9px;padding:5px 8px;color:var(--ink)}.door .cap{display:none}.door.open img{display:block}.door.locked{background:repeating-linear-gradient(45deg,#D94B3A 0 14px,#C53F30 14px 28px);pointer-events:none}.door.locked .num{position:static;display:grid;place-items:center;width:100%;height:100%;background:none;border:0;color:#fff;font-size:44px}.door.today{outline:5px solid var(--leaf);outline-offset:3px}@media(max-width:820px){.doors{grid-template-columns:repeat(3,1fr);gap:10px}.door.locked .num{font-size:34px}}</style>\n'
+    body += '<nav class="crumbs"><a href="%s">Free Coloring Pages</a> › <a href="../christmas/">Christmas</a> › <span>Advent calendar</span></nav>\n' % root
+    body += '<h1>Christmas Coloring Advent Calendar</h1>\n<p class="lede">A new Christmas coloring page to print every day from December 1 to 24. Open today\'s door, print it, and color. <span id="adventNote"></span></p>\n'
+    body += '<div class="doors">%s</div>\n<p class="cta"><a class="btn pri" href="../christmas/">See all the Christmas coloring pages</a></p>\n' % doors
+    script = ("<script>(function(){var d=new Date(),m=d.getMonth(),day=d.getDate(),open=(m===11)?Math.min(day,24):(m===0?24:0);"
+              "[].forEach.call(document.querySelectorAll('.door'),function(a){var n=+a.dataset.day;if(n<=open){a.classList.add('open');var i=a.querySelector('img');i.src=i.dataset.src;if(m===11&&n===day)a.classList.add('today')}else{a.classList.add('locked');a.removeAttribute('href');a.setAttribute('aria-label','Day '+n+', not open yet')}});"
+              "var note=document.getElementById('adventNote');if(open===0){var y=d.getFullYear(),s=new Date(y,11,1);if(d>s)s=new Date(y+1,11,1);var left=Math.ceil((s-d)/864e5);note.textContent='The first door opens December 1, '+left+(left===1?' day':' days')+' from now.'}"
+              "[].forEach.call(document.querySelectorAll('.door'),function(a){a.addEventListener('click',function(){if(window.track)track('advent_door',{day:a.dataset.day})})})})();</script>")
+    body += FOOT.format(root=root, footlinks=footlinks(root), script=script)
+    write(os.path.join(ROOT, "advent", "index.html"), body)
+    urls.append((url, [], "0.8"))
 
     # sitemap
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
