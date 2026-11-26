@@ -96,7 +96,7 @@ HEAD = """<!DOCTYPE html>
 <body>
 <header class="top"><div class="wrap">
   <a class="logo" href="{root}"><span class="c1">Free</span> <span class="c2">Coloring</span> <span class="c3">Pages</span></a>
-  <nav class="topnav"><a href="{root}">All 288 pages</a><a href="{root}#book">Build a book</a></nav>
+  <nav class="topnav"><a href="{root}">All pages</a><a href="{root}#book">Build a book</a></nav>
 </div></header>
 <nav class="bar" aria-label="Themes"><div class="tabs">{tabs}</div></nav>
 <main class="wrap">
@@ -173,11 +173,11 @@ def main():
             {"@type": "BreadcrumbList", "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Free Coloring Pages", "item": BASE},
                 {"@type": "ListItem", "position": 2, "name": seo, "item": url}]}]}
-        body = HEAD.format(title=esc("Free %s: %d Printable Pages" % (seo, len(items))),
-                           ogtitle=esc("Free " + seo), desc=esc("%d free printable %s. %s Print, save a PDF or color online." % (len(items), seo.lower().replace("valentine's day", "Valentine's Day").replace("4th of july", "4th of July").replace("thanksgiving", "Thanksgiving").replace("christmas", "Christmas").replace("halloween", "Halloween").replace("easter", "Easter"), intro)),
+        body = HEAD.format(title=esc("Free %s (Printable PDF)" % seo),
+                           ogtitle=esc("Free " + seo), desc=esc("Free printable %s. %s Print, save a PDF or color online." % (seo.lower().replace("valentine's day", "Valentine's Day").replace("4th of july", "4th of July").replace("thanksgiving", "Thanksgiving").replace("christmas", "Christmas").replace("halloween", "Halloween").replace("easter", "Easter"), intro)),
                            url=url, image=BASE + "pin/" + items[1]["id"] + ".jpg", root=root, jsonld=json.dumps(ld, ensure_ascii=False), tabs=tabs(root, key))
         body += '<nav class="crumbs"><a href="%s">Free Coloring Pages</a> › <span>%s</span></nav>\n' % (root, esc(name))
-        body += '<h1>Free %s</h1>\n<p class="lede">%s All %d pages are free to print. Tap one to print it, save a PDF, add a small color guide, or color it on your screen.</p>\n' % (esc(seo), esc(intro), len(items))
+        body += '<h1>Free %s</h1>\n<p class="lede">%s Every page is free to print. Tap one to print it, save a PDF, add a small color guide, or color it on your screen.</p>\n' % (esc(seo), esc(intro))
         body += '<p class="cta"><a class="btn pri" href="%s#t=%s">Open in the coloring app</a></p>\n' % (root, key)
         body += "\n".join(sections)
         body += FOOT.format(root=root, footlinks=footlinks(root), script="")
@@ -227,9 +227,9 @@ def main():
             body += '<h2>About this page</h2><p>%s</p>\n<p>It prints on one sheet of regular paper. For markers, use heavier paper or put a spare sheet underneath. In the print options you can also print two per sheet, switch to light gray lines, or add a name line.</p>\n' % esc(STYLE_BLURB[p["style"]])
             body += '</div>\n</article>\n'
             body += '<nav class="pager"><a href="../%s/">‹ %s</a><a href="../%s/">%s ›</a></nav>\n' % (prev["slug"], esc(prev["title"]), nxt["slug"], esc(nxt["title"]))
-            body += '<section><h2>More %s</h2><div class="grid small">%s</div><p class="cta"><a class="btn" href="../">See all %d %s</a></p></section>\n' % (
+            body += '<section><h2>More %s</h2><div class="grid small">%s</div><p class="cta"><a class="btn" href="../">See all %s</a></p></section>\n' % (
                 esc(seo.lower().replace("valentine's day", "Valentine's Day").replace("4th of july", "4th of July").replace("thanksgiving", "Thanksgiving").replace("christmas", "Christmas").replace("halloween", "Halloween").replace("easter", "Easter")),
-                "".join(card(q, root) for q in more), len(items), esc(seo))
+                "".join(card(q, root) for q in more), esc(seo))
             body += '<section><h2>More %s pages</h2><div class="grid small">%s</div></section>\n' % (esc(STYLE_NAME[p["style"]].lower()), "".join(card(q, root) for q in same))
             script = ("<script>(function(){var id=document.querySelector('.item').dataset.id;function t(n){if(window.track)track(n,{page_id:id})}"
                       "document.getElementById('printBtn').addEventListener('click',function(){t('print');window.print()});"
@@ -247,6 +247,28 @@ def main():
             esc(url), TODAY, "".join("<image:image><image:loc>%s</image:loc></image:image>" % esc(a) for a, _ in imgs)))
     sm.append("</urlset>")
     write(os.path.join(ROOT, "sitemap.xml"), "\n".join(sm) + "\n")
+    import csv, email.utils, time
+    order = ["christmas", "holidays", "valentines", "animals", "dinosaurs", "fantasy", "ocean", "space", "easter", "summer", "halloween", "thanksgiving"]
+    feed = ['<?xml version="1.0" encoding="UTF-8"?>', '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel>',
+            "<title>Free Coloring Pages</title><link>%s</link><description>Free printable coloring pages for kids and adults.</description>" % BASE]
+    rows = []
+    now = time.time()
+    seq = [p for k in order for p in by_theme[k]]
+    for n, p in enumerate(seq):
+        url = BASE + p["theme"] + "/" + p["slug"] + "/"
+        pin = BASE + "pin/" + p["id"] + ".jpg"
+        title = p["title"] + " Coloring Page (Free Printable)"
+        d = "Free printable %s coloring page. %s Print it, save a PDF or color it online." % (p["title"], p["desc"])
+        feed.append('<item><title>%s</title><link>%s</link><guid>%s</guid><pubDate>%s</pubDate><description>%s</description><enclosure url="%s" type="image/jpeg" length="0"/><media:content url="%s" medium="image"/></item>' % (
+            esc(title), esc(url), esc(url), email.utils.formatdate(now - n * 3600), esc(d), esc(pin), esc(pin)))
+        rows.append([title[:100], pin, THEME_SEO[p["theme"]][0], "", d[:500], url, "",
+                     ", ".join(["coloring pages", "free printable", THEME_SEO[p["theme"]][0].lower(), STYLE_NAME[p["style"]].lower() + " coloring page"])])
+    feed.append("</channel></rss>")
+    write(os.path.join(ROOT, "feed.xml"), "\n".join(feed) + "\n")
+    with open(os.path.join(HERE, "pinterest-pins.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["Title", "Media URL", "Pinterest board", "Thumbnail", "Description", "Link", "Publish date", "Keywords"])
+        w.writerows(rows)
     json.dump({p["id"]: p["theme"] + "/" + p["slug"] + "/" for p in pages}, open(os.path.join(ROOT, "links.json"), "w"), separators=(",", ":"))
     print(len(urls), "pages written")
 

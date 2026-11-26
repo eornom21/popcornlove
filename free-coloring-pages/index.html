@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Free Coloring Pages: 288 Printable Pages for Kids and Adults</title>
+<title>Free Coloring Pages: Hundreds of Printable Pages for Kids and Adults</title>
 <link rel="canonical" href="https://popcornlove.net/free-coloring-pages/">
-<meta name="description" content="288 free coloring pages for kids and grown-ups. Holidays, dinosaurs, ocean, space, dragons and more. Print, download a PDF, or color right in your browser.">
+<link rel="alternate" type="application/rss+xml" title="Free Coloring Pages" href="feed.xml">
+<meta name="description" content="Hundreds of free coloring pages for kids and grown-ups. Holidays, dinosaurs, ocean, space, dragons and more. Print, download a PDF, or color right in your browser.">
 <meta property="og:title" content="Free Coloring Pages">
-<meta property="og:description" content="288 free pages for kids and grown-ups. Print, save as PDF, or color online.">
+<meta property="og:description" content="Hundreds of free pages for kids and grown-ups. Print, save as PDF, or color online.">
 <meta property="og:image" content="https://popcornlove.net/free-coloring-pages/og.jpg">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://popcornlove.net/free-coloring-pages/">
@@ -16,7 +17,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FFC53D'/%3E%3Cpath d='M18 46l6-22 16-10 8 8-10 16z' fill='%23F25C3B' stroke='%231D1B2F' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M18 46l8-3-5-5z' fill='%231D1B2F'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/fredoka-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Free Coloring Pages","url":"https://popcornlove.net/free-coloring-pages/","description":"288 free printable coloring pages for kids and adults: holidays, dinosaurs, ocean animals, space, dragons and unicorns. Print, save a PDF, or color online."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Free Coloring Pages","url":"https://popcornlove.net/free-coloring-pages/","description":"Hundreds of free printable coloring pages for kids and adults: holidays, dinosaurs, ocean animals, space, dragons and unicorns. Print, save a PDF, or color online."}</script>
 <style>
 :root{
   --paper:#FFF6E5; --card:#FFFFFF; --ink:#1D1B2F; --body:#3B3852; --muted:#77738F; --line:#E9DCC3;
@@ -212,7 +213,7 @@ footer b{color:var(--ink)}
     <div>
       <span class="kicker">100% free &middot; no sign-up</span>
       <h1><span class="c1">Free</span> <span class="squig"><span class="c2">Coloring</span><svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M2 12 C 22 2, 34 20, 54 10 S 88 2, 108 11 S 144 20, 164 9 S 190 6, 198 12" fill="none" stroke="#FFC53D" stroke-width="7" stroke-linecap="round"/></svg></span> <span class="c3">Pages</span></h1>
-      <p class="lede"><b id="total">288</b> pages for little kids, big kids and grown-ups. Print one, save a PDF, build your own coloring book, or color right here on your screen.</p>
+      <p class="lede"><b>Hundreds</b> of pages for little kids, big kids and grown-ups. Print one, save a PDF, build your own coloring book, or color right here on your screen.</p>
       <div class="heroBtns">
         <button class="btn pri" id="surprise">🎲 Surprise me</button>
         <button class="btn" id="favBtn">♥ Favorites <span class="count" id="favCount">0</span></button>
@@ -388,7 +389,6 @@ Promise.all([getJSON('catalog.json'),getJSON('ready.json').catch(function(){retu
   S.pages=a[0].pages.filter(function(p){return S.ready.art[p.id]}).map(function(p){return {id:p.id,theme:p.t,style:p.s,title:p.n}});
   S.pages.forEach(function(p){S.byId[p.id]=p});
   S.favs=S.favs.filter(function(i){return S.byId[i]});S.book=S.book.filter(function(i){return S.byId[i]});
-  $('#total').textContent=S.pages.length;
   if(hasGuide('thanksgiving-02'))$('#heroCol').src='guide/thanksgiving-02.webp';
   var se=seasonal();var h=location.hash.match(/t=([a-z]+)/);
   S.theme=(h&&themeName(h[1]))?h[1]:(se||'all');
