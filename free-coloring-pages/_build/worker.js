@@ -56,10 +56,6 @@ async function make(q, env) {
   if (BLOCK.test(idea)) return json({ error: "blocked", message: "We can't draw that one. Try a different idea." }, 400);
   if (NAMES.test(idea)) return json({ error: "named", message: "We can't draw characters, brands or real people. Describe your own instead, like “a friendly yellow electric mouse”." }, 400);
 
-  const c = await counts(env, q.headers.get("cf-connecting-ip") || "0");
-  if (c.mine >= c.limIp) return json({ error: "limit", message: "That is your " + c.limIp + " free instant pages for today. Come back tomorrow!" }, 429);
-  if (c.all >= c.limDay) return json({ error: "busy", message: "Our crayons are worn out for today. Send it as a request and we'll draw it soon." }, 429);
-
   // Human check (Turnstile). Only enforced once its secret is set on the Worker.
   if (env.TURNSTILE_SECRET) {
     const token = String(body.ts || "");
@@ -73,6 +69,10 @@ async function make(q, env) {
     }
     if (!human) return json({ error: "human", message: "We could not confirm you are a person. Please try again." }, 403);
   }
+
+  const c = await counts(env, q.headers.get("cf-connecting-ip") || "0");
+  if (c.mine >= c.limIp) return json({ error: "limit", message: "That is your " + c.limIp + " free instant pages for today. Come back tomorrow!" }, 429);
+  if (c.all >= c.limDay) return json({ error: "busy", message: "Our crayons are worn out for today. Send it as a request and we'll draw it soon." }, 429);
 
   const auth = { authorization: "Bearer " + env.OPENAI_API_KEY, "content-type": "application/json" };
   // Text safety check first. If the check itself fails, we stop: this is a kids' site.
