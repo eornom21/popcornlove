@@ -15,6 +15,7 @@ const STYLES = {
   intricate: "Style: intricate adult coloring book page, fine detailed linework, every element filled with ornate decorative patterns (zentangle, mandala, floral and paisley motifs), dense detailed composition with many small enclosed areas to color.",
 };
 const TAIL = "Pure black line art on a pure white background, clean crisp closed outlines, no shading, no hatching, no gray tones, no color, no solid black filled areas, no text, no letters, no numbers, no signature, no watermark, no border or frame. The whole illustration fits inside the page with a clear white margin on all four sides.";
+const WHOLE = "Draw every character completely and correctly: each face has two eyes, and hands, paws and feet are finished with the right number of parts. Nothing is left half drawn or hidden by mistake.";
 const RULES = "This is for a family website used by children. Keep it friendly and suitable for all ages. If the idea names a character from a movie, show, book, comic, toy or game, a brand or logo, or a real person, do not draw them: draw an original, generic version of the same kind of thing instead. Never include nudity, gore, weapons pointed at anyone, drugs, alcohol, hateful symbols or anything frightening for a small child.";
 // Words we refuse outright. Kept short on purpose; the image model and the moderation check catch the rest.
 const BLOCK = /\b(nude|naked|nsfw|sexy|sex|porn\w*|boobs?|penis|vagina|genital\w*|erotic\w*|fetish\w*|lingerie|murder\w*|bloody|gore|gory|behead\w*|suicid\w*|self[- ]?harm|rape\w*|nazi\w*|swastika|hitler|kkk|terroris\w*|cocaine|heroin|meth|marijuana|vap(e|es|ing)|cigarettes?|vodka|whiskey|drunk|guns?|rifles?|pistols?|grenades?)\b/i;
@@ -71,8 +72,16 @@ async function make(q, env) {
   }
 
   const c = await counts(env, q.headers.get("cf-connecting-ip") || "0");
-  if (c.mine >= c.limIp) return json({ error: "limit", message: "That is your " + c.limIp + " free instant pages for today. Come back tomorrow!" }, 429);
-  if (c.all >= c.limDay) return json({ error: "busy", message: "Our crayons are worn out for today. Send it as a request and we'll draw it soon." }, 429);
+  // One free do-over per drawing: a first drawing hands back a one-time code, and a request carrying
+  // that code skips the visitor's daily limit (it still counts toward the site-wide cap).
+  const redoKey = /^[a-f0-9]{24}$/.test(String(body.redo || "")) ? "redo:" + body.redo : "";
+  let free = false;
+  if (redoKey && (await env.KV.get(redoKey))) { free = true; await env.KV.delete(redoKey); }
+  if (!free && c.mine >= c.limIp) return json({ error: "limit", message: "That is your " + c.limIp + " free instant pages for today. Come back tomorrow!" }, 429);
+  if (c.all >= c.limDay) {
+    if (free) await env.KV.put(redoKey, "1", { expirationTtl: 86400 });
+    return json({ error: "busy", message: "Our crayons are worn out for today. Send it as a request and we'll draw it soon." }, 429);
+  }
 
   const auth = { authorization: "Bearer " + env.OPENAI_API_KEY, "content-type": "application/json" };
   // Text safety check first. If the check itself fails, we stop: this is a kids' site.
@@ -82,27 +91,36 @@ async function make(q, env) {
     if (m.ok) { const j = await m.json(); flagged = !!(j.results && j.results[0] && j.results[0].flagged); }
     else if (m.status === 401 || m.status === 429) return json({ error: "upstream", message: "The drawing machine is resting. Please try again later." }, 503);
   } catch (e) { flagged = true; }
-  if (flagged) return json({ error: "blocked", message: "We can't draw that one. Try a different idea." }, 400);
+  if (flagged) {
+    if (free) await env.KV.put(redoKey, "1", { expirationTtl: 86400 });
+    return json({ error: "blocked", message: "We can't draw that one. Try a different idea." }, 400);
+  }
 
   // Count the attempt before drawing so a burst of clicks cannot run past the limits.
   const ttl = { expirationTtl: 172800 };
-  await Promise.all([env.KV.put(c.ipKey, String(c.mine + 1), ttl), env.KV.put(c.dayKey, String(c.all + 1), ttl)]);
+  await Promise.all([free ? null : env.KV.put(c.ipKey, String(c.mine + 1), ttl), env.KV.put(c.dayKey, String(c.all + 1), ttl)]);
 
-  const prompt = "Black and white coloring book page, portrait orientation. Subject: " + idea + ". " + STYLES[style] + " " + TAIL + " " + RULES;
+  const prompt = "Black and white coloring book page, portrait orientation. Subject: " + idea + ". " + STYLES[style] + " " + WHOLE + " " + TAIL + " " + RULES;
   const r = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST", headers: auth,
     body: JSON.stringify({ model: env.IMAGE_MODEL || "gpt-image-2.6-flare", prompt, size: "1024x1536", quality: env.QUALITY || "medium", n: 1, output_format: "webp", output_compression: 92, background: "opaque", moderation: "auto", safety_identifier: c.ipKey.slice(-24) }),
   });
   if (!r.ok) {
     // Give the visitor their turn back; the site-wide count stays (it guards spending).
-    await env.KV.put(c.ipKey, String(c.mine), ttl);
+    if (free) await env.KV.put(redoKey, "1", { expirationTtl: 86400 }); else await env.KV.put(c.ipKey, String(c.mine), ttl);
     let why = ""; try { const e = await r.json(); why = (e.error && (e.error.code || e.error.type)) || ""; } catch (e) {}
     if (r.status === 400 && /moderation|safety|content_policy/i.test(why)) return json({ error: "blocked", message: "We can't draw that one. Try a different idea." }, 400);
     console.log("image error", r.status, why);
     return json({ error: "upstream", message: "The drawing did not come out. Please try again in a minute." }, 502);
   }
   // Pass OpenAI's JSON straight through (the picture is in data[0].b64_json). No re-encoding here.
-  return new Response(r.body, { status: 200, headers: { "content-type": "application/json", "cache-control": "no-store", "x-left": String(Math.max(0, c.limIp - c.mine - 1)) } });
+  const out = { "content-type": "application/json", "cache-control": "no-store", "x-left": String(Math.max(0, c.limIp - c.mine - (free ? 0 : 1))) };
+  if (!free) {
+    const code = [...crypto.getRandomValues(new Uint8Array(12))].map((b) => b.toString(16).padStart(2, "0")).join("");
+    await env.KV.put("redo:" + code, "1", { expirationTtl: 86400 });
+    out["x-redo"] = code;
+  }
+  return new Response(r.body, { status: 200, headers: out });
 }
 
 export default {

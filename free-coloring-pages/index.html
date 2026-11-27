@@ -287,9 +287,11 @@ footer b{color:var(--ink)}
         <button class="btn leaf wide" id="dColor">🖍 Color it online</button>
         <button class="btn" id="dPng">⬇ Image</button>
         <button class="btn" id="dShare">↗ Share</button>
+        <button class="btn" id="dRedo" style="display:none">↻ Redraw (1 free)</button>
         <button class="btn" id="dFav">♥ Favorite</button>
         <button class="btn sun" id="dAdd">＋ Add to my book</button>
       </div>
+      <div id="dTs" style="margin-top:10px"></div>
     </div>
   </div>
 </div>
@@ -509,7 +511,7 @@ function run(msg,fn){busy(msg);return tick().then(fn).catch(function(e){console.
 var pvTok=0;
 function openDetail(id){S.cur=S.byId[id];if(!S.cur)return;T('open_page',{page_id:id,theme:S.cur.theme,style:S.cur.style});T('page_view',{page_title:S.cur.title+' Coloring Page',page_location:location.origin+location.pathname.replace(/index\.html$/,'')+pageUrl(S.cur)});if(S.list.indexOf(S.cur)<0)S.list=S.pages.filter(function(p){return p.theme===S.cur.theme});open('#ovDetail');history.replaceState(null,'','#p='+id);fillDetail()}
 function fillDetail(){var p=S.cur;$('#dTitle').textContent=p.title;var b=$('#dBadge');b.className='badge s-'+p.style;b.textContent=STYLES[p.style];$('#dTheme').textContent=themeName(p.theme)+' · '+STYLE_HINT[p.style];
-  var g=hasGuide(p.id);$('#optGuide').style.display=g?'':'none';$('#dShare').style.display=p.src?'none':'';
+  var g=hasGuide(p.id);$('#optGuide').style.display=g?'':'none';$('#dShare').style.display=p.src?'none':'';var rd=$('#dRedo'),canRedo=!!(p.src&&p.redo&&p.idea&&INSTANT.on);rd.style.display=canRedo?'':'none';rd.textContent='↻ Redraw (1 free)';if(canRedo)tsLoad('#dTs');
   $('#dSw').innerHTML=(g&&S.opts.guide==='full')?(S.pal[p.id]||[]).map(function(h){return '<span class="sw" style="background:'+h+'" title="'+nameOf(h)+'"></span>'}).join(''):'';
   $$('#ovDetail .seg').forEach(function(seg){var k=seg.dataset.opt;$$('button',seg).forEach(function(bt){bt.setAttribute('aria-pressed',String(S.opts[k])===bt.dataset.v)})});
   $$('#ovDetail input[data-opt]').forEach(function(i){i.checked=!!S.opts[i.dataset.opt]});$('#dWho').value=S.opts.who||'';
@@ -534,7 +536,7 @@ $('#rSend').addEventListener('click',function(){var t=$('#rIdea').value.replace(
   var fd=new FormData();fd.append(REQ_FIELD,'['+reqStyle+'] '+t);$('#rSend').disabled=true;
   fetch(REQ_URL,{method:'POST',mode:'no-cors',body:fd}).catch(function(){}).then(function(){$('#rSend').disabled=false;log.n++;store.set('req',log);T('request_page',{style:reqStyle});$('#rIdea').value='';$('#rForm').style.display='none';$('#rDone').style.display=''})});
 /* ---------- instant pages: type an idea, get a page ---------- */
-var MINE={key:'mine',name:'My Pages',emoji:'🪄'},MINE_MAX=24,INSTANT={on:false,left:0,ts:''},TS={id:null,token:'',loading:false},MDB=null;
+var MINE={key:'mine',name:'My Pages',emoji:'🪄'},MINE_MAX=24,INSTANT={on:false,left:0,ts:''},TS={w:{},want:{},loading:false},MDB=null;
 function mdb(){if(MDB)return MDB;MDB=new Promise(function(res,rej){try{var r=indexedDB.open('fcp',1);r.onupgradeneeded=function(){r.result.createObjectStore('mine',{keyPath:'id'})};r.onsuccess=function(){res(r.result)};r.onerror=function(){rej(r.error)}}catch(e){rej(e)}});return MDB}
 function mineAll(){return mdb().then(function(db){return new Promise(function(res){var q=db.transaction('mine').objectStore('mine').getAll();q.onsuccess=function(){res(q.result||[])};q.onerror=function(){res([])}})}).catch(function(){return []})}
 function mineTx(fn){return mdb().then(function(db){return new Promise(function(res){var t=db.transaction('mine','readwrite');fn(t.objectStore('mine'));t.oncomplete=res;t.onerror=res;t.onabort=res})}).catch(function(){})}
@@ -558,23 +560,36 @@ function instantUI(){var on=INSTANT.on;$('#rNow').style.display=on?'':'none';$('
   var l=$('#rLeft');l.style.display=on?'':'none';l.textContent=INSTANT.left>0?(INSTANT.left+' free instant '+(INSTANT.left===1?'page':'pages')+' left today'):'You have used your free instant pages for today.';$('#rNow').disabled=on&&INSTANT.left<=0}
 function instantCheck(){return fetch('/api/make/status',{cache:'no-store'}).then(function(r){return r.ok?r.json():{ok:false}}).then(function(j){INSTANT.on=!!(j&&j.ok);INSTANT.left=(j&&j.left)||0;INSTANT.ts=(j&&j.ts)||'';instantUI()}).catch(function(){})}
 /* Human check (Cloudflare Turnstile). Loads only when the Worker says it is on. Most people never see it. */
-function tsRender(){if(!INSTANT.ts||TS.id!==null||!window.turnstile)return;try{TS.id=turnstile.render('#rTs',{sitekey:INSTANT.ts,size:'flexible',appearance:'interaction-only',callback:function(t){TS.token=t},'expired-callback':function(){TS.token='';tsReset()},'error-callback':function(){TS.token=''}})}catch(e){console.error(e)}}
-function tsLoad(){if(!INSTANT.ts||!INSTANT.on)return;if(window.turnstile){tsRender();return}if(TS.loading)return;TS.loading=true;var sc=document.createElement('script');sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';sc.async=true;sc.onload=tsRender;sc.onerror=function(){TS.loading=false};document.head.appendChild(sc)}
-function tsReset(){TS.token='';try{if(TS.id!==null&&window.turnstile)turnstile.reset(TS.id)}catch(e){}}
-$('#reqBtn').addEventListener('click',tsLoad);
+function tsRender(sel){if(!INSTANT.ts||!window.turnstile)return;var w=TS.w[sel]||(TS.w[sel]={id:null,token:''});if(w.id!==null)return;try{w.id=turnstile.render(sel,{sitekey:INSTANT.ts,size:'flexible',appearance:'interaction-only',callback:function(t){w.token=t},'expired-callback':function(){w.token='';tsReset(sel)},'error-callback':function(){w.token=''}})}catch(e){console.error(e)}}
+function tsLoad(sel){if(!INSTANT.ts||!INSTANT.on)return;TS.want[sel]=1;if(window.turnstile){tsRender(sel);return}if(TS.loading)return;TS.loading=true;var sc=document.createElement('script');sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';sc.async=true;sc.onload=function(){Object.keys(TS.want).forEach(tsRender)};sc.onerror=function(){TS.loading=false};document.head.appendChild(sc)}
+function tsReset(sel){var w=TS.w[sel];if(!w)return;w.token='';try{if(w.id!==null&&window.turnstile)turnstile.reset(w.id)}catch(e){}}
+function tsToken(sel){var w=TS.w[sel];return w?w.token:''}
+$('#reqBtn').addEventListener('click',function(){tsLoad('#rTs')});
 instantCheck();
 var WAITS=['Sharpening the pencils…','Sketching your idea…','Inking the lines…','Erasing the smudges…','Almost there…'];
-$('#rNow').addEventListener('click',function(){var t=$('#rIdea').value.replace(/\s+/g,' ').trim();if(t.length<4){toast('Tell us a little more about what to draw.');return}
-  if(INSTANT.ts&&!TS.token){tsLoad();toast('One moment, checking that you are a person. Then press Draw it now again.');return}
-  var b=$('#rStyle button[aria-pressed="true"]'),style=(b&&b.dataset.k)||'whimsical',k=0,ctl=window.AbortController?new AbortController():null,msg='';
-  T('instant_make',{style:style});busy(WAITS[0]);var iv=setInterval(function(){k=Math.min(k+1,WAITS.length-1);$('#busyMsg').textContent=WAITS[k]},9000),to=setTimeout(function(){if(ctl)ctl.abort()},170000);
-  fetch('/api/make',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({idea:t,style:style,ts:TS.token}),signal:ctl?ctl.signal:undefined})
-  .then(function(r){return r.json().catch(function(){return {}}).then(function(j){if(!r.ok){msg=j.message||'';throw new Error(j.error||'failed')}return j})})
+/* One drawing request: shows the waiting messages, returns {src, redo}. sel is the human-check box to use. */
+function instantDraw(idea,style,sel,redo){var k=0,code='',ctl=window.AbortController?new AbortController():null;
+  busy(WAITS[0]);var iv=setInterval(function(){k=Math.min(k+1,WAITS.length-1);$('#busyMsg').textContent=WAITS[k]},9000),to=setTimeout(function(){if(ctl)ctl.abort()},170000);
+  function done(){clearInterval(iv);clearTimeout(to);idle();if(INSTANT.ts)tsReset(sel)}
+  return fetch('/api/make',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({idea:idea,style:style,ts:tsToken(sel),redo:redo||''}),signal:ctl?ctl.signal:undefined})
+  .then(function(r){code=r.headers.get('x-redo')||'';return r.json().catch(function(){return {}}).then(function(j){if(!r.ok){var e=new Error(j.error||'failed');e.msg=j.message||'';throw e}return j})})
   .then(function(j){var d=j.data&&j.data[0]&&j.data[0].b64_json;if(!d)throw new Error('empty');$('#busyMsg').textContent='Tidying it up…';return cleanArt('data:image/'+(j.output_format||'webp')+';base64,'+d)})
-  .then(function(src){var pg={id:'mine-'+Date.now(),theme:'mine',style:style,title:ideaTitle(t),src:src,t:Date.now()};return addMine(pg).then(function(){return pg})})
+  .then(function(src){done();return {src:src,redo:code}},function(e){done();throw e})}
+$('#rNow').addEventListener('click',function(){var t=$('#rIdea').value.replace(/\s+/g,' ').trim();if(t.length<4){toast('Tell us a little more about what to draw.');return}
+  if(INSTANT.ts&&!tsToken('#rTs')){tsLoad('#rTs');toast('One moment, checking that you are a person. Then press Draw it now again.');return}
+  var b=$('#rStyle button[aria-pressed="true"]'),style=(b&&b.dataset.k)||'whimsical';T('instant_make',{style:style});
+  instantDraw(t,style,'#rTs','').then(function(o){var pg={id:'mine-'+Date.now(),theme:'mine',style:style,title:ideaTitle(t),src:o.src,t:Date.now(),idea:t,redo:o.redo};return addMine(pg).then(function(){return pg})})
   .then(function(pg){T('instant_done',{style:style});INSTANT.left=Math.max(0,INSTANT.left-1);instantUI();$('#rIdea').value='';close('#ovReq');S.theme='mine';S.onlyFav=false;S.q='';$('#q').value='';$$('.tab').forEach(function(x){x.setAttribute('aria-selected',x.dataset.t==='mine')});render();openDetail(pg.id)})
-  .catch(function(e){console.error(e);T('instant_fail',{reason:String(e&&e.message||e).slice(0,40)});toast(msg||'The drawing did not come out. Please try again.');instantCheck()})
-  .then(function(){clearInterval(iv);clearTimeout(to);idle();if(INSTANT.ts)tsReset()})});
+  .catch(function(e){console.error(e);T('instant_fail',{reason:String(e&&e.message||e).slice(0,40)});toast((e&&e.msg)||'The drawing did not come out. Please try again.');instantCheck()})});
+/* One free do-over for a drawing that came out wrong. Two taps, because it replaces the picture. */
+var redoArm=0;
+$('#dRedo').addEventListener('click',function(){var p=S.cur,btn=$('#dRedo');if(!p||!p.src||!p.redo||!p.idea)return;
+  if(INSTANT.ts&&!tsToken('#dTs')){tsLoad('#dTs');toast('One moment, checking that you are a person. Then press Redraw again.');return}
+  if(Date.now()-redoArm>6000){redoArm=Date.now();btn.textContent='Replace this drawing? Tap again';setTimeout(function(){if(redoArm&&S.cur===p)btn.textContent='↻ Redraw (1 free)'},6000);return}
+  redoArm=0;T('instant_redo',{style:p.style});
+  instantDraw(p.idea,p.style,'#dTs',p.redo).then(function(o){p.src=o.src;p.redo='';return mineTx(function(st){st.put(p)})})
+  .then(function(){render();fillDetail();toast('Here is a fresh drawing.')})
+  .catch(function(e){console.error(e);T('instant_fail',{reason:'redo '+String(e&&e.message||e).slice(0,30)});toast((e&&e.msg)||'The redraw did not come out. Please try again.');fillDetail()})});
 (function(){var d=new Date(),m=d.getMonth(),day=d.getDate();if((m===10&&day>=20)||(m===11&&day<=25))$('#adventBtn').style.display=''})();
 $('#dPrint').addEventListener('click',function(){var p=S.cur;T('print',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Sending to your printer…',function(){return sheetFor(p,S.opts).then(function(c){idle();return printCanvases([c],S.opts.paper)})})});
 $('#dPdf').addEventListener('click',function(){var p=S.cur;T('pdf',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Making your PDF…',function(){return sheetFor(p,S.opts).then(function(c){return makePdf([c],S.opts.paper,slug(p))}).then(function(){toast('PDF saved')})})});
