@@ -497,7 +497,7 @@ function close(id){$(id).classList.remove('open');if(!$('.ov.open'))document.bod
 $$('.ov').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o||e.target.closest('[data-close]')){if(o.id==='ovDetail'&&history.state&&history.state.ov){history.back();return}close('#'+o.id);if(o.id==='ovDetail')history.replaceState(null,'',location.pathname+location.search)}})});
 document.addEventListener('keydown',function(e){var top=$$('.ov.open').pop();if(!top)return;if(e.key==='Escape'){close('#'+top.id)}else if(top.id==='ovDetail'&&!/INPUT/.test(e.target.tagName)){if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)}});
 
-/* ---------- hero: color a page left to right, then wipe it away to reveal the next one ----------
+/* ---------- hero: color a page left to right, then wipe it away right to left to reveal the next one ----------
    Only pages whose color guide is a true coloring of the same drawing belong in this list. */
 var HERO_IDS=['christmas-05','christmas-06','christmas-01','christmas-02','thanksgiving-02'];
 function heroRun(){var ids=HERO_IDS.filter(hasGuide);if(!ids.length)return;var i=0,cur=$('#heroCur'),line=$('#heroLine'),col=$('#heroCol'),nxt=$('#heroNext');
@@ -511,9 +511,9 @@ function heroRun(){var ids=HERO_IDS.filter(hasGuide);if(!ids.length)return;var i
     Promise.all([load('guide/'+id+'.webp'),load('thumb/'+nid+'.webp')]).then(function(){return wait(900)})
     .then(function(){return anim(col,'inset(0 100% 0 0)','inset(0 0% 0 0)',2600)})
     .then(function(){return wait(1900)})
-    .then(function(){nxt.src='thumb/'+nid+'.webp';return anim(cur,'inset(0 0 0 0%)','inset(0 0 0 100%)',2200)})
+    .then(function(){nxt.src='thumb/'+nid+'.webp';return anim(cur,'inset(0 0% 0 0)','inset(0 100% 0 0)',2200)})
     .then(function(){set(nid);return load('thumb/'+nid+'.webp')})
-    .then(function(){return wait(60)}).then(function(){cur.style.clipPath='inset(0 0 0 0%)';i=(i+1)%ids.length;loop()})})()}
+    .then(function(){return wait(60)}).then(function(){cur.style.clipPath='inset(0 0% 0 0)';i=(i+1)%ids.length;loop()})})()}
 
 /* ---------- page composer ---------- */
 function fontsReady(){return (document.fonts&&document.fonts.load)?Promise.all([document.fonts.load('700 60px Fredoka'),document.fonts.load('700 30px Nunito')]).catch(function(){}):Promise.resolve()}
