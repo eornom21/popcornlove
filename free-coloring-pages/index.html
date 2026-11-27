@@ -67,6 +67,7 @@ h1 .squig svg{position:absolute;left:-2%;bottom:-.18em;width:104%;height:.3em;ov
 .bar{position:sticky;top:0;z-index:20;background:rgba(255,246,229,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink)}
 .tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 18px;scrollbar-width:none;max-width:1240px;margin:0 auto}
 .tabs::-webkit-scrollbar{display:none}
+@media (min-width:861px){.tabs{flex-wrap:wrap;overflow-x:visible;justify-content:center}}
 .tab{flex:none;font:600 15px/1 var(--display);padding:10px 14px;border:2.5px solid var(--ink);border-radius:999px;background:var(--card);color:var(--ink);display:flex;gap:7px;align-items:center}
 .tab[aria-selected="true"]{background:var(--ink);color:#fff}
 .tab .now{font:800 10px/1 var(--text);letter-spacing:.6px;text-transform:uppercase;background:var(--tomato);color:#fff;border-radius:6px;padding:3px 5px}
@@ -164,10 +165,12 @@ h1 .squig svg{position:absolute;left:-2%;bottom:-.18em;width:104%;height:.3em;ov
 .busy.on{display:grid}
 .spin{width:46px;height:46px;border:5px solid var(--ink);border-top-color:var(--tomato);border-radius:50%;animation:sp 0.8s linear infinite;margin:0 auto 12px}
 @keyframes sp{to{transform:rotate(360deg)}}
+.keepnote{background:#FFF0C7;border:2px dashed var(--ink);border-radius:12px;padding:9px 12px;margin-top:10px}
 .fab{position:fixed;right:16px;bottom:16px;z-index:30;display:none}
 .fab.show{display:inline-flex}
 footer{border-top:2.5px solid var(--ink);padding:24px 18px 34px;text-align:center;color:var(--muted);font-size:14px;font-weight:700}
 footer b{color:var(--ink)}
+.footlinks a{color:var(--ink);font-weight:800}
 .footnav{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;max-width:900px;margin:0 auto 16px}.footnav a{color:var(--ink);font-weight:800}
 .meta h3 a{color:inherit;text-decoration:none}
 #printHost{display:none}
@@ -222,6 +225,7 @@ footer b{color:var(--ink)}
         <button class="btn" id="favBtn">♥ Favorites <span class="count" id="favCount">0</span></button>
         <button class="btn sun" id="bookBtn">📚 My book <span class="count" id="bookCount">0</span></button>
         <button class="btn" id="reqBtn">✏️ Request a page</button>
+        <a class="btn" id="pinBtn" href="https://www.pinterest.com/makeacoloringbook/" target="_blank" rel="noopener" style="text-decoration:none">📌 Follow on Pinterest</a>
         <a class="btn leaf" id="adventBtn" href="advent/" style="display:none;text-decoration:none">🎁 Advent calendar</a>
       </div>
     </div>
@@ -241,12 +245,14 @@ footer b{color:var(--ink)}
     <label class="search"><span aria-hidden="true">🔎</span><input id="q" type="search" placeholder="Search: turkey, dragon, mandala…" autocomplete="off" aria-label="Search coloring pages"></label>
   </div>
   <div class="sechead"><h2 id="secTitle">Coloring pages</h2><span><button class="btn sm" id="packBtn" style="display:none;margin-right:10px">⬇ All as one PDF</button><span id="secCount"></span></span></div>
+  <p class="hint keepnote" id="mineNote" style="display:none;margin:-4px 0 14px">My Pages live only in this browser on this device. Clearing your browser data or switching devices will lose them. Tap a page and use ⬇ PDF or ⬇ Image to keep a copy.</p>
   <section class="grid" id="grid" aria-live="polite"></section>
 </main>
 
 <footer>
   <nav class="footnav" aria-label="All themes"><a href="thanksgiving/">Thanksgiving Coloring Pages</a><a href="christmas/">Christmas Coloring Pages</a><a href="halloween/">Halloween Coloring Pages</a><a href="easter/">Easter and Spring Coloring Pages</a><a href="valentines/">Valentine's Day Coloring Pages</a><a href="summer/">Summer and 4th of July Coloring Pages</a><a href="holidays/">Holiday Coloring Pages</a><a href="dinosaurs/">Dinosaur Coloring Pages</a><a href="ocean/">Ocean Animal Coloring Pages</a><a href="animals/">Animal Coloring Pages</a><a href="space/">Space and Robot Coloring Pages</a><a href="fantasy/">Dragon and Unicorn Coloring Pages</a></nav>
   <p><b>Free for home, classroom, church and party use.</b> Print as many as you like.</p>
+  <p class="footlinks"><a href="https://www.pinterest.com/makeacoloringbook/" target="_blank" rel="noopener">📌 Follow us on Pinterest</a> · <a href="privacy/">Privacy</a> · <a href="#" data-cookie-choices>Cookie choices</a> · <a href="mailto:hello@makeacoloringbook.com">hello@makeacoloringbook.com</a></p>
   <p>makeacoloringbook.com</p>
 </footer>
 
@@ -278,11 +284,12 @@ footer b{color:var(--ink)}
         <div class="opt"><label>Lines</label><div class="seg" data-opt="lines"><button data-v="dark">Bold</button><button data-v="light">Light</button></div></div>
       </div>
       <div class="opt"><label>Layout</label><div class="seg" data-opt="layout"><button data-v="full">Full page</button><button data-v="half">2 per sheet</button></div></div>
-      <div class="opt"><label for="dWho">Put a name on it (optional)</label><input class="field" id="dWho" maxlength="22" placeholder="Charlie" autocomplete="off"></div>
+      <div class="opt"><label for="dWho">Name (optional)</label><input class="field" id="dWho" maxlength="22" placeholder="Charlie" autocomplete="off"></div>
       <div class="checks">
         <label class="check"><input type="checkbox" data-opt="title"> Title on top</label>
         <label class="check"><input type="checkbox" data-opt="name"> Name line</label>
       </div>
+      <p class="hint" id="dWhoHint" style="margin-top:-6px">With a name: the title reads “Charlie’s …” and the name line says “Colored by Charlie.”</p>
       <div class="cta">
         <button class="btn pri" id="dPrint">🖨 Print</button>
         <button class="btn sky" id="dPdf">⬇ PDF</button>
@@ -335,6 +342,7 @@ footer b{color:var(--ink)}
     <div class="in">
       <h2 id="bTitle">My coloring book</h2>
       <p class="hint" id="bHint">Tap “＋ Book” on any page to add it. Then download the whole thing as one PDF.</p>
+      <p class="hint keepnote">Your book, favorites and My Pages are saved only in this browser on this device. Clearing your browser data, using private browsing, or switching devices will lose them, so download the PDF to keep a copy.</p>
       <div class="blist" id="bList"></div>
       <div class="two">
         <div class="opt"><label for="bName">Book title</label><input class="field" id="bName" maxlength="40" value="My Coloring Book"></div>
@@ -362,7 +370,7 @@ footer b{color:var(--ink)}
       <h2 id="rTitle">Request a coloring page</h2>
       <p class="hint" id="rHint">Tell us what to draw. If we can draw it, we'll add it to the site for free. We make a batch of new pages every day.</p>
       <div class="opt" style="margin-top:12px"><label for="rIdea">What should we draw?</label><textarea class="field" id="rIdea" rows="3" maxlength="200" placeholder="A corgi riding a skateboard past a taco truck" style="resize:vertical;line-height:1.35"></textarea></div>
-      <div class="opt" style="margin-top:12px"><label>Style</label><div class="seg" id="rStyle"><button data-v="Little Kids" data-k="easy">Little Kids</button><button data-v="Whimsical" data-k="whimsical" aria-pressed="true">Whimsical</button><button data-v="Realistic" data-k="realistic">Realistic</button><button data-v="Intricate" data-k="intricate">Intricate</button></div></div>
+      <div class="opt" style="margin-top:12px"><label>How hard?</label><div class="seg" id="rStyle"><button data-v="Easy" data-k="easy">Easy</button><button data-v="Medium" data-k="whimsical" aria-pressed="true">Medium</button><button data-v="Detailed" data-k="realistic">Detailed</button><button data-v="Expert" data-k="intricate">Expert</button></div></div>
       <p class="hint" style="margin-top:12px">We can't draw characters from movies, shows or games, or real people. Please leave out names and personal details.</p>
       <div id="rTs" style="margin-top:10px"></div>
       <div class="cta" style="flex-direction:column;gap:10px"><button class="btn pri wide" id="rNow" style="display:none">🪄 Draw it now</button><button class="btn pri wide" id="rSend">Send my request</button></div>
@@ -386,8 +394,8 @@ footer b{color:var(--ink)}
 'use strict';
 function T(n,p){try{if(window.track)track(n,p||{})}catch(e){}}
 var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
-var STYLES={easy:'Little Kids',whimsical:'Whimsical',realistic:'Realistic',intricate:'Intricate'};
-var STYLE_HINT={easy:'bold & easy',whimsical:'storybook fun',realistic:'true to life',intricate:'for grown-ups'};
+var STYLES={easy:'Easy',whimsical:'Medium',realistic:'Detailed',intricate:'Expert'};
+var STYLE_HINT={easy:'big shapes for little kids',whimsical:'storybook scenes, about ages 6 to 10',realistic:'true-to-life detail for older kids and adults',intricate:'tiny patterns for teens and adults'};
 var STYLE_COL={easy:'#FFC53D',whimsical:'#FF7AB6',realistic:'#9CC6FF',intricate:'#C9B5FF'};
 var PAPER={letter:{w:2040,h:2640,fmt:'letter',css:'8.5in 11in',cssL:'11in 8.5in'},a4:{w:1984,h:2806,fmt:'a4',css:'210mm 297mm',cssL:'297mm 210mm'}};
 var BOX=['#E53935','#F25C3B','#FB8C00','#FFC53D','#FFF176','#C0CA33','#2FAE69','#1B7F4B','#26C6DA','#3D8BFD','#1E4FBF','#8B5CF6','#B96AD9','#FF7AB6','#F8BBD0','#FFD7B5','#C68642','#8D5524','#5D4037','#9E9E9E','#607D8B','#263238','#000000','#FFFFFF'];
@@ -436,7 +444,7 @@ function buildTabs(se){var el=$('#tabs');var tabs=[{key:'all',name:'All pages',e
   el.innerHTML=tabs.map(function(t){return '<button class="tab" role="tab" data-t="'+t.key+'" aria-selected="'+(t.key===S.theme)+'"><span aria-hidden="true">'+t.emoji+'</span>'+t.name+(t.key===se?'<span class="now">now</span>':'')+'</button>'}).join('');
   el.addEventListener('click',function(e){var b=e.target.closest('.tab');if(!b)return;S.theme=b.dataset.t;S.onlyFav=false;T('theme_tab',{theme:S.theme});$$('.tab',el).forEach(function(x){x.setAttribute('aria-selected',x===b)});render();b.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})});
   var a=$('.tab[aria-selected="true"]',el);if(a)a.scrollIntoView({inline:'center',block:'nearest'})}
-function buildChips(){var el=$('#chips');el.innerHTML='<button class="chip" data-s="all" aria-pressed="true">All styles</button>'+Object.keys(STYLES).map(function(k){return '<button class="chip" data-s="'+k+'" aria-pressed="false" title="'+STYLE_HINT[k]+'"><i style="background:'+STYLE_COL[k]+'"></i>'+STYLES[k]+'</button>'}).join('');
+function buildChips(){var el=$('#chips');el.innerHTML='<button class="chip" data-s="all" aria-pressed="true">All levels</button>'+Object.keys(STYLES).map(function(k){return '<button class="chip" data-s="'+k+'" aria-pressed="false" title="'+STYLE_HINT[k]+'"><i style="background:'+STYLE_COL[k]+'"></i>'+STYLES[k]+'</button>'}).join('');
   el.addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;S.style=b.dataset.s;$$('.chip',el).forEach(function(x){x.setAttribute('aria-pressed',x===b)});render()})}
 $('#q').addEventListener('input',function(e){S.q=e.target.value.trim().toLowerCase();render()});
 function filtered(){return S.pages.filter(function(p){
@@ -448,7 +456,7 @@ function cardHTML(p){var f=S.favs.indexOf(p.id)>=0,b=S.book.indexOf(p.id)>=0;
   return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="'+thumbSrc(p)+'" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3><a href="'+pageUrl(p)+'" data-open>'+p.title+'</a></h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Favorite" aria-pressed="'+f+'">♥</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button></div></article>'}
 function render(){S.list=filtered();var g=$('#grid');
   $('#secTitle').textContent=S.onlyFav?'Your favorites':(S.q?'Search results':(S.theme==='all'?'All coloring pages':themeName(S.theme)));
-  $('#secCount').textContent=S.list.length+(S.list.length===1?' page':' pages');
+  $('#secCount').textContent=S.list.length+(S.list.length===1?' page':' pages');var kn=$('#mineNote');if(kn)kn.style.display=(S.theme==='mine'&&!S.onlyFav&&!S.q)?'':'none';
   $('#packBtn').style.display=(!S.q&&(S.onlyFav||S.theme!=='all')&&S.list.length>1&&S.list.length<=60)?'':'none';
   g.innerHTML=S.list.length?S.list.map(cardHTML).join(''):'<div class="empty">'+(S.onlyFav?'No favorites yet. Tap ♥ on a page to save it here.':'Nothing matches that. Try another word or style.')+'</div>'}
 $('#grid').addEventListener('click',function(e){var c=e.target.closest('.card');if(!c)return;var id=c.dataset.id;
@@ -475,14 +483,14 @@ function compose(page,o){return Promise.all([loadImg(artSrc(page)),(o.guide!=='o
   var art=r[0],gimg=r[1],P=PAPER[o.paper]||PAPER.letter,c=document.createElement('canvas');c.width=P.w;c.height=P.h;var x=c.getContext('2d');
   x.fillStyle='#fff';x.fillRect(0,0,P.w,P.h);x.imageSmoothingQuality='high';
   var m=72,top=m,bottom=P.h-m,ink='#1D1B2F';
-  var who=(o.who||'').trim(),head=who?(who+(/s$/i.test(who)?'\u2019 ':'\u2019s ')+(o.title?page.title:'Coloring Page')):(o.title?page.title:'');
+  var who=(o.who||'').trim(),head=o.title?(who?(who+(/s$/i.test(who)?'\u2019 ':'\u2019s ')+page.title):page.title):'';
   if(head){x.fillStyle=ink;x.textAlign='center';x.textBaseline='middle';x.font='700 76px Fredoka, "Trebuchet MS", sans-serif';x.fillText(head,P.w/2,top+52,P.w-2*m);top+=112}
   var foot=gimg?456:(o.name?92:0);bottom-=foot;
   var s=Math.min((P.w-2*m)/art.width,(bottom-top)/art.height),aw=art.width*s,ah=art.height*s,ax=(P.w-aw)/2,ay=top+((bottom-top)-ah)/2;
   if(o.lines==='light')x.globalAlpha=.36;x.drawImage(art,ax,ay,aw,ah);x.globalAlpha=1;
   var fy=bottom+18,left=m+30,right=P.w-m-30;
   x.textAlign='left';x.textBaseline='alphabetic';x.lineCap='round';
-  function nameLine(y,x2){x.fillStyle=ink;x.font='700 40px Nunito, sans-serif';x.fillText('Colored by',left,y);var w=x.measureText('Colored by').width;x.strokeStyle=ink;x.lineWidth=3;x.beginPath();x.moveTo(left+w+22,y+6);x.lineTo(x2,y+6);x.stroke()}
+  function nameLine(y,x2){x.fillStyle=ink;x.font='700 40px Nunito, sans-serif';x.fillText('Colored by',left,y);var w=x.measureText('Colored by').width;x.strokeStyle=ink;x.lineWidth=3;x.beginPath();x.moveTo(left+w+22,y+6);x.lineTo(x2,y+6);x.stroke();if(who){x.font='700 48px Fredoka, "Trebuchet MS", sans-serif';x.fillText(who,left+w+36,y-2,x2-left-w-50)}}
   if(gimg){var gh=392,gw=294,gx=right-gw,gy=fy+8;
     x.drawImage(gimg,gx,gy,gw,gh);x.strokeStyle=ink;x.lineWidth=4;x.strokeRect(gx,gy,gw,gh);
     x.fillStyle=ink;x.font='800 24px Nunito, sans-serif';x.textAlign='center';x.fillText('COLOR GUIDE',gx+gw/2,gy+gh+30);
@@ -526,12 +534,12 @@ window.addEventListener('hashchange',function(){var m=location.hash.match(/p=([a
 $('#dPrev').addEventListener('click',function(){step(-1)});$('#dNext').addEventListener('click',function(){step(1)});
 $('#ovDetail').addEventListener('click',function(e){var b=e.target.closest('.seg button');if(b){var k=b.parentNode.dataset.opt;S.opts[k]=b.dataset.v;store.set('opts',S.opts);if(k==='guide')T('guide_option',{value:b.dataset.v});fillDetail()}});
 $('#ovDetail').addEventListener('change',function(e){var i=e.target;if(i.dataset&&i.dataset.opt){S.opts[i.dataset.opt]=i.checked;store.set('opts',S.opts);preview()}});
-var whoT;$('#dWho').addEventListener('input',function(e){S.opts.who=e.target.value;store.set('opts',S.opts);clearTimeout(whoT);whoT=setTimeout(function(){if(S.opts.who)T('name_on_page');preview()},350)});
+var whoT;$('#dWho').addEventListener('input',function(e){S.opts.who=e.target.value;if(S.opts.who.trim()&&!S.opts.title&&!S.opts.name){S.opts.name=true;var nb=$('#ovDetail input[data-opt="name"]');if(nb)nb.checked=true}store.set('opts',S.opts);clearTimeout(whoT);whoT=setTimeout(function(){if(S.opts.who)T('name_on_page');preview()},350)});
 $('#packBtn').addEventListener('click',function(){var pages=S.list.slice(0,60),name=((S.onlyFav?'my favorites':themeName(S.theme))||'coloring').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-coloring-pages';T('pack_pdf',{theme:S.onlyFav?'favorites':S.theme,pages:pages.length});
   run('Building the pack…',function(){return needPdf().then(function(jsPDF){var paper=S.opts.paper,doc=new jsPDF({unit:'pt',format:PAPER[paper].fmt,orientation:'portrait',compress:true}),first=true,k=0,chain=Promise.resolve(),o={paper:paper,guide:'off',lines:'dark',layout:'full',title:false,name:false};
     pages.forEach(function(p){chain=chain.then(function(){k++;$('#busyMsg').textContent='Building the pack… page '+k+' of '+pages.length;return compose(p,o)}).then(function(c){if(!first)doc.addPage(PAPER[paper].fmt,'portrait');first=false;doc.addImage(c.toDataURL('image/jpeg',.88),'JPEG',0,0,doc.internal.pageSize.getWidth(),doc.internal.pageSize.getHeight(),undefined,'FAST');c.width=c.height=1}).then(tick)});
     return chain.then(function(){doc.save(name+'.pdf');toast('Pack saved')})})})});
-var REQ_URL='https://docs.google.com/forms/d/e/1FAIpQLScuLAeL6MpKQ0uUqwoBmW_egAuAbt4hk_n7tBOJu72J89s6rw/formResponse',REQ_FIELD='entry.1860724256',reqStyle='Whimsical';
+var REQ_URL='https://docs.google.com/forms/d/e/1FAIpQLScuLAeL6MpKQ0uUqwoBmW_egAuAbt4hk_n7tBOJu72J89s6rw/formResponse',REQ_FIELD='entry.1860724256',reqStyle='Medium';
 $('#reqBtn').addEventListener('click',function(){$('#rForm').style.display='';$('#rDone').style.display='none';open('#ovReq');T('request_open')});
 $('#rStyle').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;reqStyle=b.dataset.v;$$('#rStyle button').forEach(function(x){x.setAttribute('aria-pressed',x===b)})});
 $('#rSend').addEventListener('click',function(){var t=$('#rIdea').value.replace(/\s+/g,' ').trim();if(t.length<4){toast('Tell us a little more about what to draw.');return}

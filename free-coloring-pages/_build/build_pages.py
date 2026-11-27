@@ -14,7 +14,7 @@ import catalog_src as C  # noqa
 BASE = "https://makeacoloringbook.com/"
 TODAY = datetime.date.today().isoformat()
 
-STYLE_NAME = {"easy": "Little Kids", "whimsical": "Whimsical", "realistic": "Realistic", "intricate": "Intricate"}
+STYLE_NAME = {"easy": "Easy", "whimsical": "Medium", "realistic": "Detailed", "intricate": "Expert"}
 STYLE_BLURB = {
     "easy": "Bold, simple shapes with thick lines and big spaces. Made for toddlers and preschoolers, about ages 2 to 5.",
     "whimsical": "A storybook scene with medium detail and plenty to find. Great for kids about 6 to 10.",
@@ -23,9 +23,9 @@ STYLE_BLURB = {
 }
 STYLE_HEAD = {
     "easy": "Easy pages for little kids",
-    "whimsical": "Whimsical storybook pages",
-    "realistic": "Realistic pages",
-    "intricate": "Intricate pages for adults",
+    "whimsical": "Medium pages: storybook scenes",
+    "realistic": "Detailed pages: true to life",
+    "intricate": "Expert pages for teens and adults",
 }
 THEME_SEO = {
     "thanksgiving": ("Thanksgiving Coloring Pages", "Turkeys, pumpkins, pies and harvest scenes for the kids' table, the classroom, or a quiet hour after the big meal."),
@@ -97,7 +97,7 @@ HEAD = """<!DOCTYPE html>
 <body>
 <header class="top"><div class="wrap">
   <a class="logo" href="{root}"><span class="c1">Free</span> <span class="c2">Coloring</span> <span class="c3">Pages</span></a>
-  <nav class="topnav"><a href="{root}">All pages</a><a href="{root}#book">Build a book</a></nav>
+  <nav class="topnav"><a href="{root}">All pages</a><a href="{root}#book">Build a book</a><a href="https://www.pinterest.com/makeacoloringbook/" target="_blank" rel="noopener">📌 Pinterest</a></nav>
 </div></header>
 <nav class="bar" aria-label="Themes"><div class="tabs">{tabs}</div></nav>
 <main class="wrap">
@@ -107,6 +107,7 @@ FOOT = """</main>
 <footer>
   <nav class="footnav" aria-label="All themes">{footlinks}</nav>
   <p><b>Free for home, classroom, church and party use.</b> Print as many as you like.</p>
+  <p class="footlinks"><a href="https://www.pinterest.com/makeacoloringbook/" target="_blank" rel="noopener">📌 Follow us on Pinterest</a> · <a href="{root}privacy/">Privacy</a> · <a href="#" data-cookie-choices>Cookie choices</a> · <a href="mailto:hello@makeacoloringbook.com">hello@makeacoloringbook.com</a></p>
   <p><a href="{root}">makeacoloringbook.com</a></p>
 </footer>
 <script src="{root}ga.js"></script>

@@ -6,7 +6,7 @@ PORT=8765
 SITE=os.path.basename(ROOT)
 OUT=ROOT+'/pin'; os.makedirs(OUT, exist_ok=True)
 cat=json.load(open(ROOT+'/catalog.json'))
-STY={'easy':('Little Kids','#FFC53D'),'whimsical':('Whimsical','#FF7AB6'),'realistic':('Realistic','#9CC6FF'),'intricate':('Intricate','#C9B5FF')}
+STY={'easy':('Easy','#FFC53D'),'whimsical':('Medium','#FF7AB6'),'realistic':('Detailed','#9CC6FF'),'intricate':('Expert','#C9B5FF')}
 TPL='''<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../fonts.css"><style>
 *{box-sizing:border-box;margin:0;padding:0}body{width:1000px;height:1500px;background:#FFF6E5;overflow:hidden;position:relative;font-family:Nunito,sans-serif;color:#1D1B2F}
 .dots{position:absolute;inset:0;background-image:radial-gradient(#E9DCC3 2.4px,transparent 2.6px);background-size:30px 30px}
