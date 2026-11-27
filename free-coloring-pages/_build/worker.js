@@ -869,6 +869,13 @@ async function orders(q, env, u, ctx) {
   if (p.startsWith("/api/print/")) return printFile(env, u);
   if (p.startsWith("/api/mail/")) return mailbox(q, env, u);
   if (p === "/api/admin/orders") return adminOrders(q, env, u);
+  if (p === "/api/admin/lulu-check") {
+    if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
+    const pages = num(u.searchParams.get("pages"), 52);
+    const dims = await lulu(env, "POST", "/cover-dimensions/", { pod_package_id: POD, interior_page_count: pages, unit: "pt" });
+    const cost = await lulu(env, "POST", "/print-job-cost-calculations/", { line_items: [{ page_count: pages, pod_package_id: POD, quantity: 1 }], shipping_address: { city: "Hughson", country_code: "US", postcode: "95326", state_code: "CA", street1: "PO Box 387", phone_number: "2094171892" }, shipping_option: u.searchParams.get("ship") || "MAIL" });
+    return json({ dims: dims.j || dims.t.slice(0, 300), cost: cost.ok ? { total: cost.j.total_cost_incl_tax, lines: (cost.j.line_item_costs || []).map((x) => x.total_cost_incl_tax), ship: cost.j.shipping_cost && cost.j.shipping_cost.total_cost_incl_tax } : cost.t.slice(0, 400) });
+  }
   return json({ error: "nope" }, 404);
 }
 
