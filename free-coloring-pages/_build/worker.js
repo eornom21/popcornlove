@@ -376,8 +376,8 @@ async function alertNate(env, o, why, detail) {
 const MAILS = {
   confirm: (o) => ["Your coloring book order " + o.id,
     "Hi " + first(o.pay.name) + ",\n\nThanks for your order! Here's what happens next:\n\n" +
-    "- We draw and print \"" + o.title + "\" (" + o.pages + " coloring pages).\n" +
-    "- It ships by " + SHIP[o.ship].label.toLowerCase() + ". Most orders arrive in " + SHIP[o.ship].eta + ".\n" +
+    "- We draw and print \"" + o.title + "\" (" + o.n + " coloring pages).\n" +
+    "- It ships " + (o.ship === "rush" ? "with faster shipping" : "with free standard shipping") + ". Most orders arrive in " + SHIP[o.ship].eta + ".\n" +
     "- We'll email you the tracking link as soon as it ships.\n\n" +
     "Order: " + o.id + "\nTotal: " + money(o.pay.amount) + "\nShips to: " + o.pay.ship.name + ", " + o.pay.ship.city + ", " + o.pay.ship.state + "\n\n" +
     "Something wrong when it arrives? Tell us here and we'll make it right: " + helpUrl(o)],
