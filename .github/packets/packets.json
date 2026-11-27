@@ -1,0 +1,11 @@
+{
+ "art": {
+  "husky": "20261127_040313_b80aed23-0d6f-41fe-8400-38d54e36f82b",
+  "schoolhouse": "20261127_040312_856d6043-77b3-48f2-bf47-785bf54aaab8"
+ },
+ "library": ["christmas-01", "christmas-09", "christmas-18", "christmas-22"],
+ "schools": [
+  {"slug": "hughson-elementary-x7k2", "name": "Hughson Elementary", "mascot": "husky"},
+  {"slug": "samuel-vaughn-elementary-q4m9", "name": "Samuel Vaughn Elementary", "mascot": ""}
+ ]
+}
