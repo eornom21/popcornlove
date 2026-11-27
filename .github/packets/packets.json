@@ -9,7 +9,7 @@
   "wolverine-fp-2": "20261127_050016_e90be8bf-1162-43ba-b06c-5f29c30ca49b",
   "wolverine-fp-3": "20261127_050015_87c56417-8384-4df9-a5bb-cebcc919c160",
   "wolverine-fp-4": "20261127_050017_aeaf7a7e-ef58-428b-91ee-1b14b4678dcc",
-  "wolverine-fp-5": "20261127_050017_1404b708-fcbd-4d1c-aa9f-be936d2370fa",
+  "wolverine-fp-5": "20261127_050255_d1185c50-d1c9-4aaf-8355-2b08269be0e7",
   "eagle-jm-1": "20261127_050017_b06acacb-1426-422e-83fc-3a9a11b9f06c",
   "eagle-jm-2": "20261127_050017_41a59cc3-65b6-4de3-bace-bde1a990703d",
   "eagle-jm-3": "20261127_050016_9d7d2779-4000-4f17-a92e-a6224dc615a9",
@@ -43,7 +43,7 @@
      "Amador Holiday Party"
     ]
    ],
-   "email_color": "20261127_044550_ac9a2670-2f90-42a2-916d-b166b66685ea"
+   "email_color": "20261127_050256_5b26e552-b922-42f4-bbfa-8fff58c287f1"
   },
   {
    "slug": "forest-park-elementary-fremont-k3p7",
@@ -69,7 +69,8 @@
      "wolverine-fp-5",
      "Forest Park Holiday Party"
     ]
-   ]
+   ],
+   "email_color": "20261127_050255_bb3637a2-4219-4835-bf94-01b52af3eada"
   },
   {
    "slug": "joe-michell-livermore-t5n2",
@@ -95,7 +96,8 @@
      "eagle-jm-5",
      "Joe Michell Holiday Party"
     ]
-   ]
+   ],
+   "email_color": "20261127_050255_a5479aac-8aea-4d49-922a-2fb7ad50b6aa"
   }
  ]
 }
