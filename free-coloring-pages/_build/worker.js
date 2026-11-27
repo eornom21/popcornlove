@@ -2,10 +2,12 @@
 // 1. Serves the site from popcornlove.net/free-coloring-pages at makeacoloringbook.com.
 // 2. Forwards every other attached host to makeacoloringbook.com.
 // 3. /api/make: draws a coloring page on the spot from a typed idea (OpenAI image API).
-// Needs: secret OPENAI_API_KEY, KV binding KV. Optional vars: LIMIT_IP (default 3 a day per visitor),
+// Needs: secret OPENAI_API_KEY, KV binding KV. Optional secret TURNSTILE_SECRET turns on the human check
+// (Cloudflare Turnstile widget "makeacoloringbook draw"; its public site key is TS_SITEKEY below). Optional vars: LIMIT_IP (default 3 a day per visitor),
 // LIMIT_DAY (default 150 a day for the whole site), QUALITY (low|medium|high, default medium), IMAGE_MODEL.
 const HOME = "makeacoloringbook.com";
 const SRC = "https://popcornlove.net/free-coloring-pages";
+const TS_SITEKEY = "0x4AAAAAAGVHFHAOuaC0U7Kc";
 const STYLES = {
   easy: "Style: bold and easy coloring page for toddlers and preschoolers, very thick uniform black outlines, large simple shapes, big open areas to color, cute friendly cartoon look with simple smiling faces, minimal background detail.",
   whimsical: "Style: whimsical storybook coloring page for kids ages 6 to 10, medium-weight clean outlines, charming hand-drawn cartoon characters, playful full scene with a fun background, moderate detail.",
@@ -39,7 +41,7 @@ async function counts(env, ip) {
 async function status(q, env) {
   if (!env.OPENAI_API_KEY || !env.KV) return json({ ok: false });
   const c = await counts(env, q.headers.get("cf-connecting-ip") || "0");
-  return json({ ok: c.all < c.limDay, left: Math.max(0, c.limIp - c.mine), perDay: c.limIp });
+  return json({ ok: c.all < c.limDay, left: Math.max(0, c.limIp - c.mine), perDay: c.limIp, ts: env.TURNSTILE_SECRET ? TS_SITEKEY : "" });
 }
 
 async function make(q, env) {
@@ -57,6 +59,20 @@ async function make(q, env) {
   const c = await counts(env, q.headers.get("cf-connecting-ip") || "0");
   if (c.mine >= c.limIp) return json({ error: "limit", message: "That is your " + c.limIp + " free instant pages for today. Come back tomorrow!" }, 429);
   if (c.all >= c.limDay) return json({ error: "busy", message: "Our crayons are worn out for today. Send it as a request and we'll draw it soon." }, 429);
+
+  // Human check (Turnstile). Only enforced once its secret is set on the Worker.
+  if (env.TURNSTILE_SECRET) {
+    const token = String(body.ts || "");
+    let human = false;
+    if (token && token.length <= 2048) {
+      try {
+        const v = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ secret: env.TURNSTILE_SECRET, response: token, remoteip: q.headers.get("cf-connecting-ip") || "" }) });
+        const j = await v.json();
+        human = !!j.success && j.hostname === HOME;
+      } catch (e) { human = false; }
+    }
+    if (!human) return json({ error: "human", message: "We could not confirm you are a person. Please try again." }, 403);
+  }
 
   const auth = { authorization: "Bearer " + env.OPENAI_API_KEY, "content-type": "application/json" };
   // Text safety check first. If the check itself fails, we stop: this is a kids' site.

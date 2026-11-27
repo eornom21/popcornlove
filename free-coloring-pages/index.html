@@ -359,6 +359,7 @@ footer b{color:var(--ink)}
       <div class="opt" style="margin-top:12px"><label for="rIdea">What should we draw?</label><textarea class="field" id="rIdea" rows="3" maxlength="200" placeholder="A corgi riding a skateboard past a taco truck" style="resize:vertical;line-height:1.35"></textarea></div>
       <div class="opt" style="margin-top:12px"><label>Style</label><div class="seg" id="rStyle"><button data-v="Little Kids" data-k="easy">Little Kids</button><button data-v="Whimsical" data-k="whimsical" aria-pressed="true">Whimsical</button><button data-v="Realistic" data-k="realistic">Realistic</button><button data-v="Intricate" data-k="intricate">Intricate</button></div></div>
       <p class="hint" style="margin-top:12px">We can't draw characters from movies, shows or games, or real people. Please leave out names and personal details.</p>
+      <div id="rTs" style="margin-top:10px"></div>
       <div class="cta" style="flex-direction:column;gap:10px"><button class="btn pri wide" id="rNow" style="display:none">🪄 Draw it now</button><button class="btn pri wide" id="rSend">Send my request</button></div>
       <p class="hint" id="rLeft" style="display:none;margin-top:10px;text-align:center"></p>
     </div>
@@ -532,7 +533,7 @@ $('#rSend').addEventListener('click',function(){var t=$('#rIdea').value.replace(
   var fd=new FormData();fd.append(REQ_FIELD,'['+reqStyle+'] '+t);$('#rSend').disabled=true;
   fetch(REQ_URL,{method:'POST',mode:'no-cors',body:fd}).catch(function(){}).then(function(){$('#rSend').disabled=false;log.n++;store.set('req',log);T('request_page',{style:reqStyle});$('#rIdea').value='';$('#rForm').style.display='none';$('#rDone').style.display=''})});
 /* ---------- instant pages: type an idea, get a page ---------- */
-var MINE={key:'mine',name:'My Pages',emoji:'🪄'},MINE_MAX=24,INSTANT={on:false,left:0},MDB=null;
+var MINE={key:'mine',name:'My Pages',emoji:'🪄'},MINE_MAX=24,INSTANT={on:false,left:0,ts:''},TS={id:null,token:'',loading:false},MDB=null;
 function mdb(){if(MDB)return MDB;MDB=new Promise(function(res,rej){try{var r=indexedDB.open('fcp',1);r.onupgradeneeded=function(){r.result.createObjectStore('mine',{keyPath:'id'})};r.onsuccess=function(){res(r.result)};r.onerror=function(){rej(r.error)}}catch(e){rej(e)}});return MDB}
 function mineAll(){return mdb().then(function(db){return new Promise(function(res){var q=db.transaction('mine').objectStore('mine').getAll();q.onsuccess=function(){res(q.result||[])};q.onerror=function(){res([])}})}).catch(function(){return []})}
 function mineTx(fn){return mdb().then(function(db){return new Promise(function(res){var t=db.transaction('mine','readwrite');fn(t.objectStore('mine'));t.oncomplete=res;t.onerror=res;t.onabort=res})}).catch(function(){})}
@@ -554,19 +555,25 @@ function instantUI(){var on=INSTANT.on;$('#rNow').style.display=on?'':'none';$('
   $('#rTitle').textContent=on?'Make your own coloring page':'Request a coloring page';$('#reqBtn').innerHTML=on?MINE.emoji+' Draw my idea':'✏️ Request a page';
   $('#rHint').textContent=on?'Type what you want and we will draw it while you wait. It usually takes less than half a minute. Then print it, save it or color it right here.':"Tell us what to draw. If we can draw it, we'll add it to the site for free. We make a batch of new pages every day.";
   var l=$('#rLeft');l.style.display=on?'':'none';l.textContent=INSTANT.left>0?(INSTANT.left+' free instant '+(INSTANT.left===1?'page':'pages')+' left today'):'You have used your free instant pages for today.';$('#rNow').disabled=on&&INSTANT.left<=0}
-function instantCheck(){return fetch('/api/make/status',{cache:'no-store'}).then(function(r){return r.ok?r.json():{ok:false}}).then(function(j){INSTANT.on=!!(j&&j.ok);INSTANT.left=(j&&j.left)||0;instantUI()}).catch(function(){})}
+function instantCheck(){return fetch('/api/make/status',{cache:'no-store'}).then(function(r){return r.ok?r.json():{ok:false}}).then(function(j){INSTANT.on=!!(j&&j.ok);INSTANT.left=(j&&j.left)||0;INSTANT.ts=(j&&j.ts)||'';instantUI()}).catch(function(){})}
+/* Human check (Cloudflare Turnstile). Loads only when the Worker says it is on. Most people never see it. */
+function tsRender(){if(!INSTANT.ts||TS.id!==null||!window.turnstile)return;try{TS.id=turnstile.render('#rTs',{sitekey:INSTANT.ts,size:'flexible',appearance:'interaction-only',callback:function(t){TS.token=t},'expired-callback':function(){TS.token='';tsReset()},'error-callback':function(){TS.token=''}})}catch(e){console.error(e)}}
+function tsLoad(){if(!INSTANT.ts||!INSTANT.on)return;if(window.turnstile){tsRender();return}if(TS.loading)return;TS.loading=true;var sc=document.createElement('script');sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';sc.async=true;sc.onload=tsRender;sc.onerror=function(){TS.loading=false};document.head.appendChild(sc)}
+function tsReset(){TS.token='';try{if(TS.id!==null&&window.turnstile)turnstile.reset(TS.id)}catch(e){}}
+$('#reqBtn').addEventListener('click',tsLoad);
 instantCheck();
 var WAITS=['Sharpening the pencils…','Sketching your idea…','Inking the lines…','Erasing the smudges…','Almost there…'];
 $('#rNow').addEventListener('click',function(){var t=$('#rIdea').value.replace(/\s+/g,' ').trim();if(t.length<4){toast('Tell us a little more about what to draw.');return}
+  if(INSTANT.ts&&!TS.token){tsLoad();toast('One moment, checking that you are a person. Then press Draw it now again.');return}
   var b=$('#rStyle button[aria-pressed="true"]'),style=(b&&b.dataset.k)||'whimsical',k=0,ctl=window.AbortController?new AbortController():null,msg='';
   T('instant_make',{style:style});busy(WAITS[0]);var iv=setInterval(function(){k=Math.min(k+1,WAITS.length-1);$('#busyMsg').textContent=WAITS[k]},9000),to=setTimeout(function(){if(ctl)ctl.abort()},170000);
-  fetch('/api/make',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({idea:t,style:style}),signal:ctl?ctl.signal:undefined})
+  fetch('/api/make',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({idea:t,style:style,ts:TS.token}),signal:ctl?ctl.signal:undefined})
   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){if(!r.ok){msg=j.message||'';throw new Error(j.error||'failed')}return j})})
   .then(function(j){var d=j.data&&j.data[0]&&j.data[0].b64_json;if(!d)throw new Error('empty');$('#busyMsg').textContent='Tidying it up…';return cleanArt('data:image/'+(j.output_format||'webp')+';base64,'+d)})
   .then(function(src){var pg={id:'mine-'+Date.now(),theme:'mine',style:style,title:ideaTitle(t),src:src,t:Date.now()};return addMine(pg).then(function(){return pg})})
   .then(function(pg){T('instant_done',{style:style});INSTANT.left=Math.max(0,INSTANT.left-1);instantUI();$('#rIdea').value='';close('#ovReq');S.theme='mine';S.onlyFav=false;S.q='';$('#q').value='';$$('.tab').forEach(function(x){x.setAttribute('aria-selected',x.dataset.t==='mine')});render();openDetail(pg.id)})
   .catch(function(e){console.error(e);T('instant_fail',{reason:String(e&&e.message||e).slice(0,40)});toast(msg||'The drawing did not come out. Please try again.');instantCheck()})
-  .then(function(){clearInterval(iv);clearTimeout(to);idle()})});
+  .then(function(){clearInterval(iv);clearTimeout(to);idle();if(INSTANT.ts)tsReset()})});
 (function(){var d=new Date(),m=d.getMonth(),day=d.getDate();if((m===10&&day>=20)||(m===11&&day<=25))$('#adventBtn').style.display=''})();
 $('#dPrint').addEventListener('click',function(){var p=S.cur;T('print',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Sending to your printer…',function(){return sheetFor(p,S.opts).then(function(c){idle();return printCanvases([c],S.opts.paper)})})});
 $('#dPdf').addEventListener('click',function(){var p=S.cur;T('pdf',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Making your PDF…',function(){return sheetFor(p,S.opts).then(function(c){return makePdf([c],S.opts.paper,slug(p))}).then(function(){toast('PDF saved')})})});
