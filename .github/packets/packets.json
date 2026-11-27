@@ -4,7 +4,17 @@
   "owl-2": "20261127_043716_797a5297-07d1-4d88-9ed3-9e382f40fac3",
   "owl-3": "20261127_043716_ddf85394-254f-47c3-bb3a-c5713cccc73f",
   "owl-4": "20261127_043717_d61ccc68-d097-4a0b-b34b-20c5423eab8c",
-  "owl-5": "20261127_043716_9562a283-f387-48d9-bf79-63f22ad05eca"
+  "owl-5": "20261127_043716_9562a283-f387-48d9-bf79-63f22ad05eca",
+  "wolverine-fp-1": "20261127_050015_d050d3f8-4772-4c75-b834-4461eb3881c5",
+  "wolverine-fp-2": "20261127_050016_e90be8bf-1162-43ba-b06c-5f29c30ca49b",
+  "wolverine-fp-3": "20261127_050015_87c56417-8384-4df9-a5bb-cebcc919c160",
+  "wolverine-fp-4": "20261127_050017_aeaf7a7e-ef58-428b-91ee-1b14b4678dcc",
+  "wolverine-fp-5": "20261127_050017_1404b708-fcbd-4d1c-aa9f-be936d2370fa",
+  "eagle-jm-1": "20261127_050017_b06acacb-1426-422e-83fc-3a9a11b9f06c",
+  "eagle-jm-2": "20261127_050017_41a59cc3-65b6-4de3-bace-bde1a990703d",
+  "eagle-jm-3": "20261127_050016_9d7d2779-4000-4f17-a92e-a6224dc615a9",
+  "eagle-jm-4": "20261127_050016_cf191e17-de72-41b4-9fa7-bb3cc8f3352a",
+  "eagle-jm-5": "20261127_050016_6f7ad1d1-9a48-4ab8-a399-cae5f714f6da"
  },
  "library": [],
  "schools": [
@@ -34,6 +44,58 @@
     ]
    ],
    "email_color": "20261127_044550_ac9a2670-2f90-42a2-916d-b166b66685ea"
+  },
+  {
+   "slug": "forest-park-elementary-fremont-k3p7",
+   "name": "Forest Park Elementary",
+   "pages": [
+    [
+     "wolverine-fp-1",
+     "Forest Park Elementary"
+    ],
+    [
+     "wolverine-fp-2",
+     "Merry Christmas, Wolverines!"
+    ],
+    [
+     "wolverine-fp-3",
+     "Forest Park Wolverines"
+    ],
+    [
+     "wolverine-fp-4",
+     "Happy Holidays, Forest Park!"
+    ],
+    [
+     "wolverine-fp-5",
+     "Forest Park Holiday Party"
+    ]
+   ]
+  },
+  {
+   "slug": "joe-michell-livermore-t5n2",
+   "name": "Joe Michell School",
+   "pages": [
+    [
+     "eagle-jm-1",
+     "Joe Michell School"
+    ],
+    [
+     "eagle-jm-2",
+     "Merry Christmas, Eagles!"
+    ],
+    [
+     "eagle-jm-3",
+     "Joe Michell Eagles"
+    ],
+    [
+     "eagle-jm-4",
+     "Happy Holidays, Joe Michell!"
+    ],
+    [
+     "eagle-jm-5",
+     "Joe Michell Holiday Party"
+    ]
+   ]
   }
  ]
 }
