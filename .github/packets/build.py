@@ -191,6 +191,12 @@ def main():
         rgb = [p.convert("RGB") for p in pages]
         rgb[0].save(os.path.join(out, sc["slug"] + ".pdf"), save_all=True, append_images=rgb[1:], resolution=DPI,
                     title="Christmas coloring pages for " + sc["name"], author="Make a Coloring Book")
+        # email preview of page 1: small JPEG, shown inline in the email
+        em = pages[0].convert("RGB")
+        em = em.resize((600, round(600 * em.height / em.width)), Image.LANCZOS)
+        framed = Image.new("RGB", (em.width + 4, em.height + 4), (200, 200, 200))
+        framed.paste(em, (2, 2))
+        framed.save(os.path.join(out, sc["slug"] + ".jpg"), quality=82, optimize=True, progressive=True)
         for i, p in enumerate(pages):
             p.resize((PW // 4, PH // 4), Image.LANCZOS).save(os.path.join(prev, "%s-%d.png" % (sc["slug"], i + 1)))
         report.append({"slug": sc["slug"], "pages": len(pages), "banner_found": ok})
