@@ -552,7 +552,7 @@ function cleanArt(src){return new Promise(function(res,rej){var im=new Image();i
 function ideaTitle(t){t=t.replace(/[.!?]+$/,'');if(t.length>44)t=t.slice(0,44).replace(/\s+\S*$/,'')+'…';return t.charAt(0).toUpperCase()+t.slice(1)}
 function instantUI(){var on=INSTANT.on;$('#rNow').style.display=on?'':'none';$('#rSend').classList.toggle('pri',!on);$('#rSend').textContent=on?'Or ask us to add it to the site':'Send my request';
   $('#rTitle').textContent=on?'Make your own coloring page':'Request a coloring page';$('#reqBtn').innerHTML=on?MINE.emoji+' Draw my idea':'✏️ Request a page';
-  $('#rHint').textContent=on?'Type what you want and we will draw it while you wait, in about a minute. Then print it, save it or color it right here.':"Tell us what to draw. If we can draw it, we'll add it to the site for free. We make a batch of new pages every day.";
+  $('#rHint').textContent=on?'Type what you want and we will draw it while you wait. It usually takes less than half a minute. Then print it, save it or color it right here.':"Tell us what to draw. If we can draw it, we'll add it to the site for free. We make a batch of new pages every day.";
   var l=$('#rLeft');l.style.display=on?'':'none';l.textContent=INSTANT.left>0?(INSTANT.left+' free instant '+(INSTANT.left===1?'page':'pages')+' left today'):'You have used your free instant pages for today.';$('#rNow').disabled=on&&INSTANT.left<=0}
 function instantCheck(){return fetch('/api/make/status',{cache:'no-store'}).then(function(r){return r.ok?r.json():{ok:false}}).then(function(j){INSTANT.on=!!(j&&j.ok);INSTANT.left=(j&&j.left)||0;instantUI()}).catch(function(){})}
 instantCheck();
