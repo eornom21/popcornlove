@@ -8,7 +8,32 @@
  },
  "library": [],
  "schools": [
-  {"slug": "amador-elementary-dublin-r8w3", "name": "Amador Elementary",
-   "pages": [["owl-1", "Amador Elementary"], ["owl-2", "Merry Christmas, Owls!"], ["owl-3", "Amador Owls"], ["owl-4", "Happy Holidays, Amador!"], ["owl-5", "Amador Holiday Party"]]}
+  {
+   "slug": "amador-elementary-dublin-r8w3",
+   "name": "Amador Elementary",
+   "pages": [
+    [
+     "owl-1",
+     "Amador Elementary"
+    ],
+    [
+     "owl-2",
+     "Merry Christmas, Owls!"
+    ],
+    [
+     "owl-3",
+     "Amador Owls"
+    ],
+    [
+     "owl-4",
+     "Happy Holidays, Amador!"
+    ],
+    [
+     "owl-5",
+     "Amador Holiday Party"
+    ]
+   ],
+   "email_color": "20261127_044550_ac9a2670-2f90-42a2-916d-b166b66685ea"
+  }
  ]
 }

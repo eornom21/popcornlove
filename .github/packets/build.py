@@ -47,6 +47,13 @@ def fetch(stamp, cache):
     return Image.alpha_composite(bg, im).convert("L")
 
 
+def fetch_rgb(stamp, cache):
+    fetch(stamp, cache)
+    im = Image.open(os.path.join(cache, stamp + ".png")).convert("RGBA")
+    bg = Image.new("RGBA", im.size, "white")
+    return Image.alpha_composite(bg, im).convert("RGB")
+
+
 def banner_comp(g):
     """Find the empty banner near the top: walking down the centre column, the first enclosed white region
     (not touching the page edge) that is wide and short enough to be a banner."""
@@ -197,6 +204,11 @@ def main():
         framed = Image.new("RGB", (em.width + 4, em.height + 4), (200, 200, 200))
         framed.paste(em, (2, 2))
         framed.save(os.path.join(out, sc["slug"] + ".jpg"), quality=82, optimize=True, progressive=True)
+        if sc.get("email_color"):
+            # colored-in page 1 for the email (drawn from the finished page, so its lettering must be checked by eye)
+            col = fetch_rgb(sc["email_color"], cache)
+            col = col.resize((600, round(600 * col.height / col.width)), Image.LANCZOS)
+            col.save(os.path.join(out, sc["slug"] + "-color.jpg"), quality=84, optimize=True, progressive=True)
         for i, p in enumerate(pages):
             p.resize((PW // 4, PH // 4), Image.LANCZOS).save(os.path.join(prev, "%s-%d.png" % (sc["slug"], i + 1)))
         report.append({"slug": sc["slug"], "pages": len(pages), "banner_found": ok})
