@@ -24,7 +24,37 @@
   "panther-2": "20261127_055335_c401fc6c-01a0-4175-a3db-120512ae5215",
   "panther-3": "20261127_055335_2b501368-28b4-42d2-91d1-b0aca28c28d4",
   "panther-4": "20261127_055335_22104ae5-3f10-4157-b071-3117c1aaa8b8",
-  "panther-5": "20261127_055334_e2bdb3ce-6548-4ce9-951f-8c6cf4780746"
+  "panther-5": "20261127_055334_e2bdb3ce-6548-4ce9-951f-8c6cf4780746",
+  "bear-tu-1": "20261127_072344_a5cba9a5-bdf0-4549-9c3d-ad29dd408d56",
+  "bear-tu-2": "20261127_072344_3ddd9f14-146c-46c3-b31c-ee4586ec5c54",
+  "bear-tu-3": "20261127_072339_e4b031f8-6f6a-49f4-955a-321c277f21a7",
+  "bear-tu-4": "20261127_072344_e1f1fd87-c683-43e4-ba9f-79116b6ce509",
+  "bear-tu-5": "20261127_072345_0739905a-cc5a-4825-af98-0496187f3a8a",
+  "bobcat-tu-1": "20261127_072343_8bf7912f-e5ef-44ca-9e93-7567103adbdb",
+  "bobcat-tu-2": "20261127_072343_fdd9d600-7f4f-48b7-a3aa-20dfff97d08d",
+  "bobcat-tu-3": "20261127_072339_c8fdb36f-518b-4fdb-b8ba-33624c753cc3",
+  "bobcat-tu-4": "20261127_072343_794a5739-4e1e-4af9-98f6-8a3da5564d08",
+  "bobcat-tu-5": "20261127_072345_51a7f881-18b0-4673-adb3-6b0fb919c1e9",
+  "dolphin-tu-1": "20261127_072350_c3c75a94-d50a-4a88-9bd1-adcf16847e80",
+  "dolphin-tu-2": "20261127_072350_05d91433-bd6b-4659-8377-72fb4002f9b3",
+  "dolphin-tu-3": "20261127_072351_df8501a1-fbec-4c31-b9f9-7b07e1927eac",
+  "dolphin-tu-4": "20261127_072350_a5ec06f1-840f-44a0-a96e-45919b418caf",
+  "dolphin-tu-5": "20261127_072350_49180246-a5b4-4c40-b416-638ed2c76272",
+  "husky-tu-1": "20261127_072349_e5bb6b5e-2c43-464f-8d09-81e796b79313",
+  "husky-tu-2": "20261127_072351_34cef2e0-a3dc-4771-9cbe-16b65625c7e0",
+  "husky-tu-3": "20261127_072349_250d3583-f3a2-4cba-924c-189c041d7492",
+  "husky-tu-4": "20261127_072351_4ad4d3b3-a6e9-4f76-8369-c589cbb34879",
+  "husky-tu-5": "20261127_072352_66bb0c25-eb7c-4778-bc75-94cdee6b2fb9",
+  "leopard-tu-1": "20261127_072357_91aace8d-b8c6-4326-8364-2e0cd8cb2806",
+  "leopard-tu-2": "20261127_072357_28badb36-ff38-4f16-b6fa-0c7f1ea00afe",
+  "leopard-tu-3": "20261127_072358_0dedb4a8-340a-4c30-bf56-1cb0fd26d911",
+  "leopard-tu-4": "20261127_072357_dc038846-d3cd-4654-928b-11c7a3472db9",
+  "leopard-tu-5": "20261127_072356_904479c5-1f75-45ea-9e16-4041c4fca538",
+  "roadrunner-tu-1": "20261127_072356_6a938185-ac7c-4e42-846b-8a1700206e41",
+  "roadrunner-tu-2": "20261127_072357_147e7c65-cb4f-4d8e-9383-877df7bb70c4",
+  "roadrunner-tu-3": "20261127_072358_3c0a630c-225d-4199-a4d1-8456d3641480",
+  "roadrunner-tu-4": "20261127_072357_02291004-d575-489e-aa87-541e15ae1dc2",
+  "roadrunner-tu-5": "20261127_072356_1f5a9a31-d54c-4113-8dcd-ed04ab18bfbb"
  },
  "library": [],
  "schools": [
@@ -189,6 +219,162 @@
     ]
    ],
    "email_color": "20261127_055434_f71fa606-3ac8-4962-b5ec-a6e283497d1d"
+  },
+  {
+   "slug": "benson-elementary-tustin-5jqg",
+   "name": "Benson Elementary",
+   "pages": [
+    [
+     "bear-tu-1",
+     "Benson Elementary"
+    ],
+    [
+     "bear-tu-2",
+     "Merry Christmas, Bears!"
+    ],
+    [
+     "bear-tu-3",
+     "Benson Bears"
+    ],
+    [
+     "bear-tu-4",
+     "Happy Holidays, Benson!"
+    ],
+    [
+     "bear-tu-5",
+     "Benson Holiday Party"
+    ]
+   ]
+  },
+  {
+   "slug": "beswick-elementary-tustin-lz99",
+   "name": "Beswick Elementary",
+   "pages": [
+    [
+     "bobcat-tu-1",
+     "Beswick Elementary"
+    ],
+    [
+     "bobcat-tu-2",
+     "Merry Christmas, Bobcats!"
+    ],
+    [
+     "bobcat-tu-3",
+     "Beswick Bobcats"
+    ],
+    [
+     "bobcat-tu-4",
+     "Happy Holidays, Beswick!"
+    ],
+    [
+     "bobcat-tu-5",
+     "Beswick Holiday Party"
+    ]
+   ]
+  },
+  {
+   "slug": "guin-foss-elementary-tustin-koa9",
+   "name": "Guin Foss Elementary",
+   "pages": [
+    [
+     "dolphin-tu-1",
+     "Guin Foss Elementary"
+    ],
+    [
+     "dolphin-tu-2",
+     "Merry Christmas, Dolphins!"
+    ],
+    [
+     "dolphin-tu-3",
+     "Guin Foss Dolphins"
+    ],
+    [
+     "dolphin-tu-4",
+     "Happy Holidays, Guin Foss!"
+    ],
+    [
+     "dolphin-tu-5",
+     "Guin Foss Holiday Party"
+    ]
+   ]
+  },
+  {
+   "slug": "hicks-canyon-elementary-tustin-4l5a",
+   "name": "Hicks Canyon Elementary",
+   "pages": [
+    [
+     "husky-tu-1",
+     "Hicks Canyon Elementary"
+    ],
+    [
+     "husky-tu-2",
+     "Merry Christmas, Huskies!"
+    ],
+    [
+     "husky-tu-3",
+     "Hicks Canyon Huskies"
+    ],
+    [
+     "husky-tu-4",
+     "Happy Holidays, Hicks Canyon!"
+    ],
+    [
+     "husky-tu-5",
+     "Hicks Canyon Holiday Party"
+    ]
+   ]
+  },
+  {
+   "slug": "ladera-elementary-tustin-2k79",
+   "name": "Ladera Elementary",
+   "pages": [
+    [
+     "leopard-tu-1",
+     "Ladera Elementary"
+    ],
+    [
+     "leopard-tu-2",
+     "Merry Christmas, Leopards!"
+    ],
+    [
+     "leopard-tu-3",
+     "Ladera Leopards"
+    ],
+    [
+     "leopard-tu-4",
+     "Happy Holidays, Ladera!"
+    ],
+    [
+     "leopard-tu-5",
+     "Ladera Holiday Party"
+    ]
+   ]
+  },
+  {
+   "slug": "heideman-elementary-tustin-wp8n",
+   "name": "Heideman Elementary",
+   "pages": [
+    [
+     "roadrunner-tu-1",
+     "Heideman Elementary"
+    ],
+    [
+     "roadrunner-tu-2",
+     "Merry Christmas, Roadrunners!"
+    ],
+    [
+     "roadrunner-tu-3",
+     "Heideman Roadrunners"
+    ],
+    [
+     "roadrunner-tu-4",
+     "Happy Holidays, Heideman!"
+    ],
+    [
+     "roadrunner-tu-5",
+     "Heideman Holiday Party"
+    ]
+   ]
   }
  ]
 }
