@@ -344,6 +344,8 @@ var P={
  tapbr:{n:'Tap & Barrel Bridges',a:'1696 Duranleau St, Vancouver, BC'},
  heather:{n:'The Irish Heather',a:'248 E Georgia St, Vancouver, BC'},
  pour:{n:'Pourhouse',a:'162 Water St, Vancouver, BC V6B 1B2'},
+ guilt:{n:'Guilt & Co.',a:'1 Alexander St, Vancouver, BC'},
+ lobby:{n:'The Lobby Lounge, Fairmont Pacific Rim',a:'1038 Canada Place, Vancouver, BC'},
  nuba:{n:'Nuba in Gastown',a:'207 W Hastings St, Vancouver, BC'},
  luigi:{n:'Ask for Luigi',a:'305 Alexander St, Vancouver, BC'}
 };
@@ -356,7 +358,8 @@ var DAYS=[
   {m:920,tm:'~3:20 PM',ic:'🚆',tt:'Airport to downtown',sb:'Canada Line SkyTrain to Waterfront Station (under 30 min), then ~7 min walk to Woodward\'s W43.',li:['Tap a credit card or Apple Pay at the gate — one per adult. Kids ride free.','Sit at the very front: there\'s no driver, so the kids get the windshield.'],map:P.wf},
   {m:1005,tm:'~4:45 PM',ic:'🏠',tt:'Check into Woodward\'s W43',sb:'128 West Cordova Street, Gastown',home:1},
   {m:1035,tm:'~5:15 PM',ic:'⛸️',tt:'Explore Gastown & Robson Square',sb:'Or just stroll. It\'s dark by 4:15, so Water Street is all lights.',li:['Steam Clock whistles every 15 minutes — 3 minutes from the door.','Lee\'s Donuts is right across from it (open to 7 PM).','Robson Square rink: free skating, rentals about $5, usually open 9–9 from the start of December. Check that it\'s open first.','The Christmas Market is open tonight 4–9:30 and Thursdays are calm — a good night to sneak a first look.'],map:P.steam,links:[['Rink status','https://www.robsonsquare.com/']]},
-  {m:1125,tm:'6:45 PM',ic:'🍴',tt:'Dinner: Water St. Café',sb:'300 Water Street — across from the Steam Clock. Table for 5 at 6:45, under Nate.',star:1,bk:1,map:P.water,tel:'+16046892832',links:[['Reserve','https://www.exploretock.com/waterstcafe']],alt:'thu-dinner'}
+  {m:1125,tm:'6:45 PM',ic:'🍴',tt:'Dinner: Water St. Café',sb:'300 Water Street — across from the Steam Clock. Table for 5 at 6:45, under Nate.',star:1,bk:1,map:P.water,tel:'+16046892832',links:[['Reserve','https://www.exploretock.com/waterstcafe']],alt:'thu-dinner'},
+  {m:1260,tm:'~9:00 PM',ic:'🥃',tt:'Nightcap (grown-ups)',sb:'Once the kids are down: two slip out, one stays in. Everything is within a few minutes of the door.',alt:'nightcap'}
  ]},
  {c:'c2',n:'Day 2',d:'Friday, Dec 4',s:'Fri',num:'4',t:'Stanley Park + Market + Family Photos 🎄',sub:'Family photo session at Stanley Park ♡',art:'img/polaroid.jpg',items:[
   {m:495,tm:'~8:15 AM',ic:'☕',tt:'Breakfast: Nemesis Coffee',sb:'Gastown, 302 W Hastings St. Counter service — quick, which is what a 10:00 photo call needs.',star:1,map:P.nemesis,alt:'fri-breakfast'},
@@ -367,7 +370,8 @@ var DAYS=[
   {m:855,tm:'2:15 – 4:30 PM',ic:'🛋️',tt:'Seawall, Canada Place, or a rest',sb:'You\'re already on the waterfront: watch the seaplanes, walk Canada Place, or head back to the Airbnb for an hour (15-minute walk).',add:1,map:P.canpl},
   {m:990,tm:'4:30 PM',ic:'🎪',tt:'Vancouver Christmas Market',sb:'90+ huts and the 5-storey Christmas Pyramid at Jack Poole Plaza. Gates open at 4:00 on Fridays; that first slot sold out, so ours is the 4:30–5:00 arrival. The lights are on by then.',li:['Carousel, walk-through 35-foot tree, snow showers every 30 minutes, Santa\'s Workshop.','Kinderpunsch for the kids, Glühwein for the grown-ups.','Very little cover — hoods up if it rains.'],map:P.market,links:[['Tickets','https://tickets.vancouverchristmasmarket.com/']]},
   {m:1095,tm:'~6:15 PM',ic:'🍩',tt:'Snack: Lee\'s Donuts',sb:'199 Water St, across from the Steam Clock — it\'s on the walk to dinner. A Vancouver classic since 1979. Grab a box of Honey Dips before they close at 7.',map:P.lees},
-  {m:1110,tm:'6:30 PM',ic:'🍴',tt:'Dinner: Old Spaghetti Factory',sb:'53 Water St, Gastown. Table for 5 at 6:30, under Nate — we asked for a spot in or near the streetcar.',star:1,bk:1,map:P.osf,tel:'+16046841288',alt:'fri-dinner'}
+  {m:1110,tm:'6:30 PM',ic:'🍴',tt:'Dinner: Old Spaghetti Factory',sb:'53 Water St, Gastown. Table for 5 at 6:30, under Nate — we asked for a spot in or near the streetcar.',star:1,bk:1,map:P.osf,tel:'+16046841288',alt:'fri-dinner'},
+  {m:1260,tm:'~9:00 PM',ic:'🥃',tt:'Nightcap (grown-ups)',sb:'Kids down after the Market and spaghetti. Live music is a 5-minute walk.',alt:'nightcap'}
  ]},
  {c:'c3',n:'Day 3',d:'Saturday, Dec 5',s:'Sat',num:'5',t:'Granville Island + Capilano Canyon Lights 🌲',sub:'Lights, mountains & magic ♡',art:'img/bridge.jpg',items:[
   {m:540,tm:'9:00 AM',ic:'🍴',tt:'Breakfast: Café Medina',sb:'780 Richards St. Opens 9:00 on weekends.',star:1,flag:'<b>Not reserved yet.</b> A 9:00 table for 5 is open on Tock; a C$50 donation holds it. Without one, weekend waits can run 90 minutes. Famous for Belgian waffles.',map:P.medina,links:[['Reserve','https://www.exploretock.com/medinacafe/search?date=2026-12-05&size=5&time=09%3A00']],alt:'sat-breakfast'},
@@ -376,7 +380,7 @@ var DAYS=[
   {m:885,tm:'~2:45 PM',ic:'🚌',tt:'Head to Capilano',sb:'Free shuttle from Canada Place, or a 20–25 minute taxi over the Lions Gate Bridge.',add:1,map:P.canpl,links:[['Shuttle schedule','https://capbridge.com/shuttle-schedule']]},
   {m:930,tm:'3:30 – 4:00 PM',ic:'🌉',tt:'Capilano Suspension Bridge Park — Canyon Lights',sb:'Arrive in daylight, stay as the lights come on around 4. Allow 1.5–2 hours.',li:['Tickets still to buy: the 3:30–4:00 PM arrival window is open. Park hours 11 AM – 10 PM.','Bridge, Cliffwalk and Treetops are all lit. Ask for the kids\' Activity Card (stickers → gingerbread house).','Free ponchos if it rains.'],map:P.cap,tel:'+16049857474',links:[['Tickets','https://www.capbridge.com/tickets-and-hours/']]},
   {m:1110,tm:'~6:30 PM',ic:'🍴',tt:'Dinner (Courtenay & kids)',sb:'Near the Airbnb — Gastown options.',alt:'sat-dinner'},
-  {m:1170,tm:'Evening',ic:'🌙',tt:'Kids down early',sb:'With Courtenay. Grown-ups\' night-out ideas are on the Eat tab.',alt:'sat-night'}
+  {m:1170,tm:'Evening',ic:'🌙',tt:'Kids down early · grown-ups\' night out',sb:'Kids down with Courtenay; the night-out ideas are on the Eat tab.',alt:'sat-night'}
  ]},
  {c:'c4',n:'Day 4',d:'Sunday, Dec 6',s:'Sun',num:'6',t:'Last Wander + Departure ✈',sub:'Back in San Francisco by evening — no jet lag, no school Monday! ♡',art:'img/seaplane.jpg',items:[
   {m:540,tm:'~9:00 AM',ic:'☕',tt:'Breakfast: Café Medina',sb:'780 Richards St (opens 9:00 Sundays) — or Nemesis Coffee in Gastown.',star:1,map:P.medina,alt:'sun-breakfast'},
@@ -483,8 +487,15 @@ var SLOTS=[
  ]},
  {id:'sat-night',day:'Sat',t:'Saturday night out',w:'The poster has the kids down early with Courtenay. If two grown-ups slip out:',opts:[
   o('heather','The Irish Heather','best','Best bet · 10 min walk, or taxi · $$',['Irish-owned and run; whiskey list, pies, live music','Open from 2 PM Tuesday–Sunday'],['No confirmed Christmas décor this year','The walk crosses Chinatown — cab it after dark'],{p:P.heather,tel:'+16046889779',res:'https://www.irishheather.com'}),
-  o('pour','Pourhouse','alt','Alternative · 2 min walk · $$$',['1910 tavern room, proper cocktails, weekend live music','Two minutes from the Airbnb'],['Upscale prices'],{p:P.pour}),
+  o('pour','Pourhouse','alt','Alternative · 2 min walk · $$$',['Century-old tavern room with a 38-foot bar; classic cocktails','Two minutes from the Airbnb','Open till 1 AM Saturday'],['Upscale prices','Busy on a Saturday — sit at the bar'],{p:P.pour,tel:'+16045687022'}),
+  o('guilt2','Guilt & Co.','alt','Alternative · live music · 5 min walk · $$',['Basement room with live bands every night','No tickets: walk in'],['Saturday line — go early','A music fee goes on the bill'],{p:P.guilt}),
   o('mktnight','The Market after dark','alt','Alternative · open till 10 · $$',['Glühwein, the Fire Pit Lounge, the bell-ring "secret wall" cocktail hut'],['Saturday night is the most crowded slot of the week','Needs its own ticket'],{p:P.market})
+ ]},
+ {id:'nightcap',day:'Any',night:1,t:'Nightcaps — any night',w:'Courtenay\'s guide had nightcaps and grown-ups\' nights out; they dropped off the version this app was built from. Her picks go here as soon as we have them. Until then, these are all a short walk from the door. (The Diamond, the old Gastown favourite, has closed for good.)',opts:[
+  o('pour2','Pourhouse','best','Best bet · 2 min walk · $$$',['Century-old tavern room with a 38-foot bar; classic cocktails','Closest to the door','Open to midnight Thursday, 1 AM Friday and Saturday'],['Upscale prices','Fills up Friday and Saturday — sit at the bar'],{p:P.pour,tel:'+16045687022'}),
+  o('guilt','Guilt & Co.','alt','Alternative · live music · 5 min walk · $$',['Basement room at Water and Carrall with live bands every night: jazz, funk, soul','No tickets or reservations: walk in'],['A music fee (roughly C$7–12 a person) goes on the bill','Lines on Friday and Saturday — go early','19 and over'],{p:P.guilt}),
+  o('lobby','The Lobby Lounge','alt','Alternative · live music · 12 min walk · $$$$',['Live music every night in the Fairmont Pacific Rim lobby','Beside the Market — an easy add on Friday','Open to midnight, 1 AM Friday and Saturday'],['Hotel-bar prices','Busy Friday and Saturday'],{p:P.lobby}),
+  o('second','Upstairs at Water St. Café','alt','Alternative · Thursday, same building as dinner',['A live-music room above Thursday\'s dinner table','No walk at all'],['Ask at dinner what\'s on that night — not checked for these dates','Someone still has to walk the kids home'],{p:P.water})
  ]},
  {id:'sun-breakfast',day:'Sun',t:'Sunday breakfast',w:'Bags packed, airport by 12:30. Don\'t gamble on a line.',opts:[
   o('med2','Café Medina','star','On the poster · opens 9:00 · $$',['One last waffle'],['Only with a reservation — a Sunday walk-in wait could eat the morning'],{p:P.medina,res:'https://www.exploretock.com/medinacafe'}),
@@ -595,7 +606,7 @@ function renderEat(){
       if(x.tel)b+='<a class="btn" href="tel:'+x.tel+'">📞</a>';
       return'<div class="opt'+(on?' picked':'')+'"><h4>'+esc(x.name)+' <span class="tag '+tg[0]+'">'+tg[1]+'</span></h4><div class="meta">'+esc(x.meta)+'</div><div class="pc"><div class="p"><b>Pros</b><ul>'+x.pros.map(function(p){return'<li>'+esc(p)+'</li>'}).join('')+'</ul></div><div class="n"><b>Trade-offs</b><ul>'+x.cons.map(function(p){return'<li>'+esc(p)+'</li>'}).join('')+'</ul></div></div><div class="btns">'+b+'</div></div>'}).join('')+'</div>'}).join('');
   var n=Object.keys(picks).filter(function(k){return picks[k]}).length;
-  $('pickcount').textContent=n?n+' of '+SLOTS.length+' meals picked':'Tap ♡ to pick a spot for each meal';
+  $('pickcount').textContent=n?n+' of '+SLOTS.length+' picked':'Tap ♡ to pick a spot for each meal and night out';
 }
 function picksText(){
   var picks=get('picks',{}),out=['Vancouver eats — my picks 🍴'];
@@ -671,7 +682,7 @@ document.addEventListener('click',function(e){
 ['open-poster','open-poster2','poster-thumb'].forEach(function(i){$(i).addEventListener('click',function(){$('ov-poster').className='ov on'})});
 ['show-addr','show-addr2'].forEach(function(i){$(i).addEventListener('click',function(){$('ov-addr').className='ov on'})});
 $('sharepicks').addEventListener('click',function(){share(picksText(),false)});
-$('shareapp').addEventListener('click',function(){share('Our Vancouver trip app — open it in Safari, then Share → Add to Home Screen.',true)});
+$('shareapp').addEventListener('click',function(){share('Our Vancouver trip app — open it in Safari, tap Share (on newer iPhones it\'s inside the menu icon at the left of the address bar), then Add to Home Screen.',true)});
 $('cad').addEventListener('input',showFx);
 $('installx').addEventListener('click',function(){set('installx',1);$('install').style.display='none'});
 
