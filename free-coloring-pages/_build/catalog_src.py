@@ -456,7 +456,7 @@ STYLE_ORDER = ["easy", "whimsical", "realistic", "intricate"]
 # [{"id": "requests-001", "style": "whimsical", "title": "...", "subject": "..."}]
 _REQ = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requests.json")
 REQUESTS = json.load(open(_REQ)) if os.path.exists(_REQ) else []
-if REQUESTS:
+if any(r.get("theme", "requests") == "requests" for r in REQUESTS):
     THEMES.append(("requests", "By Request", "✏️"))
 
 def build():
@@ -472,7 +472,7 @@ def build():
                 n += 1
                 pages.append({"id": f"{key}-{n:02d}", "theme": key, "style": st, "title": title, "subject": subject})
     for r in REQUESTS:
-        pages.append({"id": r["id"], "theme": "requests", "style": r["style"], "title": r["title"], "subject": r["subject"]})
+        pages.append({"id": r["id"], "theme": r.get("theme", "requests"), "style": r["style"], "title": r["title"], "subject": r["subject"]})
     return pages
 
 def prompt_for(p):

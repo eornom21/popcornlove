@@ -117,6 +117,15 @@ FOOT = """</main>
 """
 
 
+HEART_JS = ("<script>(function(){var b=document.getElementById('heartBtn');if(!b)return;var id=document.querySelector('.item').dataset.id,n=0;"
+            "function favs(){try{return JSON.parse(localStorage.getItem('fcp.favs')||'[]')}catch(e){return []}}"
+            "function show(){var on=favs().indexOf(id)>=0;b.textContent=(on?'\u2665 Hearted':'\u2665 Heart it')+(n?' \u00b7 '+n:'');b.setAttribute('aria-pressed',on);b.classList.toggle('pri',on)}"
+            "fetch('/api/hearts').then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.counts){n=j.counts[id]||0;show()}}).catch(function(){});show();"
+            "b.addEventListener('click',function(){var f=favs(),i=f.indexOf(id),on=i<0;if(on)f.push(id);else f.splice(i,1);try{localStorage.setItem('fcp.favs',JSON.stringify(f))}catch(e){}n=Math.max(0,n+(on?1:-1));show();"
+            "if(on&&window.track)track('favorite',{page_id:id,from:'page'});"
+            "fetch('/api/heart',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id,on:on})}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&typeof j.n==='number'){n=j.n;show()}}).catch(function(){})})})();</script>")
+
+
 def tabs(root, active):
     out = ['<a class="tab" href="%s">✨ All pages</a>' % root]
     for key, name, emoji in C.THEMES:
@@ -225,7 +234,8 @@ def main():
             body += ('<div class="actions"><button class="btn pri" id="printBtn" type="button">🖨 Print this page</button>'
                      '<a class="btn sky" data-ev="open_app" href="%s#p=%s">⬇ PDF and print options</a>'
                      '<a class="btn leaf" data-ev="color_online" href="%s#p=%s&amp;color=1">🖍 Color it online</a>'
-                     '<a class="btn" data-ev="pin" rel="noopener nofollow" target="_blank" href="%s">📌 Save to Pinterest</a></div>\n') % (root, p["id"], root, p["id"], pinurl)
+                     '<a class="btn" data-ev="pin" rel="noopener nofollow" target="_blank" href="%s">📌 Save to Pinterest</a>'
+                     '<button class="btn" id="heartBtn" type="button" aria-pressed="false">♥ Heart it</button></div>\n') % (root, p["id"], root, p["id"], pinurl)
             body += '<div class="example"><img loading="lazy" width="510" height="680" src="%sguide/%s.webp" alt="%s colored in, as an example"><div><h2>Color ideas</h2><p>%s</p><p>Want this small colored picture printed in the corner of the page as a guide? Open the print options and switch on <b>Color guide</b>.</p></div></div>\n' % (
                 root, p["id"], esc(p["title"]), esc("Here is one way to color it. Good colors to pull out: " + ", ".join(colors).lower() + "." if colors else "Here is one way to color it."))
             body += '<h2>About this page</h2><p>%s</p>\n<p>It prints on one sheet of regular paper. For markers, use heavier paper or put a spare sheet underneath. In the print options you can also print two per sheet, switch to light gray lines, or add a name line.</p>\n' % esc(STYLE_BLURB[p["style"]])
@@ -237,7 +247,7 @@ def main():
             body += '<section><h2>More %s pages</h2><div class="grid small">%s</div></section>\n' % (esc(STYLE_NAME[p["style"]].lower()), "".join(card(q, root) for q in same))
             script = ("<script>(function(){var id=document.querySelector('.item').dataset.id;function t(n){if(window.track)track(n,{page_id:id})}"
                       "document.getElementById('printBtn').addEventListener('click',function(){t('print');window.print()});"
-                      "[].forEach.call(document.querySelectorAll('[data-ev]'),function(a){a.addEventListener('click',function(){t(a.dataset.ev)})})})();</script>")
+                      "[].forEach.call(document.querySelectorAll('[data-ev]'),function(a){a.addEventListener('click',function(){t(a.dataset.ev)})})})();</script>" + HEART_JS)
             body += FOOT.format(root=root, footlinks=footlinks(root), script=script)
             write(os.path.join(ROOT, key, p["slug"], "index.html"), body)
             urls.append((url, [(art, h1)], "0.6"))

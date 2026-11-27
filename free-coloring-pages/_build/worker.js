@@ -2,6 +2,9 @@
 // 1. Serves the site from popcornlove.net/free-coloring-pages at makeacoloringbook.com.
 // 2. Forwards every other attached host to makeacoloringbook.com.
 // 3. /api/make: draws a coloring page on the spot from a typed idea (OpenAI image API).
+// 4. /api/hearts, /api/heart: public heart counts for each page (KV "heart:<id>", count kept in key metadata).
+// 5. /api/team/*: Uncle Dave's team tools (secret TEAM_KEY): draw without the visitor limits, publish to the site.
+//    A GitHub Action (team-pages) pulls /api/team/queue every few minutes and adds published pages to the site.
 // Needs: secret OPENAI_API_KEY, KV binding KV. Optional secret TURNSTILE_SECRET turns on the human check
 // (Cloudflare Turnstile widget "makeacoloringbook draw"; its public site key is TS_SITEKEY below). Optional vars: LIMIT_IP (default 3 a day per visitor),
 // LIMIT_DAY (default 150 a day for the whole site), QUALITY (low|medium|high, default medium), IMAGE_MODEL.
@@ -37,6 +40,18 @@ async function counts(env, ip) {
   const dayKey = "day:" + day;
   const [a, b] = await Promise.all([env.KV.get(ipKey), env.KV.get(dayKey)]);
   return { ipKey, dayKey, mine: num(a, 0), all: num(b, 0), limIp: num(env.LIMIT_IP, 3), limDay: num(env.LIMIT_DAY, 150) };
+}
+
+
+const promptFor = (idea, style) => "Black and white coloring book page, portrait orientation. Subject: " + idea + ". " + STYLES[style] + " " + WHOLE + " " + TAIL + " " + RULES;
+const cleanIdea = (t, n) => String(t || "").replace(/[\u0000-\u001f<>{}\[\]\\`]/g, " ").replace(/\s+/g, " ").trim().slice(0, n || 200);
+async function moderate(env, text) {
+  try {
+    const m = await fetch("https://api.openai.com/v1/moderations", { method: "POST", headers: { authorization: "Bearer " + env.OPENAI_API_KEY, "content-type": "application/json" }, body: JSON.stringify({ model: "omni-moderation-latest", input: text }) });
+    if (!m.ok) return m.status === 401 || m.status === 429 ? "upstream" : "flagged";
+    const j = await m.json();
+    return j.results && j.results[0] && j.results[0].flagged ? "flagged" : "";
+  } catch (e) { return "flagged"; }
 }
 
 async function status(q, env) {
@@ -100,7 +115,7 @@ async function make(q, env) {
   const ttl = { expirationTtl: 172800 };
   await Promise.all([free ? null : env.KV.put(c.ipKey, String(c.mine + 1), ttl), env.KV.put(c.dayKey, String(c.all + 1), ttl)]);
 
-  const prompt = "Black and white coloring book page, portrait orientation. Subject: " + idea + ". " + STYLES[style] + " " + WHOLE + " " + TAIL + " " + RULES;
+  const prompt = promptFor(idea, style);
   const r = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST", headers: auth,
     body: JSON.stringify({ model: env.IMAGE_MODEL || "gpt-image-2.6-flare", prompt, size: "1024x1536", quality: env.QUALITY || "medium", n: 1, output_format: "webp", output_compression: 92, background: "opaque", moderation: "auto", safety_identifier: c.ipKey.slice(-24) }),
@@ -123,14 +138,178 @@ async function make(q, env) {
   return new Response(r.body, { status: 200, headers: out });
 }
 
+// ---------- shared helpers ----------
+const b64ToBytes = (b) => { const s = atob(b); const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u; };
+const bytesToB64 = (u) => { let s = ""; for (let i = 0; i < u.length; i += 32768) s += String.fromCharCode.apply(null, u.subarray(i, i + 32768)); return btoa(s); };
+const rid = (n) => [...crypto.getRandomValues(new Uint8Array(n || 12))].map((b) => b.toString(16).padStart(2, "0")).join("");
+const okOrigin = (q) => { const o = q.headers.get("origin") || ""; return !o || o === "https://" + HOME; };
+function same(a, b) { a = String(a || ""); b = String(b || ""); if (!a || a.length !== b.length) return false; let d = 0; for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; }
+
+// Draw one image. refs: array of {bytes, type} to edit from (keeps a character or a drawing the same).
+// Falls back to the standard 1024x1536 size if the model refuses a custom size.
+async function drawImage(env, prompt, o) {
+  o = o || {};
+  const model = o.model || env.IMAGE_MODEL || "gpt-image-2.6-flare";
+  const fmt = o.format || "jpeg";
+  const tries = [o.size || "1024x1536"]; if (tries[0] !== "1024x1536") tries.push("1024x1536");
+  let last = "";
+  for (const size of tries) {
+    let r;
+    if (o.refs && o.refs.length) {
+      const f = new FormData();
+      f.append("model", model); f.append("prompt", prompt); f.append("size", size); f.append("quality", o.quality || "medium");
+      f.append("output_format", fmt); f.append("n", "1"); f.append("moderation", "auto");
+      o.refs.forEach((x, i) => f.append("image[]", new Blob([x.bytes], { type: x.type || "image/jpeg" }), "ref" + i + "." + ((x.type || "").split("/")[1] || "jpg")));
+      r = await fetch("https://api.openai.com/v1/images/edits", { method: "POST", headers: { authorization: "Bearer " + env.OPENAI_API_KEY }, body: f });
+    } else {
+      r = await fetch("https://api.openai.com/v1/images/generations", {
+        method: "POST", headers: { authorization: "Bearer " + env.OPENAI_API_KEY, "content-type": "application/json" },
+        body: JSON.stringify({ model, prompt, size, quality: o.quality || "medium", n: 1, output_format: fmt, background: "opaque", moderation: "auto", safety_identifier: o.who || undefined }),
+      });
+    }
+    if (r.ok) { const j = await r.json(); const b = j.data && j.data[0] && j.data[0].b64_json; if (b) return { ok: true, bytes: b64ToBytes(b), size, type: "image/" + fmt }; last = "empty"; continue; }
+    let why = ""; try { const e = await r.json(); why = (e.error && (e.error.code || e.error.type || e.error.message)) || ""; } catch (e) {}
+    last = r.status + " " + why;
+    if (r.status === 400 && /moderation|safety|content_policy/i.test(why)) return { ok: false, blocked: true, why: last };
+    if (!(r.status === 400 && /size|dimension|resolution/i.test(why))) break;
+  }
+  return { ok: false, why: last };
+}
+
+// ---------- hearts ----------
+const PID = /^[a-z]+-\d{2,3}$/;
+async function heartsAll(q, env, ctx) {
+  const cache = caches.default, key = new Request("https://" + HOME + "/api/hearts?c=1");
+  const hit = await cache.match(key); if (hit) return hit;
+  const counts = {}; let cursor = undefined;
+  do {
+    const l = await env.KV.list({ prefix: "heart:", cursor });
+    for (const k of l.keys) { const n = k.metadata && k.metadata.n; if (n > 0) counts[k.name.slice(6)] = n; }
+    cursor = l.list_complete ? undefined : l.cursor;
+  } while (cursor);
+  const r = json({ counts }, 200, { "cache-control": "public, max-age=120" });
+  ctx.waitUntil(cache.put(key, r.clone()));
+  return r;
+}
+async function heart(q, env) {
+  if (!okOrigin(q)) return json({ error: "origin" }, 403);
+  let b; try { b = await q.json(); } catch (e) { return json({ error: "bad" }, 400); }
+  const id = String(b.id || ""); if (!PID.test(id)) return json({ error: "bad" }, 400);
+  const who = await sha((q.headers.get("cf-connecting-ip") || "0") + "|heart");
+  const vk = "hv:" + id + ":" + who, ck = "heart:" + id;
+  const [had, cur] = await Promise.all([env.KV.get(vk), env.KV.getWithMetadata(ck)]);
+  let n = (cur && cur.metadata && cur.metadata.n) || 0;
+  if (b.on && !had) { n += 1; await Promise.all([env.KV.put(vk, "1"), env.KV.put(ck, "", { metadata: { n } })]); }
+  else if (!b.on && had) { n = Math.max(0, n - 1); await Promise.all([env.KV.delete(vk), env.KV.put(ck, "", { metadata: { n } })]); }
+  return json({ n });
+}
+
+// ---------- team (Uncle Dave) ----------
+const THEMES = ["requests", "thanksgiving", "christmas", "halloween", "easter", "valentines", "summer", "holidays", "dinosaurs", "ocean", "animals", "space", "fantasy"];
+const teamOk = (q, env) => !!env.TEAM_KEY && same(q.headers.get("x-team-key"), env.TEAM_KEY);
+async function teamMake(q, env) {
+  if (!env.OPENAI_API_KEY) return json({ error: "off", message: "Drawing is switched off." }, 503);
+  let b; try { b = await q.json(); } catch (e) { return json({ error: "bad", message: "That did not come through." }, 400); }
+  const idea = cleanIdea(b.idea, 400), style = STYLES[b.style] ? b.style : "whimsical";
+  if (idea.length < 4) return json({ error: "short", message: "Say a little more about the picture." }, 400);
+  if (BLOCK.test(idea)) return json({ error: "blocked", message: "That has a word we can't use on a kids' site." }, 400);
+  if (NAMES.test(idea)) return json({ error: "named", message: "No characters, brands or real people. Describe your own version instead." }, 400);
+  const dk = "team:day:" + today(), used = num(await env.KV.get(dk), 0), lim = num(env.TEAM_LIMIT, 40);
+  if (used >= lim) return json({ error: "limit", message: "That's " + lim + " drawings today. More tomorrow." }, 429);
+  const mod = await moderate(env, idea);
+  if (mod === "upstream") return json({ error: "upstream", message: "The drawing machine is resting. Try again later." }, 503);
+  if (mod) return json({ error: "blocked", message: "The safety check said no to that one. Try different words." }, 400);
+  await env.KV.put(dk, String(used + 1), { expirationTtl: 172800 });
+  const d = await drawImage(env, promptFor(idea, style), { size: env.TEAM_SIZE || "1536x2048", quality: env.TEAM_QUALITY || "high", format: "png", who: "team" });
+  if (!d.ok) return json({ error: d.blocked ? "blocked" : "upstream", message: d.blocked ? "The safety check said no to that one. Try different words." : "The drawing did not come out (" + d.why + "). Try again." }, d.blocked ? 400 : 502);
+  const tid = "t" + rid(6);
+  await env.KV.put("team:img:" + tid, d.bytes, { expirationTtl: 1209600, metadata: { type: d.type, idea, style, at: Date.now() } });
+  return json({ tid, type: d.type, b64: bytesToB64(d.bytes), left: lim - used - 1 });
+}
+async function teamUpload(q, env) {
+  let b; try { b = await q.json(); } catch (e) { return json({ error: "bad", message: "That did not come through." }, 400); }
+  const m = /^data:(image\/(png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || ""));
+  if (!m) return json({ error: "bad", message: "Send a PNG, JPG or WEBP picture." }, 400);
+  const bytes = b64ToBytes(m[3]); if (bytes.length > 8e6) return json({ error: "big", message: "That picture is over 8 MB." }, 400);
+  const tid = "t" + rid(6);
+  await env.KV.put("team:img:" + tid, bytes, { expirationTtl: 1209600, metadata: { type: m[1], idea: "(uploaded)", style: "", at: Date.now() } });
+  return json({ tid, type: m[1] });
+}
+async function teamPublish(q, env) {
+  let b; try { b = await q.json(); } catch (e) { return json({ error: "bad", message: "That did not come through." }, 400); }
+  const tid = /^t[a-f0-9]{12}$/.test(String(b.tid || "")) ? b.tid : "";
+  const title = cleanIdea(b.title, 40).replace(/[^A-Za-z0-9 '&!,.-]/g, "").trim();
+  const subject = cleanIdea(b.subject, 300);
+  const theme = THEMES.indexOf(b.theme) >= 0 ? b.theme : "requests", style = STYLES[b.style] ? b.style : "whimsical";
+  if (!tid || !(await env.KV.get("team:img:" + tid, "arrayBuffer"))) return json({ error: "gone", message: "That drawing is no longer saved. Draw it again." }, 400);
+  if (title.length < 3) return json({ error: "title", message: "Give the page a title (3 to 40 letters)." }, 400);
+  if (subject.length < 8) return json({ error: "subject", message: "Add a sentence describing the picture (it becomes the page's description)." }, 400);
+  if (NAMES.test(title + " " + subject) || BLOCK.test(title + " " + subject)) return json({ error: "named", message: "The title or description has a word we can't use." }, 400);
+  const item = { tid, title, subject, theme, style, by: "team", at: new Date().toISOString() };
+  await env.KV.put("team:pub:" + tid, JSON.stringify(item), { expirationTtl: 1209600 });
+  return json({ ok: true, item });
+}
+async function teamLive(env) {
+  // team.json on the site maps a published drawing (tid) to its page id once the Action has added it.
+  try { const r = await fetch(SRC + "/team.json?t=" + Date.now(), { cf: { cacheTtl: 30 } }); return r.ok ? await r.json() : {}; } catch (e) { return {}; }
+}
+async function teamQueue(env) {
+  const live = await teamLive(env), out = [];
+  const l = await env.KV.list({ prefix: "team:pub:" });
+  for (const k of l.keys) {
+    const tid = k.name.slice(9);
+    if (live[tid]) continue;
+    const it = await env.KV.get(k.name, "json"); if (!it) continue;
+    it.img = "https://" + HOME + "/api/team/img/" + tid; out.push(it);
+  }
+  return json({ items: out });
+}
+async function teamList(env) {
+  const live = await teamLive(env), out = [];
+  const l = await env.KV.list({ prefix: "team:img:" });
+  for (const k of l.keys) { const tid = k.name.slice(9), md = k.metadata || {}; out.push({ tid, idea: md.idea, style: md.style, at: md.at, live: live[tid] || "" }); }
+  const pubs = await env.KV.list({ prefix: "team:pub:" }); const pub = {}; pubs.keys.forEach((k) => { pub[k.name.slice(9)] = 1; });
+  out.forEach((x) => { x.published = !!pub[x.tid] || !!x.live; });
+  out.sort((a, b) => (b.at || 0) - (a.at || 0));
+  return json({ items: out.slice(0, 60) });
+}
+async function teamImg(tid, env) {
+  if (!/^t[a-f0-9]{12}$/.test(tid)) return new Response("not found", { status: 404 });
+  const v = await env.KV.getWithMetadata("team:img:" + tid, "arrayBuffer");
+  if (!v || !v.value) return new Response("not found", { status: 404 });
+  return new Response(v.value, { headers: { "content-type": (v.metadata && v.metadata.type) || "image/png", "cache-control": "private, max-age=600" } });
+}
+async function team(q, env, u) {
+  const path = u.pathname.slice(10); // after /api/team/
+  if (path === "queue" && q.method === "GET") return teamQueue(env);
+  if (path.startsWith("img/") && q.method === "GET") {
+    // Published drawings are public (they are about to be on the site); unpublished ones need the key.
+    const tid = path.slice(4);
+    if (!teamOk(q, env) && !(await env.KV.get("team:pub:" + tid)) && u.searchParams.get("k") !== env.TEAM_KEY) return new Response("not found", { status: 404 });
+    return teamImg(tid, env);
+  }
+  if (!env.TEAM_KEY) return json({ error: "off", message: "Team tools are not switched on yet." }, 503);
+  if (!teamOk(q, env)) return json({ error: "key", message: "That team key is not right." }, 403);
+  if (path === "check") return json({ ok: true });
+  if (path === "list") return teamList(env);
+  if (q.method !== "POST") return json({ error: "method" }, 405);
+  if (path === "make") return teamMake(q, env);
+  if (path === "upload") return teamUpload(q, env);
+  if (path === "publish") return teamPublish(q, env);
+  return json({ error: "nope" }, 404);
+}
+
 export default {
-  async fetch(q, env) {
+  async fetch(q, env, ctx) {
     const u = new URL(q.url);
     if (u.hostname !== HOME && !u.hostname.endsWith(".workers.dev")) {
       u.hostname = HOME; u.protocol = "https:";
       return Response.redirect(u.toString(), 301);
     }
     if (u.pathname === "/api/make/status") return status(q, env || {});
+    if (u.pathname === "/api/hearts") return heartsAll(q, env, ctx);
+    if (u.pathname === "/api/heart") return q.method === "POST" ? heart(q, env) : json({ error: "method" }, 405);
+    if (u.pathname.startsWith("/api/team/")) { try { return await team(q, env, u); } catch (e) { console.log("team failed", String(e)); return json({ error: "server", message: "Something went wrong: " + String(e).slice(0, 120) }, 500); } }
     if (u.pathname === "/api/make") {
       if (q.method !== "POST") return json({ error: "method" }, 405);
       try { return await make(q, env || {}); } catch (e) { console.log("make failed", String(e)); return json({ error: "server", message: "Something went wrong. Please try again." }, 500); }

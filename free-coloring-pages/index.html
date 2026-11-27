@@ -99,7 +99,7 @@ h1 .squig svg{position:absolute;left:-2%;bottom:-.18em;width:104%;height:.3em;ov
 .ico.on{background:var(--tomato);color:#fff}
 .ico.add.on{background:var(--leaf)}
 .ico.shr{flex:0 0 36px}
-.acts .fav,.acts [data-peek]{flex:0 0 40px}
+.acts .fav,.acts [data-peek]{flex:0 0 40px}.acts .fav{flex:0 0 auto;min-width:40px;padding:0 8px}.acts .fav .hn{font-weight:800;font-size:12px}
 .ico:active{transform:translateY(1px)}
 .empty{grid-column:1/-1;text-align:center;padding:50px 10px;color:var(--muted);font-weight:700}
 
@@ -192,7 +192,7 @@ footer b{color:var(--ink)}
   .lede{font-size:16.5px}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .meta h3{font-size:14.5px}
-  .acts{gap:5px;padding:8px 8px 10px}.acts .fav,.acts [data-peek]{flex:0 0 34px}.acts .ico{font-size:12.5px}
+  .acts{gap:5px;padding:8px 8px 10px}.acts .fav,.acts [data-peek]{flex:0 0 34px}.acts .fav{flex:0 0 auto;min-width:34px;padding:0 6px}.acts .ico{font-size:12.5px}
   .ov{padding:0}
   .ov.open{display:block}
   .panel{border-radius:0;border:0;box-shadow:none;min-height:100vh;min-height:100dvh;width:100%}
@@ -307,7 +307,7 @@ footer b{color:var(--ink)}
         <button class="btn" id="dPng">⬇ Image</button>
         <button class="btn" id="dShare">↗ Share</button>
         <button class="btn" id="dRedo" style="display:none">↻ Redraw (1 free)</button>
-        <button class="btn" id="dFav">♥ Favorite</button>
+        <button class="btn" id="dFav">♥ Heart it</button>
         <button class="btn sun" id="dAdd">＋ Add to my book</button>
       </div>
       <div id="dTs" style="margin-top:10px"></div>
@@ -423,7 +423,7 @@ function nameOf(hex){var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5)
 
 var store={get:function(k,d){try{var v=localStorage.getItem('fcp.'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{localStorage.setItem('fcp.'+k,JSON.stringify(v))}catch(e){}}};
 var S={themes:[],pages:[],byId:{},ready:{art:{},guide:{}},pal:{},theme:'all',style:'all',q:'',onlyFav:false,
-  favs:store.get('favs',[]),book:store.get('book',[]),
+  favs:store.get('favs',[]),hearts:{},book:store.get('book',[]),
   opts:Object.assign({guide:'off',paper:'letter',lines:'dark',layout:'full',title:false,name:true},store.get('opts',{})),
   cur:null,list:[]};
 var V='?v='+Math.floor(Date.now()/6e5);
@@ -454,6 +454,7 @@ Promise.all([getJSON('catalog.json'),getJSON('ready.json').catch(function(){retu
   var se=seasonal();var h=location.hash.match(/t=([a-z]+)/);
   S.theme=(h&&themeName(h[1]))?h[1]:(se||'all');
   buildTabs(se);buildChips();render();counts();
+  fetch('/api/hearts').then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.counts)return;S.hearts=j.counts;$$('.card').forEach(function(c){syncCard(c.dataset.id)});syncDetail()}).catch(function(){});
   var m=location.hash.match(/p=([a-z]+-\d+)/);if(m&&S.byId[m[1]]){var wantColor=/color=1/.test(location.hash);openDetail(m[1]);if(wantColor)openStudio(S.byId[m[1]])}
   if(location.hash==='#book')openBook();
 }).catch(function(e){$('#grid').innerHTML='<div class="empty">The pages did not load. Please refresh.</div>';console.error(e)});
@@ -472,7 +473,7 @@ function filtered(){return S.pages.filter(function(p){
   if(S.q){var hay=(p.title+' '+themeName(p.theme)+' '+STYLES[p.style]).toLowerCase();if(S.q.split(/\s+/).some(function(w){return hay.indexOf(w)<0}))return false}
   return true})}
 function cardHTML(p){var f=S.favs.indexOf(p.id)>=0,b=S.book.indexOf(p.id)>=0;
-  return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="'+thumbSrc(p)+'" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3><a href="'+pageUrl(p)+'" data-open>'+p.title+'</a></h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Favorite" aria-pressed="'+f+'">♥</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button>'+(p.src?'':'<button class="ico shr" data-share aria-label="Share '+p.title+' with a friend" title="Share with a friend">↗</button>')+'</div></article>'}
+  return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="'+thumbSrc(p)+'" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3><a href="'+pageUrl(p)+'" data-open>'+p.title+'</a></h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Heart this page" title="Heart it" aria-pressed="'+f+'">♥'+heartNum(p)+'</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button>'+(p.src?'':'<button class="ico shr" data-share aria-label="Share '+p.title+' with a friend" title="Share with a friend">↗</button>')+'</div></article>'}
 function render(){S.list=filtered();var g=$('#grid');
   $('#secTitle').textContent=S.onlyFav?'Your favorites':(S.q?'Search results':(S.theme==='all'?'All coloring pages':themeName(S.theme)));
   $('#secCount').textContent=S.list.length+(S.list.length===1?' page':' pages');var kn=$('#mineNote');if(kn)kn.style.display=(S.theme==='mine'&&!S.onlyFav&&!S.q)?'':'none';
@@ -484,8 +485,10 @@ $('#grid').addEventListener('click',function(e){var c=e.target.closest('.card');
   if(e.target.closest('[data-share]')){sharePage(S.byId[id]);return}
   if(e.target.closest('[data-peek]')){var im=$('.peek',c);if(im&&!im.src)im.src=im.dataset.src;c.classList.toggle('peeking');return}
   if(e.target.closest('[data-open]')){e.preventDefault();openDetail(id)}});
-function syncCard(id){var c=$('.card[data-id="'+id+'"]');if(!c)return;var f=S.favs.indexOf(id)>=0,b=S.book.indexOf(id)>=0;var fb=$('[data-fav]',c),ab=$('[data-add]',c);fb.classList.toggle('on',f);fb.setAttribute('aria-pressed',f);ab.classList.toggle('on',b);ab.setAttribute('aria-pressed',b);ab.textContent=b?'✓ In book':'＋ Book'}
-function toggleFav(id){var i=S.favs.indexOf(id);if(i>=0)S.favs.splice(i,1);else{S.favs.push(id);T('favorite',{page_id:id})}store.set('favs',S.favs);syncCard(id);counts();syncDetail();if(S.onlyFav)render()}
+function syncCard(id){var c=$('.card[data-id="'+id+'"]');if(!c)return;var f=S.favs.indexOf(id)>=0,b=S.book.indexOf(id)>=0;var fb=$('[data-fav]',c),ab=$('[data-add]',c);fb.classList.toggle('on',f);fb.setAttribute('aria-pressed',f);fb.innerHTML='♥'+heartNum(S.byId[id]);ab.classList.toggle('on',b);ab.setAttribute('aria-pressed',b);ab.textContent=b?'✓ In book':'＋ Book'}
+function heartNum(p){var n=p&&!p.src?(S.hearts[p.id]||0):0;return n?' <b class="hn">'+n+'</b>':''}
+function heartSend(id,on){var p=S.byId[id];if(!p||p.src)return;S.hearts[id]=Math.max(0,(S.hearts[id]||0)+(on?1:-1));fetch('/api/heart',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id,on:on})}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&typeof j.n==='number'){S.hearts[id]=j.n;syncCard(id);syncDetail()}}).catch(function(){})}
+function toggleFav(id){var i=S.favs.indexOf(id),on=i<0;if(i>=0)S.favs.splice(i,1);else{S.favs.push(id);T('favorite',{page_id:id})}heartSend(id,on);store.set('favs',S.favs);syncCard(id);counts();syncDetail();if(S.onlyFav)render()}
 function toggleBook(id){var i=S.book.indexOf(id);if(i>=0)S.book.splice(i,1);else{if(S.book.length>=60){toast('A book holds up to 60 pages.');return}S.book.push(id);T('add_to_book',{page_id:id});toast('Added to your book ('+S.book.length+')')}store.set('book',S.book);syncCard(id);counts();syncDetail()}
 function counts(){$('#favCount').textContent=S.favs.length;$('#bookCount').textContent=S.book.length;$('#fabCount').textContent=S.book.length;$('#fab').classList.toggle('show',S.book.length>0)}
 $('#favBtn').addEventListener('click',function(){S.onlyFav=true;S.q='';$('#q').value='';$$('.tab').forEach(function(x){x.setAttribute('aria-selected',false)});render();$('.bar').scrollIntoView()});
@@ -564,7 +567,7 @@ function fillDetail(){var p=S.cur;$('#dTitle').textContent=p.title;var b=$('#dBa
   $$('#ovDetail .seg').forEach(function(seg){var k=seg.dataset.opt;$$('button',seg).forEach(function(bt){bt.setAttribute('aria-pressed',String(S.opts[k])===bt.dataset.v)})});
   $$('#ovDetail input[data-opt]').forEach(function(i){i.checked=!!S.opts[i.dataset.opt]});$('#dWho').value=S.opts.who||'';
   syncDetail();preview()}
-function syncDetail(){if(!S.cur)return;var f=S.favs.indexOf(S.cur.id)>=0,b=S.book.indexOf(S.cur.id)>=0;$('#dFav').textContent=f?'♥ Favorited':'♥ Favorite';$('#dFav').classList.toggle('pri',f);$('#dAdd').textContent=b?'✓ In my book':'＋ Add to my book'}
+function syncDetail(){if(!S.cur)return;var f=S.favs.indexOf(S.cur.id)>=0,b=S.book.indexOf(S.cur.id)>=0;var hn=S.cur.src?0:(S.hearts[S.cur.id]||0);$('#dFav').textContent=(f?'♥ Hearted':'♥ Heart it')+(hn?' · '+hn:'');$('#dFav').classList.toggle('pri',f);$('#dAdd').textContent=b?'✓ In my book':'＋ Add to my book'}
 function preview(){var tok=++pvTok,p=S.cur;sheetFor(p,S.opts).then(function(c){if(tok!==pvTok)return;var v=$('#pvCanvas'),k=Math.min(1,1100/Math.max(c.width,c.height));v.width=Math.round(c.width*k);v.height=Math.round(c.height*k);var x=v.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(c,0,0,v.width,v.height)}).catch(function(e){console.error(e)})}
 function step(d){var i=S.list.indexOf(S.cur);if(i<0)return;var n=S.list[(i+d+S.list.length)%S.list.length];S.cur=n;history.replaceState(history.state,'','#p='+n.id);fillDetail()}
 window.addEventListener('popstate',function(){if(!/p=/.test(location.hash)){$$('.ov.open').forEach(function(o){close('#'+o.id)})}});

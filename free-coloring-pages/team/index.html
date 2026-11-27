@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Team | Make a Coloring Book</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../fonts.css">
+<link rel="stylesheet" href="../site.css">
+<style>
+.tm{max-width:980px;margin:0 auto;padding:14px 0 40px;color:var(--body)}
+.tm h1{font:700 clamp(30px,5vw,42px)/1.05 var(--display);color:var(--ink);margin:12px 0 4px}
+.tm h2{font:700 22px/1.2 var(--display);color:var(--ink);margin:0 0 10px}
+.box{background:var(--card);border:2.5px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 var(--ink);padding:18px;margin:16px 0}
+.tm label{display:block;font:800 14px/1.2 var(--text);color:var(--ink);margin:10px 0 5px}
+.tm input[type=text],.tm input[type=password],.tm textarea,.tm select{width:100%;box-sizing:border-box;font:600 16px/1.35 var(--text);padding:10px 12px;border:2px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink)}
+.tm textarea{min-height:84px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.pic{background:#fff;border:2px dashed var(--line);border-radius:14px;min-height:240px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pic img{width:100%;display:block}
+.msg{font-weight:800;margin-top:10px;min-height:1.2em}
+.msg.bad{color:var(--tomato)}.msg.good{color:var(--leaf)}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.it{border:2px solid var(--ink);border-radius:12px;background:#fff;overflow:hidden;font-size:13px}
+.it img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;border-bottom:2px solid var(--ink)}
+.it div{padding:7px 8px}
+.it b{display:block;color:var(--ink)}
+.tag{display:inline-block;font-weight:800;border-radius:999px;padding:2px 8px;margin-top:4px;background:var(--line)}
+.tag.live{background:var(--leaf);color:#fff}.tag.wait{background:var(--sun)}
+.hide{display:none}
+.small{font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="../"><span class="c1">Free</span> <span class="c2">Coloring</span> <span class="c3">Pages</span></a>
+  <nav class="topnav"><a href="../">See the site</a></nav>
+</div></header>
+<main class="wrap"><div class="tm">
+<h1>Team tools</h1>
+<p>Draw a page, look it over, and publish it to makeacoloringbook.com yourself. Published pages show up on the site in about 15 minutes.</p>
+
+<div class="box" id="keyBox">
+  <h2>Your team key</h2>
+  <label for="key">Paste the team key Nate sent you</label>
+  <input type="password" id="key" autocomplete="off">
+  <div class="row"><button class="btn pri" id="keyGo">Unlock</button></div>
+  <div class="msg" id="keyMsg"></div>
+</div>
+
+<div id="tools" class="hide">
+<div class="box">
+  <div class="two">
+    <div>
+      <h2>1. Draw a page</h2>
+      <label for="idea">What should the picture show?</label>
+      <textarea id="idea" maxlength="400" placeholder="A friendly snowman building a smaller snowman, with a scarf and a carrot nose"></textarea>
+      <label for="lvl">Level</label>
+      <select id="lvl"><option value="easy">Easy (little kids)</option><option value="whimsical" selected>Medium (storybook, ages 6 to 10)</option><option value="realistic">Detailed (teens and adults)</option><option value="intricate">Expert (patterns, adults)</option></select>
+      <div class="row"><button class="btn pri" id="draw">🖍 Draw it</button><label class="btn" for="up" style="margin:0">⬆ Or upload a drawing</label><input type="file" id="up" accept="image/png,image/jpeg,image/webp" class="hide"></div>
+      <p class="small">A drawing takes about 20 to 40 seconds. No characters, brands or real people; it's a kids' site.</p>
+      <div class="msg" id="drawMsg"></div>
+    </div>
+    <div><div class="pic" id="pic"><span class="small">Your drawing shows up here.</span></div></div>
+  </div>
+</div>
+
+<div class="box hide" id="pubBox">
+  <h2>2. Publish it</h2>
+  <label for="title">Page title (shows on the site)</label>
+  <input type="text" id="title" maxlength="40" placeholder="Snowman Family">
+  <label for="subj">One-sentence description (helps Google find it)</label>
+  <textarea id="subj" maxlength="300"></textarea>
+  <div class="two">
+    <div><label for="theme">Where it goes</label>
+    <select id="theme"><option value="requests">By Request</option><option value="christmas">Christmas</option><option value="thanksgiving">Thanksgiving</option><option value="halloween">Halloween</option><option value="easter">Easter &amp; Spring</option><option value="valentines">Valentine's Day</option><option value="summer">Summer &amp; 4th of July</option><option value="holidays">More Holidays</option><option value="dinosaurs">Dinosaurs</option><option value="ocean">Ocean</option><option value="animals">Animals</option><option value="space">Space &amp; Robots</option><option value="fantasy">Dragons &amp; Unicorns</option></select></div>
+    <div><label for="lvl2">Level</label>
+    <select id="lvl2"><option value="easy">Easy</option><option value="whimsical">Medium</option><option value="realistic">Detailed</option><option value="intricate">Expert</option></select></div>
+  </div>
+  <div class="row"><button class="btn leaf" id="pub">✓ Publish to the site</button><button class="btn" id="redo">↻ Draw it again</button></div>
+  <div class="msg" id="pubMsg"></div>
+</div>
+
+<div class="box">
+  <h2>Your drawings</h2>
+  <p class="small">Green = live on the site. Yellow = published, going live in a few minutes. Gray = not published (tap Publish to put it up). Drawings are kept for two weeks.</p>
+  <div class="list" id="list"></div>
+</div>
+
+<div class="box">
+  <h2>Ideas, requests and fixes</h2>
+  <p>For anything else (a fix to the site, an idea, a book order to make), add a row to the team board. Claude checks it and does it.</p>
+  <p id="boardLink" class="small">Nate will share the team board with you.</p>
+</div>
+</div>
+</div></main>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+var KEY='',CUR=null,LAST={idea:'',style:''},BOARD='';
+var STYLE_NAME={easy:'Easy',whimsical:'Medium',realistic:'Detailed',intricate:'Expert'};
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localStorage.setItem(k,v)}catch(e){return ''}}
+function msg(el,t,c){el.textContent=t||'';el.className='msg'+(c?' '+c:'')}
+function api(path,body){return fetch('/api/team/'+path,{method:body?'POST':'GET',headers:{'x-team-key':KEY,'content-type':'application/json'},body:body?JSON.stringify(body):undefined}).then(function(r){return r.json().catch(function(){return {error:'bad',message:'The server did not answer properly ('+r.status+').'}}).then(function(j){if(!r.ok&&!j.error)j.error='http';return j})})}
+function unlock(k){KEY=k;return api('check').then(function(j){if(j.ok){store('fcp.teamkey',k);$('#keyBox').classList.add('hide');$('#tools').classList.remove('hide');list();return true}msg($('#keyMsg'),j.message||'That key did not work.','bad');return false})}
+var h=location.hash.match(/k=([^&]+)/);if(h){history.replaceState(null,'',location.pathname);unlock(decodeURIComponent(h[1]))}else if(store('fcp.teamkey')){unlock(store('fcp.teamkey'))}
+$('#keyGo').addEventListener('click',function(){var k=$('#key').value.trim();if(k)unlock(k)});
+function show(src){$('#pic').innerHTML='<img alt="Your drawing" src="'+src+'">'}
+function ready(tid,idea,style){CUR=tid;$('#pubBox').classList.remove('hide');$('#lvl2').value=style||'whimsical';if(idea&&idea!=='(uploaded)'){$('#subj').value=idea.charAt(0).toUpperCase()+idea.slice(1).replace(/\.?$/,'.');var t=idea.replace(/^(a|an|the)\s+/i,'').split(/\s+/).slice(0,4).join(' ');$('#title').value=t.replace(/\b\w/g,function(c){return c.toUpperCase()}).replace(/[^A-Za-z0-9 '&-]/g,'')}msg($('#pubMsg'),'');$('#pubBox').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function draw(){var idea=$('#idea').value.trim(),style=$('#lvl').value;if(idea.length<4){msg($('#drawMsg'),'Describe the picture first.','bad');return}
+  LAST={idea:idea,style:style};$('#draw').disabled=true;var t0=Date.now(),iv=setInterval(function(){msg($('#drawMsg'),'Drawing… '+Math.round((Date.now()-t0)/1000)+' s')},1000);
+  api('make',{idea:idea,style:style}).then(function(j){clearInterval(iv);$('#draw').disabled=false;if(j.error){msg($('#drawMsg'),j.message||'That did not work.','bad');return}
+    show('data:'+j.type+';base64,'+j.b64);msg($('#drawMsg'),'Done. '+j.left+' drawings left today.','good');ready(j.tid,idea,style);list()}).catch(function(){clearInterval(iv);$('#draw').disabled=false;msg($('#drawMsg'),'No answer from the server. Try again.','bad')})}
+$('#draw').addEventListener('click',draw);
+$('#redo').addEventListener('click',function(){if(LAST.idea){$('#idea').value=LAST.idea;$('#lvl').value=LAST.style}draw()});
+$('#up').addEventListener('change',function(){var f=this.files[0];if(!f)return;if(f.size>8e6){msg($('#drawMsg'),'That picture is over 8 MB.','bad');return}var rd=new FileReader();rd.onload=function(){msg($('#drawMsg'),'Uploading…');api('upload',{data:rd.result}).then(function(j){if(j.error){msg($('#drawMsg'),j.message,'bad');return}show(rd.result);msg($('#drawMsg'),'Uploaded. It should be black lines on white.','good');ready(j.tid,'','whimsical');list()})};rd.readAsDataURL(f)});
+$('#pub').addEventListener('click',function(){if(!CUR)return;$('#pub').disabled=true;api('publish',{tid:CUR,title:$('#title').value,subject:$('#subj').value,theme:$('#theme').value,style:$('#lvl2').value}).then(function(j){$('#pub').disabled=false;if(j.error){msg($('#pubMsg'),j.message,'bad');return}msg($('#pubMsg'),'Published. It will be on the site in about 15 minutes; it turns green below when it is.','good');list()})});
+var LINKS=null;function links(){if(LINKS)return Promise.resolve(LINKS);return fetch('/links.json?t='+Date.now()).then(function(r){return r.json()}).then(function(j){LINKS=j;return j}).catch(function(){return {}})}
+function list(){Promise.all([api('list'),links()]).then(function(a){var j=a[0],L=a[1]||{};if(!j.items)return;$('#list').innerHTML=j.items.map(function(x){var st=x.live?'<a class="tag live" target="_blank" href="/'+(L[x.live]||'')+'">Live ↗</a>':(x.published?'<span class="tag wait">Going live…</span>':'<button class="btn" data-pub="'+x.tid+'" data-idea="'+(x.idea||'').replace(/"/g,'&quot;')+'" data-style="'+(x.style||'')+'" style="padding:6px 10px;margin-top:4px">Publish</button>');
+  return '<div class="it"><img loading="lazy" alt="" src="/api/team/img/'+x.tid+'?k='+encodeURIComponent(KEY)+'"><div><b>'+(x.idea||'').replace(/</g,'&lt;').slice(0,60)+'</b>'+(STYLE_NAME[x.style]||'')+'<br>'+st+'</div></div>'}).join('')||'<p class="small">Nothing yet.</p>';
+  if(j.items.some(function(x){return x.published&&!x.live}))setTimeout(function(){LINKS=null;list()},60000)})}
+$('#list').addEventListener('click',function(e){var b=e.target.closest('[data-pub]');if(!b)return;show('/api/team/img/'+b.dataset.pub+'?k='+encodeURIComponent(KEY));ready(b.dataset.pub,b.dataset.idea,b.dataset.style)});
+})();
+</script>
+</body>
+</html>

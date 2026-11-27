@@ -48,7 +48,9 @@ async def main(only=None):
             t=q['n']; fs=96 if len(t)<=16 else (84 if len(t)<=22 else 72)
             lines=1 if len(t)*fs*0.5<880 else 2
             top=128+fs*lines+fs*0.58+60
-            open(ROOT+'/_build/_pin_tmp.html','w').write(TPL%dict(col=STY[q['s']][1],sname=STY[q['s']][0],fs=fs,title=html.escape(t),id=q['id'],top=int(top),tagb=150+480+6))
+            html_=(TPL%dict(col=STY[q['s']][1],sname=STY[q['s']][0],fs=fs,title=html.escape(t),id=q['id'],top=int(top),tagb=150+480+6))
+            if not os.path.exists(ROOT+'/guide/'+q['id']+'.webp'): html_=html_.replace('<div class="col"><img src="../guide/%s.webp"></div><div class="tag">color guide included</div>'%q['id'],'')
+            open(ROOT+'/_build/_pin_tmp.html','w').write(html_)
             await pg.goto('http://127.0.0.1:%d/%s/_build/_pin_tmp.html?n=%d'%(PORT,SITE,n))
             await pg.wait_for_function("document.fonts.ready.then(()=>Array.from(document.images).every(i=>i.complete&&i.naturalWidth>0))")
             await pg.screenshot(path=f"{OUT}/{q['id']}.jpg", type='jpeg', quality=72)
