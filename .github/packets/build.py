@@ -209,6 +209,18 @@ def main():
             col = fetch_rgb(sc["email_color"], cache)
             col = col.resize((600, round(600 * col.height / col.width)), Image.LANCZOS)
             col.save(os.path.join(out, sc["slug"] + "-color.jpg"), quality=84, optimize=True, progressive=True)
+            # side-by-side for the email: the printable page 1 next to the same drawing colored in.
+            # email_color must be a coloring of THIS page 1 (an edit of <slug>.jpg), never a fresh drawing.
+            H, gap, pad = 900, 40, 30
+            panes = []
+            for im in (framed, Image.open(os.path.join(out, sc["slug"] + "-color.jpg")).convert("RGB")):
+                if im is framed:
+                    im = im.crop((2, 2, im.width - 2, im.height - 2))
+                im = im.resize((round(im.width * H / im.height), H), Image.LANCZOS)
+                b = Image.new("RGB", (im.width + 4, im.height + 4), (200, 200, 200)); b.paste(im, (2, 2)); panes.append(b)
+            side = Image.new("RGB", (pad * 2 + panes[0].width + gap + panes[1].width, H + 4 + pad * 2), "white")
+            side.paste(panes[0], (pad, pad)); side.paste(panes[1], (pad + panes[0].width + gap, pad))
+            side.save(os.path.join(out, sc["slug"] + "-side.jpg"), quality=85, optimize=True)
         for i, p in enumerate(pages):
             p.resize((PW // 4, PH // 4), Image.LANCZOS).save(os.path.join(prev, "%s-%d.png" % (sc["slug"], i + 1)))
         report.append({"slug": sc["slug"], "pages": len(pages), "banner_found": ok})
