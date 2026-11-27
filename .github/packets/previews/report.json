@@ -31,5 +31,38 @@
    true,
    true
   ]
+ },
+ {
+  "slug": "durham-elementary-fremont-2hse",
+  "pages": 5,
+  "banner_found": [
+   true,
+   true,
+   true,
+   true,
+   true
+  ]
+ },
+ {
+  "slug": "warwick-elementary-fremont-ids7",
+  "pages": 5,
+  "banner_found": [
+   true,
+   true,
+   true,
+   true,
+   true
+  ]
+ },
+ {
+  "slug": "parkmont-elementary-fremont-uuj7",
+  "pages": 5,
+  "banner_found": [
+   true,
+   true,
+   true,
+   true,
+   true
+  ]
  }
 ]
