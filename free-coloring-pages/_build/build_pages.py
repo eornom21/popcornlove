@@ -117,7 +117,8 @@ FOOT = """</main>
 """
 
 
-HEART_JS = ("<script>(function(){var b=document.getElementById('heartBtn');if(!b)return;var id=document.querySelector('.item').dataset.id,n=0;"
+HEART_JS = ("<script>fetch('/api/order/open').then(function(r){return r.json()}).then(function(j){var e=document.getElementById('mailNote');if(e&&j.open)e.hidden=false}).catch(function(){});</script>"
+            "<script>(function(){var b=document.getElementById('heartBtn');if(!b)return;var id=document.querySelector('.item').dataset.id,n=0;"
             "function favs(){try{return JSON.parse(localStorage.getItem('fcp.favs')||'[]')}catch(e){return []}}"
             "function show(){var on=favs().indexOf(id)>=0;b.textContent=(on?'\u2665 Hearted':'\u2665 Heart it')+(n?' \u00b7 '+n:'');b.setAttribute('aria-pressed',on);b.classList.toggle('pri',on)}"
             "fetch('/api/hearts').then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.counts){n=j.counts[id]||0;show()}}).catch(function(){});show();"
@@ -235,7 +236,8 @@ def main():
                      '<a class="btn sky" data-ev="open_app" href="%s#p=%s">⬇ PDF and print options</a>'
                      '<a class="btn leaf" data-ev="color_online" href="%s#p=%s&amp;color=1">🖍 Color it online</a>'
                      '<a class="btn" data-ev="pin" rel="noopener nofollow" target="_blank" href="%s">📌 Save to Pinterest</a>'
-                     '<button class="btn" id="heartBtn" type="button" aria-pressed="false">♥ Heart it</button></div>\n') % (root, p["id"], root, p["id"], pinurl)
+                     '<button class="btn" id="heartBtn" type="button" aria-pressed="false">♥ Heart it</button></div>\n'
+                     '<p class="mailnote" id="mailNote" hidden><a href="%s#p=%s&amp;print=1">No printer? We\'ll print it and mail it →</a></p>\n') % (root, p["id"], root, p["id"], pinurl, root, p["id"])
             body += '<div class="example"><img loading="lazy" width="510" height="680" src="%sguide/%s.webp" alt="%s colored in, as an example"><div><h2>Color ideas</h2><p>%s</p><p>Want this small colored picture printed in the corner of the page as a guide? Open the print options and switch on <b>Color guide</b>.</p></div></div>\n' % (
                 root, p["id"], esc(p["title"]), esc("Here is one way to color it. Good colors to pull out: " + ", ".join(colors).lower() + "." if colors else "Here is one way to color it."))
             body += '<h2>About this page</h2><p>%s</p>\n<p>It prints on one sheet of regular paper. For markers, use heavier paper or put a spare sheet underneath. In the print options you can also print two per sheet, switch to light gray lines, or add a name line.</p>\n' % esc(STYLE_BLURB[p["style"]])

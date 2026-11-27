@@ -99,6 +99,8 @@ h1 .squig svg{position:absolute;left:-2%;bottom:-.18em;width:104%;height:.3em;ov
 .ico.on{background:var(--tomato);color:#fff}
 .ico.add.on{background:var(--leaf)}
 .ico.shr{flex:0 0 36px}
+.offer{margin-top:14px;padding:12px 14px;border:2.5px dashed var(--ink);border-radius:14px;background:#FFF9EC;line-height:1.45}.offer .btn{display:flex;margin-top:10px;width:100%}.offer .price{font-weight:800;color:var(--tomato)}
+.promo{margin:4px 0 12px;font-weight:800}.promo a{color:var(--ink)}
 .acts .fav,.acts [data-peek]{flex:0 0 40px}.acts .fav{flex:0 0 auto;min-width:40px;padding:0 8px}.acts .fav .hn{font-weight:800;font-size:12px}
 .ico:active{transform:translateY(1px)}
 .empty{grid-column:1/-1;text-align:center;padding:50px 10px;color:var(--muted);font-weight:700}
@@ -230,6 +232,7 @@ footer b{color:var(--ink)}
       <span class="kicker">100% free &middot; no sign-up</span>
       <h1><span class="c1">Free</span> <span class="squig"><span class="c2">Coloring</span><svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M2 12 C 22 2, 34 20, 54 10 S 88 2, 108 11 S 144 20, 164 9 S 190 6, 198 12" fill="none" stroke="#FFC53D" stroke-width="7" stroke-linecap="round"/></svg></span> <span class="c3">Pages</span></h1>
       <p class="lede"><b>Hundreds</b> of pages for little kids, big kids and grown-ups. Print one, save a PDF, build your own coloring book, or color right here on your screen.</p>
+      <p class="promo" id="promo" style="display:none"><a href="order/">🎁 New: a printed coloring book starring your kid, mailed to your door →</a></p>
       <div class="heroBtns">
         <button class="btn pri" id="surprise">🎲 Surprise me</button>
         <button class="btn" id="favBtn">♥ Favorites <span class="count" id="favCount">0</span></button>
@@ -311,6 +314,8 @@ footer b{color:var(--ink)}
         <button class="btn sun" id="dAdd">＋ Add to my book</button>
       </div>
       <div id="dTs" style="margin-top:10px"></div>
+      <div class="offer" id="dBookOffer" style="display:none"><b>Love it?</b> We'll make a whole 24-page book around this idea and mail it to you. <span class="price" data-price="idea">$29.99</span> shipped.<button class="btn pri" id="dBookGo">📚 Make it a book</button></div>
+      <p class="hint" id="dMailLink" style="display:none;margin-top:10px"><a href="#" id="dMail">No printer? We'll print it and mail it →</a></p>
     </div>
   </div>
 </div>
@@ -369,6 +374,7 @@ footer b{color:var(--ink)}
         <button class="btn pri" id="bPrint">🖨 Print book</button>
         <button class="btn wide" id="bClear">Empty the book</button>
       </div>
+      <div class="offer" id="bMailOffer" style="display:none"><b>No printer? We'll print it and mail it.</b> Your book as a real 8.5 × 11 paperback, each page on its own sheet. <span class="price" data-price="picked">$19.99</span> shipped, up to 40 pages.<div id="bTs" style="margin:8px 0"></div><button class="btn pri" id="bMail">📬 Print and mail my book</button></div>
     </div>
   </div>
 </div>
@@ -393,6 +399,7 @@ footer b{color:var(--ink)}
       <p class="hint" style="margin-top:12px">We can't draw characters from movies, shows or games, or real people. Please leave out names and personal details.</p>
       <div id="rTs" style="margin-top:10px"></div>
       <div class="cta" style="flex-direction:column;gap:10px"><button class="btn pri wide" id="rNow" style="display:none">🪄 Draw it now</button><button class="btn pri wide" id="rSend">Send my request</button></div>
+      <div class="offer" id="rBookOffer" style="display:none"><b>Want more than 3 a day?</b> We'll draw a whole 24-page book of your idea and mail it to you. <span class="price" data-price="idea">$29.99</span> shipped.<a class="btn pri" id="rBookGo" href="order/?p=idea">📚 Make a book of my idea</a></div>
       <p class="hint" id="rLeft" style="display:none;margin-top:10px;text-align:center"></p>
     </div>
     <div class="in" id="rDone" style="display:none">
@@ -457,6 +464,7 @@ Promise.all([getJSON('catalog.json'),getJSON('ready.json').catch(function(){retu
   fetch('/api/hearts').then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.counts)return;S.hearts=j.counts;$$('.card').forEach(function(c){syncCard(c.dataset.id)});syncDetail()}).catch(function(){});
   var m=location.hash.match(/p=([a-z]+-\d+)/);if(m&&S.byId[m[1]]){var wantColor=/color=1/.test(location.hash);openDetail(m[1]);if(wantColor)openStudio(S.byId[m[1]])}
   if(location.hash==='#book')openBook();
+  if(m&&S.byId[m[1]]&&/print=1/.test(location.hash)){if(S.book.indexOf(m[1])<0)toggleBook(m[1]);close('#ovDetail');openBook();setTimeout(function(){var o=$('#bMailOffer');if(o)o.scrollIntoView({block:'center'})},600)}
 }).catch(function(e){$('#grid').innerHTML='<div class="empty">The pages did not load. Please refresh.</div>';console.error(e)});
 
 /* ---------- browse ---------- */
@@ -567,7 +575,7 @@ function fillDetail(){var p=S.cur;$('#dTitle').textContent=p.title;var b=$('#dBa
   $$('#ovDetail .seg').forEach(function(seg){var k=seg.dataset.opt;$$('button',seg).forEach(function(bt){bt.setAttribute('aria-pressed',String(S.opts[k])===bt.dataset.v)})});
   $$('#ovDetail input[data-opt]').forEach(function(i){i.checked=!!S.opts[i.dataset.opt]});$('#dWho').value=S.opts.who||'';
   syncDetail();preview()}
-function syncDetail(){if(!S.cur)return;var f=S.favs.indexOf(S.cur.id)>=0,b=S.book.indexOf(S.cur.id)>=0;var hn=S.cur.src?0:(S.hearts[S.cur.id]||0);$('#dFav').textContent=(f?'♥ Hearted':'♥ Heart it')+(hn?' · '+hn:'');$('#dFav').classList.toggle('pri',f);$('#dAdd').textContent=b?'✓ In my book':'＋ Add to my book'}
+function syncDetail(){if(!S.cur)return;$('#dBookOffer').style.display=(ORDER.open&&S.cur.src)?'':'none';$('#dMailLink').style.display=ORDER.open?'':'none';var f=S.favs.indexOf(S.cur.id)>=0,b=S.book.indexOf(S.cur.id)>=0;var hn=S.cur.src?0:(S.hearts[S.cur.id]||0);$('#dFav').textContent=(f?'♥ Hearted':'♥ Heart it')+(hn?' · '+hn:'');$('#dFav').classList.toggle('pri',f);$('#dAdd').textContent=b?'✓ In my book':'＋ Add to my book'}
 function preview(){var tok=++pvTok,p=S.cur;sheetFor(p,S.opts).then(function(c){if(tok!==pvTok)return;var v=$('#pvCanvas'),k=Math.min(1,1100/Math.max(c.width,c.height));v.width=Math.round(c.width*k);v.height=Math.round(c.height*k);var x=v.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(c,0,0,v.width,v.height)}).catch(function(e){console.error(e)})}
 function step(d){var i=S.list.indexOf(S.cur);if(i<0)return;var n=S.list[(i+d+S.list.length)%S.list.length];S.cur=n;history.replaceState(history.state,'','#p='+n.id);fillDetail()}
 window.addEventListener('popstate',function(){if(!/p=/.test(location.hash)){$$('.ov.open').forEach(function(o){close('#'+o.id)})}});
@@ -618,6 +626,25 @@ function tsReset(sel){var w=TS.w[sel];if(!w)return;w.token='';try{if(w.id!==null
 function tsToken(sel){var w=TS.w[sel];return w?w.token:''}
 $('#reqBtn').addEventListener('click',function(){tsLoad('#rTs')});
 instantCheck();
+/* ---------- printed books ---------- */
+var ORDER={open:false,prices:{}};
+fetch('/api/order/open').then(function(r){return r.ok?r.json():{}}).then(function(j){ORDER=j||{};if(!ORDER.open)return;$('#promo').style.display='';$('#bMailOffer').style.display='';
+  $$('[data-price]').forEach(function(e){var c=ORDER.prices&&ORDER.prices[e.dataset.price];if(c)e.textContent='$'+(c/100).toFixed(2)});syncDetail()}).catch(function(){});
+function jpegOf(src){return loadImg(src).then(function(im){var c=document.createElement('canvas');c.width=im.width;c.height=im.height;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0);return c.toDataURL('image/jpeg',.92)})}
+$('#dBookGo').addEventListener('click',function(){var p=S.cur;if(!p||!p.src)return;T('book_offer',{from:'drawing'});jpegOf(p.src).then(function(j){try{sessionStorage.setItem('fcp.orderIdea',JSON.stringify({idea:p.idea||p.title,level:p.style,jpg:j}))}catch(e){}location.href='order/?p=idea'})});
+$('#dMail').addEventListener('click',function(e){e.preventDefault();var p=S.cur;if(!p)return;if(S.book.indexOf(p.id)<0)toggleBook(p.id);T('mail_offer',{from:'page'});close('#ovDetail');openBook();setTimeout(function(){var o=$('#bMailOffer');if(o)o.scrollIntoView({behavior:'smooth',block:'center'})},300)});
+$('#bMail').addEventListener('click',function(){var pages=bookPages();if(!pages.length){toast('Add some pages to your book first.');return}if(pages.length>40){toast('A printed book holds up to 40 pages. Remove '+(pages.length-40)+' first.');return}
+  if(INSTANT.ts&&!tsToken('#bTs')){var on0=INSTANT.on;INSTANT.on=true;tsLoad('#bTs');INSTANT.on=on0;toast('One moment, checking that you are a person. Then press the button again.');return}
+  T('mail_checkout_start',{pages:pages.length});var o=bookOpts();o.paper='letter';var id,tok;
+  busy('Getting your book ready…');
+  fetch('/api/order/draft',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({product:'picked',count:pages.length,form:{title:($('#bName').value||'My Coloring Book').trim(),name:$('#bFor').value.trim()},ts:tsToken('#bTs')})}).then(function(r){return r.json()}).then(function(d){
+    if(d.error)throw Object.assign(new Error(d.error),{msg:d.message});id=d.id;tok=d.tok;
+    function put(n,c){return toBlob(c,'image/jpeg',.9).then(function(b){c.width=c.height=1;return fetch('/api/order/upload?id='+id+'&tok='+tok+'&n='+n,{method:'PUT',headers:{'content-type':'image/jpeg'},body:b})}).then(function(r){if(!r.ok)throw new Error('upload')})}
+    var chain=cover('letter',pages).then(function(c){return put('c',c)});
+    pages.forEach(function(p,i){chain=chain.then(function(){$('#busyMsg').textContent='Sending page '+(i+1)+' of '+pages.length+'…';return compose(p,o).then(function(c){return put(i+1,c)})})});
+    return chain}).then(function(){$('#busyMsg').textContent='Opening secure checkout…';return fetch('/api/order/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id,tok:tok})})}).then(function(r){return r.json()}).then(function(j){
+    if(!j.url)throw Object.assign(new Error('checkout'),{msg:j.message});try{var a=JSON.parse(localStorage.getItem('fcp.orders')||'[]');a.unshift({id:id,tok:tok,title:$('#bName').value,t:Date.now()});localStorage.setItem('fcp.orders',JSON.stringify(a.slice(0,10)))}catch(e){}location.href=j.url})
+  .catch(function(e){console.error(e);idle();if(INSTANT.ts)tsReset('#bTs');toast((e&&e.msg)||'That did not work. Please try again.')})});
 var WAITS=['Sharpening the pencils…','Sketching your idea…','Inking the lines…','Erasing the smudges…','Almost there…'];
 /* One drawing request: shows the waiting messages, returns {src, redo}. sel is the human-check box to use. */
 function instantDraw(idea,style,sel,redo){var k=0,code='',ctl=window.AbortController?new AbortController():null;
@@ -632,7 +659,8 @@ $('#rNow').addEventListener('click',function(){var t=$('#rIdea').value.replace(/
   var b=$('#rStyle button[aria-pressed="true"]'),style=(b&&b.dataset.k)||'whimsical';T('instant_make',{style:style});
   instantDraw(t,style,'#rTs','').then(function(o){var pg={id:'mine-'+Date.now(),theme:'mine',style:style,title:ideaTitle(t),src:o.src,t:Date.now(),idea:t,redo:o.redo};return addMine(pg).then(function(){return pg})})
   .then(function(pg){T('instant_done',{style:style});INSTANT.left=Math.max(0,INSTANT.left-1);instantUI();$('#rIdea').value='';close('#ovReq');S.theme='mine';S.onlyFav=false;S.q='';$('#q').value='';$$('.tab').forEach(function(x){x.setAttribute('aria-selected',x.dataset.t==='mine')});render();openDetail(pg.id)})
-  .catch(function(e){console.error(e);T('instant_fail',{reason:String(e&&e.message||e).slice(0,40)});toast((e&&e.msg)||'The drawing did not come out. Please try again.');instantCheck()})});
+  .catch(function(e){console.error(e);T('instant_fail',{reason:String(e&&e.message||e).slice(0,40)});toast((e&&e.msg)||'The drawing did not come out. Please try again.');instantCheck();
+    if(e&&e.message==='limit'&&ORDER.open){$('#rBookGo').href='order/?p=idea&idea='+encodeURIComponent(t);$('#rBookOffer').style.display='';T('book_offer_shown',{from:'limit'})}})});
 /* One free do-over for a drawing that came out wrong. Two taps, because it replaces the picture. */
 var redoArm=0;
 $('#dRedo').addEventListener('click',function(){var p=S.cur,btn=$('#dRedo');if(!p||!p.src||!p.redo||!p.idea)return;
