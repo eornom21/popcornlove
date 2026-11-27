@@ -345,7 +345,12 @@ var P={
  heather:{n:'The Irish Heather',a:'248 E Georgia St, Vancouver, BC'},
  pour:{n:'Pourhouse',a:'162 Water St, Vancouver, BC V6B 1B2'},
  guilt:{n:'Guilt & Co.',a:'1 Alexander St, Vancouver, BC'},
- lobby:{n:'The Lobby Lounge, Fairmont Pacific Rim',a:'1038 Canada Place, Vancouver, BC'},
+ abattoir:{n:'L\'Abattoir',a:'217 Carrall St, Vancouver, BC V6B 2J2'},
+ lavantine:{n:'Lavantine Restaurant & Skybar',a:'833 W Pender St, Vancouver, BC'},
+ chambar:{n:'Chambar',a:'568 Beatty St, Vancouver, BC V6B 2L3'},
+ annalena:{n:'AnnaLena',a:'1809 W 1st Ave, Vancouver, BC'},
+ published:{n:'Published on Main',a:'3593 Main St, Vancouver, BC'},
+ parker:{n:'Parker Rooftop',a:'1379 Howe St, Vancouver, BC'},
  nuba:{n:'Nuba in Gastown',a:'207 W Hastings St, Vancouver, BC'},
  luigi:{n:'Ask for Luigi',a:'305 Alexander St, Vancouver, BC'}
 };
@@ -358,8 +363,7 @@ var DAYS=[
   {m:920,tm:'~3:20 PM',ic:'🚆',tt:'Airport to downtown',sb:'Canada Line SkyTrain to Waterfront Station (under 30 min), then ~7 min walk to Woodward\'s W43.',li:['Tap a credit card or Apple Pay at the gate — one per adult. Kids ride free.','Sit at the very front: there\'s no driver, so the kids get the windshield.'],map:P.wf},
   {m:1005,tm:'~4:45 PM',ic:'🏠',tt:'Check into Woodward\'s W43',sb:'128 West Cordova Street, Gastown',home:1},
   {m:1035,tm:'~5:15 PM',ic:'⛸️',tt:'Explore Gastown & Robson Square',sb:'Or just stroll. It\'s dark by 4:15, so Water Street is all lights.',li:['Steam Clock whistles every 15 minutes — 3 minutes from the door.','Lee\'s Donuts is right across from it (open to 7 PM).','Robson Square rink: free skating, rentals about $5, usually open 9–9 from the start of December. Check that it\'s open first.','The Christmas Market is open tonight 4–9:30 and Thursdays are calm — a good night to sneak a first look.'],map:P.steam,links:[['Rink status','https://www.robsonsquare.com/']]},
-  {m:1125,tm:'6:45 PM',ic:'🍴',tt:'Dinner: Water St. Café',sb:'300 Water Street — across from the Steam Clock. Table for 5 at 6:45, under Nate.',star:1,bk:1,map:P.water,tel:'+16046892832',links:[['Reserve','https://www.exploretock.com/waterstcafe']],alt:'thu-dinner'},
-  {m:1260,tm:'~9:00 PM',ic:'🥃',tt:'Nightcap (grown-ups)',sb:'Once the kids are down: two slip out, one stays in. Everything is within a few minutes of the door.',alt:'nightcap'}
+  {m:1125,tm:'6:45 PM',ic:'🍴',tt:'Dinner: Water St. Café',sb:'300 Water Street — across from the Steam Clock. Table for 5 at 6:45, under Nate.',star:1,bk:1,map:P.water,tel:'+16046892832',links:[['Reserve','https://www.exploretock.com/waterstcafe']],alt:'thu-dinner'}
  ]},
  {c:'c2',n:'Day 2',d:'Friday, Dec 4',s:'Fri',num:'4',t:'Stanley Park + Market + Family Photos 🎄',sub:'Family photo session at Stanley Park ♡',art:'img/polaroid.jpg',items:[
   {m:495,tm:'~8:15 AM',ic:'☕',tt:'Breakfast: Nemesis Coffee',sb:'Gastown, 302 W Hastings St. Counter service — quick, which is what a 10:00 photo call needs.',star:1,map:P.nemesis,alt:'fri-breakfast'},
@@ -371,7 +375,8 @@ var DAYS=[
   {m:990,tm:'4:30 PM',ic:'🎪',tt:'Vancouver Christmas Market',sb:'90+ huts and the 5-storey Christmas Pyramid at Jack Poole Plaza. Gates open at 4:00 on Fridays; that first slot sold out, so ours is the 4:30–5:00 arrival. The lights are on by then.',li:['Carousel, walk-through 35-foot tree, snow showers every 30 minutes, Santa\'s Workshop.','Kinderpunsch for the kids, Glühwein for the grown-ups.','Very little cover — hoods up if it rains.'],map:P.market,links:[['Tickets','https://tickets.vancouverchristmasmarket.com/']]},
   {m:1095,tm:'~6:15 PM',ic:'🍩',tt:'Snack: Lee\'s Donuts',sb:'199 Water St, across from the Steam Clock — it\'s on the walk to dinner. A Vancouver classic since 1979. Grab a box of Honey Dips before they close at 7.',map:P.lees},
   {m:1110,tm:'6:30 PM',ic:'🍴',tt:'Dinner: Old Spaghetti Factory',sb:'53 Water St, Gastown. Table for 5 at 6:30, under Nate — we asked for a spot in or near the streetcar.',star:1,bk:1,map:P.osf,tel:'+16046841288',alt:'fri-dinner'},
-  {m:1260,tm:'~9:00 PM',ic:'🥃',tt:'Nightcap (grown-ups)',sb:'Kids down after the Market and spaghetti. Live music is a 5-minute walk.',alt:'nightcap'}
+  {m:1230,tm:'~8:30 PM',ic:'🥃',tt:'Nightcap 1: Courtenay & Nate — L\'Abattoir',sb:'217 Carrall St, four minutes from the door. Amy has the kids.',star:1,map:P.abattoir,tel:'+16045681701',alt:'fri-night'},
+  {m:1305,tm:'~9:45 PM',ic:'🌙',tt:'Nightcap 2: Courtenay & Amy — Lavantine',sb:'Rooftop lounge, 14th floor, 833 W Pender St. A short cab or a 14-minute walk. Nate has the kids.',star:1,map:P.lavantine,alt:'fri-night'}
  ]},
  {c:'c3',n:'Day 3',d:'Saturday, Dec 5',s:'Sat',num:'5',t:'Granville Island + Capilano Canyon Lights 🌲',sub:'Lights, mountains & magic ♡',art:'img/bridge.jpg',items:[
   {m:540,tm:'9:00 AM',ic:'🍴',tt:'Breakfast: Café Medina',sb:'780 Richards St. Opens 9:00 on weekends.',star:1,flag:'<b>Not reserved yet.</b> A 9:00 table for 5 is open on Tock; a C$50 donation holds it. Without one, weekend waits can run 90 minutes. Famous for Belgian waffles.',map:P.medina,links:[['Reserve','https://www.exploretock.com/medinacafe/search?date=2026-12-05&size=5&time=09%3A00']],alt:'sat-breakfast'},
@@ -380,7 +385,9 @@ var DAYS=[
   {m:885,tm:'~2:45 PM',ic:'🚌',tt:'Head to Capilano',sb:'Free shuttle from Canada Place, or a 20–25 minute taxi over the Lions Gate Bridge.',add:1,map:P.canpl,links:[['Shuttle schedule','https://capbridge.com/shuttle-schedule']]},
   {m:930,tm:'3:30 – 4:00 PM',ic:'🌉',tt:'Capilano Suspension Bridge Park — Canyon Lights',sb:'Arrive in daylight, stay as the lights come on around 4. Allow 1.5–2 hours.',li:['Tickets still to buy: the 3:30–4:00 PM arrival window is open. Park hours 11 AM – 10 PM.','Bridge, Cliffwalk and Treetops are all lit. Ask for the kids\' Activity Card (stickers → gingerbread house).','Free ponchos if it rains.'],map:P.cap,tel:'+16049857474',links:[['Tickets','https://www.capbridge.com/tickets-and-hours/']]},
   {m:1110,tm:'~6:30 PM',ic:'🍴',tt:'Dinner (Courtenay & kids)',sb:'Near the Airbnb — Gastown options.',alt:'sat-dinner'},
-  {m:1170,tm:'Evening',ic:'🌙',tt:'Kids down early · grown-ups\' night out',sb:'Kids down with Courtenay; the night-out ideas are on the Eat tab.',alt:'sat-night'}
+  {m:1170,tm:'Evening',ic:'🌙',tt:'Kids down early',sb:'With Courtenay.'},
+  {m:1185,tm:'~7:45 PM',ic:'⭐',tt:'Nate & Amy\'s evening out',sb:'Dinner at Chambar, AnnaLena or Published on Main. Nothing is booked yet — compare them on the Eat tab.',star:1,alt:'sat-night'},
+  {m:1290,tm:'~9:30 PM',ic:'🍸',tt:'Cocktails at Parker Rooftop',sb:'1379 Howe St, 9th floor. Glass-walled room above downtown, so December is fine. Open Wednesday to Sunday from 3 PM.',star:1,map:P.parker,alt:'sat-cocktails'}
  ]},
  {c:'c4',n:'Day 4',d:'Sunday, Dec 6',s:'Sun',num:'6',t:'Last Wander + Departure ✈',sub:'Back in San Francisco by evening — no jet lag, no school Monday! ♡',art:'img/seaplane.jpg',items:[
   {m:540,tm:'~9:00 AM',ic:'☕',tt:'Breakfast: Café Medina',sb:'780 Richards St (opens 9:00 Sundays) — or Nemesis Coffee in Gastown.',star:1,map:P.medina,alt:'sun-breakfast'},
@@ -485,17 +492,22 @@ var SLOTS=[
   o('nuba','Nuba','alt','Alternative · 2 min walk · $$',['Lebanese: falafel, chicken shawarma, big shareable plates','Casual room'],['A stretch for picky eaters'],{p:P.nuba}),
   o('osf2','Old Spaghetti Factory','alt','Alternative · 3 min walk · $$',['If Friday went another way, the streetcar is still there'],['Saturday night wait'],{p:P.osf,tel:'+16046841288'})
  ]},
- {id:'sat-night',day:'Sat',t:'Saturday night out',w:'The poster has the kids down early with Courtenay. If two grown-ups slip out:',opts:[
-  o('heather','The Irish Heather','best','Best bet · 10 min walk, or taxi · $$',['Irish-owned and run; whiskey list, pies, live music','Open from 2 PM Tuesday–Sunday'],['No confirmed Christmas décor this year','The walk crosses Chinatown — cab it after dark'],{p:P.heather,tel:'+16046889779',res:'https://www.irishheather.com'}),
-  o('pour','Pourhouse','alt','Alternative · 2 min walk · $$$',['Century-old tavern room with a 38-foot bar; classic cocktails','Two minutes from the Airbnb','Open till 1 AM Saturday'],['Upscale prices','Busy on a Saturday — sit at the bar'],{p:P.pour,tel:'+16045687022'}),
-  o('guilt2','Guilt & Co.','alt','Alternative · live music · 5 min walk · $$',['Basement room with live bands every night','No tickets: walk in'],['Saturday line — go early','A music fee goes on the bill'],{p:P.guilt}),
-  o('mktnight','The Market after dark','alt','Alternative · open till 10 · $$',['Glühwein, the Fire Pit Lounge, the bell-ring "secret wall" cocktail hut'],['Saturday night is the most crowded slot of the week','Needs its own ticket'],{p:P.market})
+ {id:'fri-night',day:'Fri',t:'Friday nightcaps — the split evening',w:'From Courtenay\'s guide: two rounds, with one grown-up home with the kids each time. Both rooms wind down by about 11, so the first round wants to start by 8:30.',opts:[
+  o('abattoir','L\'Abattoir','star','Courtenay & Nate · 4 min walk · $$$$',['On the site of Vancouver\'s first jail, between Gaoler\'s Mews and Blood Alley','One of the city\'s best bar programs; walk-ins at the bar','Closest of the two'],['Kitchen closes around 10 on Fridays','Fine-dining prices'],{p:P.abattoir,tel:'+16045681701',res:'https://www.labattoir.ca'}),
+  o('lavantine','Lavantine','star','Courtenay & Amy · rooftop · short cab or 14 min walk · $$$',['14th-floor rooftop restaurant and skybar at the Azur hotel','Covered, all-season rooftop with skyline views','Middle Eastern small plates if anyone is still hungry'],['Listed hours are Tuesday–Saturday, 4 to 11 PM — confirm before walking over','Farther than L\'Abattoir: go second only if you leave by 9:45'],{p:P.lavantine}),
+  o('pour2','Pourhouse','alt','Backup · 2 min walk · $$$',['Open to 1 AM Friday and Saturday — the late option if a round runs long','Century-old tavern room with a 38-foot bar'],['Fills up Friday night — sit at the bar'],{p:P.pour,tel:'+16045687022'}),
+  o('guilt','Guilt & Co.','alt','Backup · live music · 5 min walk · $$',['Basement room with live bands every night','No tickets: walk in'],['A music fee goes on the bill','Friday line — go early','19 and over'],{p:P.guilt})
  ]},
- {id:'nightcap',day:'Any',night:1,t:'Nightcaps — any night',w:'Courtenay\'s guide had nightcaps and grown-ups\' nights out; they dropped off the version this app was built from. Her picks go here as soon as we have them. Until then, these are all a short walk from the door. (The Diamond, the old Gastown favourite, has closed for good.)',opts:[
-  o('pour2','Pourhouse','best','Best bet · 2 min walk · $$$',['Century-old tavern room with a 38-foot bar; classic cocktails','Closest to the door','Open to midnight Thursday, 1 AM Friday and Saturday'],['Upscale prices','Fills up Friday and Saturday — sit at the bar'],{p:P.pour,tel:'+16045687022'}),
-  o('guilt','Guilt & Co.','alt','Alternative · live music · 5 min walk · $$',['Basement room at Water and Carrall with live bands every night: jazz, funk, soul','No tickets or reservations: walk in'],['A music fee (roughly C$7–12 a person) goes on the bill','Lines on Friday and Saturday — go early','19 and over'],{p:P.guilt}),
-  o('lobby','The Lobby Lounge','alt','Alternative · live music · 12 min walk · $$$$',['Live music every night in the Fairmont Pacific Rim lobby','Beside the Market — an easy add on Friday','Open to midnight, 1 AM Friday and Saturday'],['Hotel-bar prices','Busy Friday and Saturday'],{p:P.lobby}),
-  o('second','Upstairs at Water St. Café','alt','Alternative · Thursday, same building as dinner',['A live-music room above Thursday\'s dinner table','No walk at all'],['Ask at dinner what\'s on that night — not checked for these dates','Someone still has to walk the kids home'],{p:P.water})
+ {id:'sat-night',day:'Sat',t:'Saturday — Nate & Amy\'s dinner out',w:'From Courtenay\'s guide: one of these three, then cocktails. You\'re back from Capilano around 6, so aim for 7:30 or later. Nothing is booked yet.',opts:[
+  o('chambar','Chambar','best','Courtenay\'s list · Belgian-inspired · 10 min walk · $$$',['Mussels and frites, Belgian beer list, a big lively room','Walkable from the Airbnb; open till 11 on Saturday','À la carte, so a later table still works'],['Loud on a Saturday','Book ahead for Thursday–Saturday evenings'],{p:P.chambar,tel:'+16048797119',res:'https://www.opentable.ca/chambar'}),
+  o('annalena','AnnaLena','star','Courtenay\'s list · tasting menu · 15 min taxi · $$$$',['Promoted to two Michelin stars in October 2026 — the first in Vancouver','Kitsilano; Parker Rooftop is an 8-minute cab afterwards'],['Tasting menu only: a long, expensive dinner','Tables open online 30 days ahead and go fast; seatings end at 9','Leaves little time for cocktails after'],{p:P.annalena,res:'https://www.annalena.ca'}),
+  o('published','Published on Main','star','Courtenay\'s list · contemporary Canadian · 15 min taxi · $$$',['On the guide as "Canada\'s best"','Open 5 to 11 every night; à la carte or tasting menu','Creative cocktails in-house'],['Farthest from the Airbnb and from Parker Rooftop','One of the hardest Saturday tables in town'],{p:P.published,res:'https://www.opentable.ca/r/published-on-main-vancouver'})
+ ]},
+ {id:'sat-cocktails',day:'Sat',t:'Saturday cocktails',w:'After dinner. The guide says Parker Rooftop.',opts:[
+  o('parker','Parker Rooftop','star','Courtenay\'s list · 9th floor · taxi · $$$',['Glass-walled room 120 feet up with city and water views — works in December','Open Wednesday to Sunday from 3 PM until late'],['Listed closing is around 11 to 11:30 on Saturday: be there by 9:30','A cab from any of the three dinners'],{p:P.parker,res:'https://www.parkerrooftop.com'}),
+  o('pour','Pourhouse','alt','Backup · 2 min from the Airbnb · $$$',['Open till 1 AM Saturday','On the way home'],['Busy — sit at the bar'],{p:P.pour,tel:'+16045687022'}),
+  o('heather','The Irish Heather','alt','Backup · 10 min walk, or taxi · $$',['Irish-owned and run; whiskey list, pies, live music'],['The walk crosses Chinatown — cab it after dark'],{p:P.heather,tel:'+16046889779',res:'https://www.irishheather.com'}),
+  o('mktnight','The Market after dark','alt','Backup · open till 10 · $$',['Glühwein, the Fire Pit Lounge, the bell-ring "secret wall" cocktail hut'],['Saturday night is the most crowded slot of the week','Needs its own ticket'],{p:P.market})
  ]},
  {id:'sun-breakfast',day:'Sun',t:'Sunday breakfast',w:'Bags packed, airport by 12:30. Don\'t gamble on a line.',opts:[
   o('med2','Café Medina','star','On the poster · opens 9:00 · $$',['One last waffle'],['Only with a reservation — a Sunday walk-in wait could eat the morning'],{p:P.medina,res:'https://www.exploretock.com/medinacafe'}),
