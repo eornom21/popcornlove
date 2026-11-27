@@ -3,7 +3,7 @@
 // 2. Forwards every other attached host to makeacoloringbook.com.
 // 3. /api/make: draws a coloring page on the spot from a typed idea (OpenAI image API).
 // 4. /api/hearts, /api/heart: public heart counts for each page (KV "heart:<id>", count kept in key metadata).
-// 5. /api/team/*: Uncle Dave's team tools (secret TEAM_KEY): draw without the visitor limits, publish to the site.
+// 5. /api/team/*: Uncle Dave's team tools (key checked against TEAM_KEY_HASH): draw without the visitor limits, publish to the site.
 //    A GitHub Action (team-pages) pulls /api/team/queue every few minutes and adds published pages to the site.
 // Needs: secret OPENAI_API_KEY, KV binding KV. Optional secret TURNSTILE_SECRET turns on the human check
 // (Cloudflare Turnstile widget "makeacoloringbook draw"; its public site key is TS_SITEKEY below). Optional vars: LIMIT_IP (default 3 a day per visitor),
@@ -187,7 +187,7 @@ async function heartsAll(q, env, ctx) {
     for (const k of l.keys) { const n = k.metadata && k.metadata.n; if (n > 0) counts[k.name.slice(6)] = n; }
     cursor = l.list_complete ? undefined : l.cursor;
   } while (cursor);
-  const r = json({ counts }, 200, { "cache-control": "public, max-age=120" });
+  const r = json({ counts }, 200, { "cache-control": "public, max-age=300" });
   ctx.waitUntil(cache.put(key, r.clone()));
   return r;
 }
@@ -206,8 +206,14 @@ async function heart(q, env) {
 
 // ---------- team (Uncle Dave) ----------
 const THEMES = ["requests", "thanksgiving", "christmas", "halloween", "easter", "valentines", "summer", "holidays", "dinosaurs", "ocean", "animals", "space", "fantasy"];
-const teamOk = (q, env) => !!env.TEAM_KEY && same(q.headers.get("x-team-key"), env.TEAM_KEY);
-async function teamMake(q, env) {
+// Only a SHA-256 hash of the team key lives here (this file is public). Nate gives Dave the key itself.
+const TEAM_KEY_HASH = "5ad07b58cbecc476661b2c214ee9a7bd37ba9903ca91519ea9cdd402673a8942";
+async function hex256(t) { const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(t || ""))); return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join(""); }
+async function keyOk(k, hash) { return !!k && !!hash && same(await hex256(k), hash); }
+const teamOk = (q, env, k) => keyOk(k || q.headers.get("x-team-key"), env.TEAM_KEY_HASH || TEAM_KEY_HASH);
+// Team drawings are stored without decoding (the free Workers plan allows only a few ms of CPU per request):
+// a drawn page is kept as OpenAI's JSON (picture in data[0].b64_json), an upload as the raw image bytes.
+async function teamMake(q, env, ctx) {
   if (!env.OPENAI_API_KEY) return json({ error: "off", message: "Drawing is switched off." }, 503);
   let b; try { b = await q.json(); } catch (e) { return json({ error: "bad", message: "That did not come through." }, 400); }
   const idea = cleanIdea(b.idea, 400), style = STYLES[b.style] ? b.style : "whimsical";
@@ -220,20 +226,27 @@ async function teamMake(q, env) {
   if (mod === "upstream") return json({ error: "upstream", message: "The drawing machine is resting. Try again later." }, 503);
   if (mod) return json({ error: "blocked", message: "The safety check said no to that one. Try different words." }, 400);
   await env.KV.put(dk, String(used + 1), { expirationTtl: 172800 });
-  const d = await drawImage(env, promptFor(idea, style), { size: env.TEAM_SIZE || "1536x2048", quality: env.TEAM_QUALITY || "high", format: "png", who: "team" });
-  if (!d.ok) return json({ error: d.blocked ? "blocked" : "upstream", message: d.blocked ? "The safety check said no to that one. Try different words." : "The drawing did not come out (" + d.why + "). Try again." }, d.blocked ? 400 : 502);
+  const body = { model: env.IMAGE_MODEL || "gpt-image-2.6-flare", prompt: promptFor(idea, style), size: env.TEAM_SIZE || "1536x2048", quality: env.TEAM_QUALITY || "high", n: 1, output_format: "png", background: "opaque", moderation: "auto" };
+  const call = (bd) => fetch("https://api.openai.com/v1/images/generations", { method: "POST", headers: { authorization: "Bearer " + env.OPENAI_API_KEY, "content-type": "application/json" }, body: JSON.stringify(bd) });
+  let r = await call(body);
+  if (!r.ok && r.status === 400) { body.size = "1024x1536"; r = await call(body); }
+  if (!r.ok) {
+    let why = ""; try { const e = await r.json(); why = (e.error && (e.error.code || e.error.message)) || ""; } catch (e) {}
+    const blocked = /moderation|safety|content_policy/i.test(why);
+    return json({ error: blocked ? "blocked" : "upstream", message: blocked ? "The safety check said no to that one. Try different words." : "The drawing did not come out (" + r.status + " " + String(why).slice(0, 80) + "). Try again." }, blocked ? 400 : 502);
+  }
   const tid = "t" + rid(6);
-  await env.KV.put("team:img:" + tid, d.bytes, { expirationTtl: 1209600, metadata: { type: d.type, idea, style, at: Date.now() } });
-  return json({ tid, type: d.type, b64: bytesToB64(d.bytes), left: lim - used - 1 });
+  const [a, c] = r.body.tee();
+  ctx.waitUntil(env.KV.put("team:img:" + tid, a, { expirationTtl: 1209600, metadata: { type: "application/json", idea, style, at: Date.now() } }));
+  return new Response(c, { headers: { "content-type": "application/json", "cache-control": "no-store", "x-team-id": tid, "x-left": String(lim - used - 1), "access-control-expose-headers": "x-team-id, x-left" } });
 }
 async function teamUpload(q, env) {
-  let b; try { b = await q.json(); } catch (e) { return json({ error: "bad", message: "That did not come through." }, 400); }
-  const m = /^data:(image\/(png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || ""));
-  if (!m) return json({ error: "bad", message: "Send a PNG, JPG or WEBP picture." }, 400);
-  const bytes = b64ToBytes(m[3]); if (bytes.length > 8e6) return json({ error: "big", message: "That picture is over 8 MB." }, 400);
+  const type = (q.headers.get("content-type") || "").split(";")[0];
+  if (!/^image\/(png|jpeg|webp)$/.test(type)) return json({ error: "bad", message: "Send a PNG, JPG or WEBP picture." }, 400);
+  if (num(q.headers.get("content-length"), 0) > 8e6) return json({ error: "big", message: "That picture is over 8 MB." }, 400);
   const tid = "t" + rid(6);
-  await env.KV.put("team:img:" + tid, bytes, { expirationTtl: 1209600, metadata: { type: m[1], idea: "(uploaded)", style: "", at: Date.now() } });
-  return json({ tid, type: m[1] });
+  await env.KV.put("team:img:" + tid, q.body, { expirationTtl: 1209600, metadata: { type, idea: "(uploaded)", style: "", at: Date.now() } });
+  return json({ tid, type });
 }
 async function teamPublish(q, env) {
   let b; try { b = await q.json(); } catch (e) { return json({ error: "bad", message: "That did not come through." }, 400); }
@@ -241,7 +254,7 @@ async function teamPublish(q, env) {
   const title = cleanIdea(b.title, 40).replace(/[^A-Za-z0-9 '&!,.-]/g, "").trim();
   const subject = cleanIdea(b.subject, 300);
   const theme = THEMES.indexOf(b.theme) >= 0 ? b.theme : "requests", style = STYLES[b.style] ? b.style : "whimsical";
-  if (!tid || !(await env.KV.get("team:img:" + tid, "arrayBuffer"))) return json({ error: "gone", message: "That drawing is no longer saved. Draw it again." }, 400);
+  if (!tid || !(await env.KV.getWithMetadata("team:img:" + tid, "stream")).value) return json({ error: "gone", message: "That drawing is no longer saved. Draw it again." }, 400);
   if (title.length < 3) return json({ error: "title", message: "Give the page a title (3 to 40 letters)." }, 400);
   if (subject.length < 8) return json({ error: "subject", message: "Add a sentence describing the picture (it becomes the page's description)." }, 400);
   if (NAMES.test(title + " " + subject) || BLOCK.test(title + " " + subject)) return json({ error: "named", message: "The title or description has a word we can't use." }, 400);
@@ -275,25 +288,25 @@ async function teamList(env) {
 }
 async function teamImg(tid, env) {
   if (!/^t[a-f0-9]{12}$/.test(tid)) return new Response("not found", { status: 404 });
-  const v = await env.KV.getWithMetadata("team:img:" + tid, "arrayBuffer");
+  const v = await env.KV.getWithMetadata("team:img:" + tid, "stream");
   if (!v || !v.value) return new Response("not found", { status: 404 });
+  // A drawn page comes back as OpenAI's JSON ({data:[{b64_json}]}); the team page and the Action decode it.
   return new Response(v.value, { headers: { "content-type": (v.metadata && v.metadata.type) || "image/png", "cache-control": "private, max-age=600" } });
 }
-async function team(q, env, u) {
+async function team(q, env, u, ctx) {
   const path = u.pathname.slice(10); // after /api/team/
   if (path === "queue" && q.method === "GET") return teamQueue(env);
   if (path.startsWith("img/") && q.method === "GET") {
     // Published drawings are public (they are about to be on the site); unpublished ones need the key.
     const tid = path.slice(4);
-    if (!teamOk(q, env) && !(await env.KV.get("team:pub:" + tid)) && u.searchParams.get("k") !== env.TEAM_KEY) return new Response("not found", { status: 404 });
+    if (!(await teamOk(q, env, u.searchParams.get("k"))) && !(await env.KV.get("team:pub:" + tid))) return new Response("not found", { status: 404 });
     return teamImg(tid, env);
   }
-  if (!env.TEAM_KEY) return json({ error: "off", message: "Team tools are not switched on yet." }, 503);
-  if (!teamOk(q, env)) return json({ error: "key", message: "That team key is not right." }, 403);
+  if (!(await teamOk(q, env))) return json({ error: "key", message: "That team key is not right." }, 403);
   if (path === "check") return json({ ok: true });
   if (path === "list") return teamList(env);
   if (q.method !== "POST") return json({ error: "method" }, 405);
-  if (path === "make") return teamMake(q, env);
+  if (path === "make") return teamMake(q, env, ctx);
   if (path === "upload") return teamUpload(q, env);
   if (path === "publish") return teamPublish(q, env);
   return json({ error: "nope" }, 404);
@@ -309,7 +322,7 @@ export default {
     if (u.pathname === "/api/make/status") return status(q, env || {});
     if (u.pathname === "/api/hearts") return heartsAll(q, env, ctx);
     if (u.pathname === "/api/heart") return q.method === "POST" ? heart(q, env) : json({ error: "method" }, 405);
-    if (u.pathname.startsWith("/api/team/")) { try { return await team(q, env, u); } catch (e) { console.log("team failed", String(e)); return json({ error: "server", message: "Something went wrong: " + String(e).slice(0, 120) }, 500); } }
+    if (u.pathname.startsWith("/api/team/")) { try { return await team(q, env, u, ctx); } catch (e) { console.log("team failed", String(e)); return json({ error: "server", message: "Something went wrong: " + String(e).slice(0, 120) }, 500); } }
     if (u.pathname === "/api/make") {
       if (q.method !== "POST") return json({ error: "method" }, 405);
       try { return await make(q, env || {}); } catch (e) { console.log("make failed", String(e)); return json({ error: "server", message: "Something went wrong. Please try again." }, 500); }

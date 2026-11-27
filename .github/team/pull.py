@@ -6,7 +6,7 @@ assigns a page id, turns the drawing into site art (same sizing as every other p
 free-coloring-pages/_build/requests.json (with its theme) and records it in free-coloring-pages/team.json,
 which tells the Worker it is live. Prints the new page ids (one per line) for the workflow.
 """
-import json, os, re, sys, urllib.request
+import base64, json, os, re, sys, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, ".github", "coloring"))
@@ -20,6 +20,14 @@ UA = {"User-Agent": "Mozilla/5.0 (team-pages action)"}
 def get(url):
     with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=90) as r:
         return r.read()
+
+
+def image(url):
+    """A drawn page comes back as OpenAI's JSON; an uploaded one as the image itself."""
+    data = get(url)
+    if data[:1] == b"{":
+        return base64.b64decode(json.loads(data)["data"][0]["b64_json"])
+    return data
 
 
 def load(path, default):
@@ -49,7 +57,7 @@ def main():
         while (theme, title.lower()) in titles:
             title = f"{base} {k}"; k += 1
         try:
-            line_art(get(it["img"]), OUT, pid)
+            line_art(image(it["img"]), OUT, pid)
         except Exception as e:  # noqa
             print("skip", tid, repr(e), file=sys.stderr)
             continue
