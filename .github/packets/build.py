@@ -47,7 +47,7 @@ def fetch(stamp, cache):
     return Image.alpha_composite(bg, im).convert("L")
 
 
-def banner_box(g):
+def banner_comp(g):
     """Find the empty banner near the top: walking down the centre column, the first enclosed white region
     (not touching the page edge) that is wide and short enough to be a banner."""
     a = np.asarray(g) < 140
@@ -64,25 +64,32 @@ def banner_box(g):
         seen.add(k)
         comp = lab == k
         ys, xs = np.where(comp)
-        x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
-        if (y1 - y0) > 0.25 * h or (x1 - x0) < 0.35 * w:
+        if (ys.max() - ys.min()) > 0.25 * h or (xs.max() - xs.min()) < 0.35 * w:
             continue
-        bw = x1 - x0
-        lo, hi = x0 + int(0.15 * bw), x1 - int(0.15 * bw)
-        tops, bots, good = [], [], True
+        return comp
+    return None
+
+
+def rects(comp):
+    """Candidate text rectangles inside the banner: narrower ones sit where the band is tallest."""
+    ys, xs = np.where(comp)
+    x0, x1 = xs.min(), xs.max()
+    bw = x1 - x0
+    out = []
+    for frac in (0.10, 0.15, 0.20, 0.25, 0.30):
+        lo, hi = x0 + int(frac * bw), x1 - int(frac * bw)
+        tops, bots = [], []
         for x in range(lo, hi, 2):
             c = np.where(comp[:, x])[0]
             if len(c) == 0:
-                good = False; break
+                break
             tops.append(c.min()); bots.append(c.max())
-        if not good:
-            continue
-        top, bot = max(tops), min(bots)
-        if bot - top < 0.03 * h:
-            continue
-        pad = int((bot - top) * 0.12)
-        return (lo, top + pad, hi, bot - pad)
-    return None
+        else:
+            top, bot = max(tops), min(bots)
+            if bot - top > 10:
+                padv, padh = int((bot - top) * 0.10), int((hi - lo) * 0.02)
+                out.append((lo + padh, top + padv, hi - padh, bot - padv))
+    return out
 
 
 def fit_lines(draw, text, box, weight=700):
@@ -114,15 +121,22 @@ def fit_lines(draw, text, box, weight=700):
 
 def stamp_name(g, name):
     """Scale the drawing up to print size, then letter the school's name, hollow, inside the banner."""
-    box = banner_box(g)
+    comp = banner_comp(g)
     s = 2400 / g.height
     big = g.resize((round(g.width * s), round(g.height * s)), Image.LANCZOS)
     big = big.point(lambda v: 0 if v < 110 else (255 if v > 200 else v))
-    if box is None:
+    if comp is None:
         return big, False
-    box = tuple(int(v * s) for v in box)
     d = ImageDraw.Draw(big)
-    size, lines = fit_lines(d, name.upper(), box)
+    best = None
+    for r in rects(comp):
+        box = tuple(int(v * s) for v in r)
+        size, lines = fit_lines(d, name.upper(), box)
+        if best is None or size > best[0]:
+            best = (size, lines, box)
+    if best is None:
+        return big, False
+    size, lines, box = best
     f = font(size)
     sw = max(3, size // 12)
     x0, y0, x1, y1 = box
