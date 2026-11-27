@@ -14,7 +14,17 @@
   "eagle-jm-2": "20261127_050017_41a59cc3-65b6-4de3-bace-bde1a990703d",
   "eagle-jm-3": "20261127_050016_9d7d2779-4000-4f17-a92e-a6224dc615a9",
   "eagle-jm-4": "20261127_050016_cf191e17-de72-41b4-9fa7-bb3cc8f3352a",
-  "eagle-jm-5": "20261127_050016_6f7ad1d1-9a48-4ab8-a399-cae5f714f6da"
+  "eagle-jm-5": "20261127_050016_6f7ad1d1-9a48-4ab8-a399-cae5f714f6da",
+  "wizard-1": "20261127_055335_b14ac20f-a816-47d1-b345-ca38151249b8",
+  "wizard-2": "20261127_055335_1bbde98f-8037-48b0-afc2-0ec0094fb177",
+  "wizard-3": "20261127_055335_267cfa5b-bae6-4e08-a7b8-eeb802faade2",
+  "wizard-4": "20261127_055334_be6af568-489d-4ef7-ae7f-1f55bc19bd75",
+  "wizard-5": "20261127_055335_e9628a09-7143-442c-b396-7a54657f1ffc",
+  "panther-1": "20261127_055334_f424efcc-7df0-41aa-8447-24be025e0e28",
+  "panther-2": "20261127_055335_c401fc6c-01a0-4175-a3db-120512ae5215",
+  "panther-3": "20261127_055335_2b501368-28b4-42d2-91d1-b0aca28c28d4",
+  "panther-4": "20261127_055335_22104ae5-3f10-4157-b071-3117c1aaa8b8",
+  "panther-5": "20261127_055334_e2bdb3ce-6548-4ce9-951f-8c6cf4780746"
  },
  "library": [],
  "schools": [
@@ -98,6 +108,87 @@
     ]
    ],
    "email_color": "20261127_050255_a5479aac-8aea-4d49-922a-2fb7ad50b6aa"
+  },
+  {
+   "slug": "durham-elementary-fremont-2hse",
+   "name": "Durham Elementary",
+   "pages": [
+    [
+     "eagle-jm-1",
+     "Durham Elementary"
+    ],
+    [
+     "eagle-jm-2",
+     "Merry Christmas, Eagles!"
+    ],
+    [
+     "eagle-jm-3",
+     "Durham Eagles"
+    ],
+    [
+     "eagle-jm-4",
+     "Happy Holidays, Durham!"
+    ],
+    [
+     "eagle-jm-5",
+     "Durham Holiday Party"
+    ]
+   ],
+   "email_color": "20261127_055336_86c6be87-3bc9-44e3-ba2c-2d1374cce695"
+  },
+  {
+   "slug": "warwick-elementary-fremont-ids7",
+   "name": "Warwick Elementary",
+   "pages": [
+    [
+     "wizard-1",
+     "Warwick Elementary"
+    ],
+    [
+     "wizard-2",
+     "Merry Christmas, Wizards!"
+    ],
+    [
+     "wizard-3",
+     "Warwick Wizards"
+    ],
+    [
+     "wizard-4",
+     "Happy Holidays, Warwick!"
+    ],
+    [
+     "wizard-5",
+     "Warwick Holiday Party"
+    ]
+   ],
+   "email_color": "20261127_055434_b03fc346-622a-4e80-aca4-5a59508176c6"
+  },
+  {
+   "slug": "parkmont-elementary-fremont-uuj7",
+   "name": "Parkmont Elementary",
+   "pages": [
+    [
+     "panther-1",
+     "Parkmont Elementary"
+    ],
+    [
+     "panther-2",
+     "Merry Christmas, Panthers!"
+    ],
+    [
+     "panther-3",
+     "Parkmont Panthers"
+    ],
+    [
+     "panther-4",
+     "Happy Holidays, Parkmont!"
+    ],
+    [
+     "panther-5",
+     "Parkmont Holiday Party"
+    ]
+   ],
+   "email_color": "20261127_055434_f71fa606-3ac8-4962-b5ec-a6e283497d1d"
   }
  ]
 }
