@@ -54,7 +54,8 @@ p{margin:0 0 12px}
 .example p{font-size:15.5px;margin-bottom:8px}
 .pager{display:flex;justify-content:space-between;gap:12px;margin:34px 0 0;font:600 16px/1.2 var(--display)}
 .pager a{text-decoration:none;border-bottom:3px solid var(--sun)}
-footer{border-top:2.5px solid var(--ink);margin-top:48px;padding:24px 18px 34px;text-align:center;color:var(--muted);font-size:14px;font-weight:700}
+footer{border-top:2.5px solid var(--ink);margin-top:48px;padding:24px 18px 34px;text-align:center;color:var(--ink);font-size:14px;font-weight:700}
+footer a{color:var(--ink)}
 footer b{color:var(--ink)}
 .footlinks a{color:var(--ink);font-weight:800}
 .footnav{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;max-width:900px;margin:0 auto 16px}

@@ -155,7 +155,15 @@ h1 .squig svg{position:absolute;left:-2%;bottom:-.18em;width:104%;height:.3em;ov
 .drawer h2{font:700 30px/1.05 var(--display);color:var(--ink);padding-right:44px}
 .blist{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;margin:14px 0;max-height:38vh;overflow:auto;padding:4px}
 .bitem{position:relative;border:2px solid var(--ink);border-radius:10px;background:#fff;aspect-ratio:3/4;overflow:hidden}
-.bitem img{width:100%;height:100%;object-fit:contain}
+.bitem img{width:100%;height:100%;object-fit:contain;cursor:zoom-in;background:#fff}
+.bitem.wait img{opacity:.45}
+.bitem.wait::after{content:'';position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border:3px solid var(--ink);border-top-color:transparent;border-radius:50%;animation:bkspin .8s linear infinite}
+@keyframes bkspin{to{transform:rotate(360deg)}}
+.bitem .blab{position:absolute;left:4px;bottom:4px;background:#FFD447;border:2px solid var(--ink);border-radius:7px;padding:1px 6px;font:800 11px/1.3 var(--text)}
+.bkpv{width:min(760px,100%)}
+.bkpv .pv{border-right:0;border-radius:19px}
+.bkpv .pv img{max-width:100%;max-height:80vh;width:auto;height:auto;background:#fff;border:2px solid var(--ink);box-shadow:5px 5px 0 rgba(29,27,47,.25)}
+.bkpv .cap{text-align:center;font-weight:800;padding:10px 14px 14px;margin:0}
 .bitem button{position:absolute;right:3px;top:3px;width:24px;height:24px;border-radius:8px;border:2px solid var(--ink);background:var(--tomato);color:#fff;font:800 13px/1 var(--text)}
 .field{width:100%;border:2.5px solid var(--ink);border-radius:12px;padding:11px 12px;font:700 15px/1.1 var(--text);color:var(--ink);background:var(--card);outline:0}
 
@@ -168,7 +176,8 @@ h1 .squig svg{position:absolute;left:-2%;bottom:-.18em;width:104%;height:.3em;ov
 .keepnote{background:#FFF0C7;border:2px dashed var(--ink);border-radius:12px;padding:9px 12px;margin-top:10px}
 .fab{position:fixed;right:16px;bottom:16px;z-index:30;display:none}
 .fab.show{display:inline-flex}
-footer{border-top:2.5px solid var(--ink);padding:24px 18px 34px;text-align:center;color:var(--muted);font-size:14px;font-weight:700}
+footer{border-top:2.5px solid var(--ink);padding:24px 18px 34px;text-align:center;color:var(--ink);font-size:14px;font-weight:700}
+footer a{color:var(--ink)}
 footer b{color:var(--ink)}
 .footlinks a{color:var(--ink);font-weight:800}
 .footnav{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;max-width:900px;margin:0 auto 16px}.footnav a{color:var(--ink);font-weight:800}
@@ -253,7 +262,7 @@ footer b{color:var(--ink)}
   <nav class="footnav" aria-label="All themes"><a href="thanksgiving/">Thanksgiving Coloring Pages</a><a href="christmas/">Christmas Coloring Pages</a><a href="halloween/">Halloween Coloring Pages</a><a href="easter/">Easter and Spring Coloring Pages</a><a href="valentines/">Valentine's Day Coloring Pages</a><a href="summer/">Summer and 4th of July Coloring Pages</a><a href="holidays/">Holiday Coloring Pages</a><a href="dinosaurs/">Dinosaur Coloring Pages</a><a href="ocean/">Ocean Animal Coloring Pages</a><a href="animals/">Animal Coloring Pages</a><a href="space/">Space and Robot Coloring Pages</a><a href="fantasy/">Dragon and Unicorn Coloring Pages</a></nav>
   <p><b>Free for home, classroom, church and party use.</b> Print as many as you like.</p>
   <p class="footlinks"><a href="https://www.pinterest.com/makeacoloringbook/" target="_blank" rel="noopener">📌 Follow us on Pinterest</a> · <a href="privacy/">Privacy</a> · <a href="#" data-cookie-choices>Cookie choices</a> · <a href="mailto:hello@makeacoloringbook.com">hello@makeacoloringbook.com</a></p>
-  <p>makeacoloringbook.com</p>
+  <p><a href="./">makeacoloringbook.com</a></p>
 </footer>
 
 <button class="btn sun fab" id="fab">📚 My book <span class="count" id="fabCount">0</span></button>
@@ -344,6 +353,7 @@ footer b{color:var(--ink)}
       <p class="hint" id="bHint">Tap “＋ Book” on any page to add it. Then download the whole thing as one PDF.</p>
       <p class="hint keepnote">Your book, favorites and My Pages are saved only in this browser on this device. Clearing your browser data, using private browsing, or switching devices will lose them, so download the PDF to keep a copy.</p>
       <div class="blist" id="bList"></div>
+      <p class="hint" id="bPvHint" style="margin:-6px 0 6px">This is your book exactly as it will print. Tap any page to see it full size.</p>
       <div class="two">
         <div class="opt"><label for="bName">Book title</label><input class="field" id="bName" maxlength="40" value="My Coloring Book"></div>
         <div class="opt"><label for="bFor">Made for (optional)</label><input class="field" id="bFor" maxlength="30" placeholder="Name"></div>
@@ -359,6 +369,14 @@ footer b{color:var(--ink)}
         <button class="btn wide" id="bClear">Empty the book</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="ov" id="ovBkPv" role="dialog" aria-modal="true" aria-label="Page preview">
+  <div class="panel bkpv">
+    <button class="x" data-close aria-label="Close">✕</button>
+    <div class="pv"><button class="nav p" id="bvPrev" aria-label="Previous page">‹</button><img id="bvImg" alt=""><button class="nav n" id="bvNext" aria-label="Next page">›</button></div>
+    <p class="cap" id="bvCap"></p>
   </div>
 </div>
 
@@ -659,11 +677,34 @@ window.addEventListener('resize',function(){if($('#ovStudio').classList.contains
 /* ---------- book ---------- */
 function openBook(){renderBook();open('#ovBook')}
 $('#bookBtn').addEventListener('click',openBook);$('#fab').addEventListener('click',openBook);
+var BKC={},bkTok=0,BLANK='data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+function bookOpts(){return {paper:$('#bA4').checked?'a4':'letter',guide:$('#bGuide').checked?'full':'off',lines:'dark',layout:'full',title:false,name:false}}
+function bookPages(){return S.book.map(function(id){return S.byId[id]}).filter(Boolean)}
+function bookEntries(){var o=bookOpts(),pages=bookPages(),e=[];
+  if($('#bCover').checked&&pages.length)e.push({cover:1,key:['cover',o.paper,$('#bName').value,$('#bFor').value,pages.length,pages.slice(0,4).map(function(p){return p.id}).join(',')].join('|')});
+  pages.forEach(function(p){e.push({p:p,key:[p.id,o.paper,(o.guide!=='off'&&hasGuide(p.id))?'g':'-'].join('|')})});return e}
+function bookSheet(en){var o=bookOpts();return en.cover?cover(o.paper,bookPages()):compose(en.p,o)}
+function shrink(c,w){var h=Math.round(c.height*w/c.width),t=document.createElement('canvas');t.width=w;t.height=h;var x=t.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(c,0,0,w,h);var u=t.toDataURL('image/jpeg',.85);t.width=t.height=1;return u}
 function renderBook(){var l=$('#bList');$('#bTitle').textContent='My coloring book ('+S.book.length+')';
-  l.innerHTML=S.book.map(function(id){var p=S.byId[id];return '<div class="bitem"><img loading="lazy" src="'+thumbSrc(p)+'" alt="'+p.title+'"><button data-rm="'+id+'" aria-label="Remove '+p.title+'">✕</button></div>'}).join('');
-  l.style.display=S.book.length?'':'none';$('#bHint').style.display=S.book.length?'none':'';
-  ['#bPdf','#bPrint','#bClear'].forEach(function(s){$(s).disabled=!S.book.length})}
-$('#bList').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){toggleBook(b.dataset.rm);renderBook()}});
+  var en=bookEntries(),tok=++bkTok;S.bkEn=en;
+  l.innerHTML=en.map(function(e,i){var src=BKC[e.key];return '<div class="bitem'+(src?'':' wait')+'" data-i="'+i+'"><img alt="'+(e.cover?'Cover page':e.p.title)+'" src="'+(src||(e.cover?BLANK:thumbSrc(e.p)))+'">'+(e.cover?'<span class="blab">Cover</span>':'<button data-rm="'+e.p.id+'" aria-label="Remove '+e.p.title+'">✕</button>')+'</div>'}).join('');
+  l.style.display=S.book.length?'':'none';$('#bPvHint').style.display=S.book.length?'':'none';$('#bHint').style.display=S.book.length?'none':'';
+  ['#bPdf','#bPrint','#bClear'].forEach(function(s){$(s).disabled=!S.book.length});
+  var chain=tick();
+  en.forEach(function(e,i){if(BKC[e.key])return;chain=chain.then(function(){if(tok!==bkTok||!$('#ovBook').classList.contains('open'))return;
+    return bookSheet(e).then(function(c){BKC[e.key]=shrink(c,260);c.width=c.height=1;var it=$('.bitem[data-i="'+i+'"]',l);if(it&&tok===bkTok){$('img',it).src=BKC[e.key];it.classList.remove('wait')}}).catch(function(){}).then(tick)})})}
+$('#bList').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){toggleBook(b.dataset.rm);renderBook();return}var it=e.target.closest('.bitem');if(it)openBkPv(+it.dataset.i)});
+['#bCover','#bGuide','#bA4'].forEach(function(s){$(s).addEventListener('change',renderBook)});
+var bkT;['#bName','#bFor'].forEach(function(s){$(s).addEventListener('input',function(){clearTimeout(bkT);bkT=setTimeout(function(){if($('#ovBook').classList.contains('open'))renderBook()},600)})});
+var bvI=0,bvTok=0;
+function openBkPv(i){var en=S.bkEn||[];if(!en.length)return;bvI=Math.max(0,Math.min(en.length-1,i));var e=en[bvI],tok=++bvTok;
+  $('#bvImg').src=BKC[e.key]||BLANK;$('#bvImg').alt=e.cover?'Cover page':e.p.title;$('#bvCap').textContent=(e.cover?'Cover':e.p.title)+' · page '+(bvI+1)+' of '+en.length;
+  $('#bvPrev').style.visibility=bvI>0?'':'hidden';$('#bvNext').style.visibility=bvI<en.length-1?'':'hidden';
+  if(!$('#ovBkPv').classList.contains('open'))open('#ovBkPv');
+  var k='full|'+e.key;if(BKC[k]){$('#bvImg').src=BKC[k];return}
+  bookSheet(e).then(function(c){BKC[k]=shrink(c,1100);c.width=c.height=1;if(tok===bvTok)$('#bvImg').src=BKC[k]}).catch(function(){})}
+$('#bvPrev').addEventListener('click',function(){openBkPv(bvI-1)});$('#bvNext').addEventListener('click',function(){openBkPv(bvI+1)});
+document.addEventListener('keydown',function(e){var top=$$('.ov.open').pop();if(top&&top.id==='ovBkPv'){if(e.key==='ArrowRight')openBkPv(bvI+1);if(e.key==='ArrowLeft')openBkPv(bvI-1)}});
 $('#bClear').addEventListener('click',function(){S.book.slice().forEach(function(id){var i=S.book.indexOf(id);S.book.splice(i,1);syncCard(id)});store.set('book',S.book);counts();renderBook()});
 function cover(paper,pages){return Promise.all(pages.slice(0,4).map(function(p){return loadImg(artSrc(p))}).concat([fontsReady()])).then(function(im){var P=PAPER[paper],c=document.createElement('canvas');c.width=P.w;c.height=P.h;var x=c.getContext('2d'),ink='#1D1B2F';x.fillStyle='#fff';x.fillRect(0,0,P.w,P.h);x.imageSmoothingQuality='high';
   x.strokeStyle=ink;x.lineWidth=10;x.setLineDash([2,34]);x.lineCap='round';x.strokeRect(110,110,P.w-220,P.h-220);x.setLineDash([]);
