@@ -355,11 +355,12 @@ footer b{color:var(--ink)}
     <button class="x" data-close aria-label="Close">✕</button>
     <div class="in" id="rForm">
       <h2 id="rTitle">Request a coloring page</h2>
-      <p class="hint">Tell us what to draw. If we can draw it, we'll add it to the site for free. We make a batch of new pages every day.</p>
+      <p class="hint" id="rHint">Tell us what to draw. If we can draw it, we'll add it to the site for free. We make a batch of new pages every day.</p>
       <div class="opt" style="margin-top:12px"><label for="rIdea">What should we draw?</label><textarea class="field" id="rIdea" rows="3" maxlength="200" placeholder="A corgi riding a skateboard past a taco truck" style="resize:vertical;line-height:1.35"></textarea></div>
-      <div class="opt" style="margin-top:12px"><label>Style</label><div class="seg" id="rStyle"><button data-v="Little Kids">Little Kids</button><button data-v="Whimsical" aria-pressed="true">Whimsical</button><button data-v="Realistic">Realistic</button><button data-v="Intricate">Intricate</button></div></div>
+      <div class="opt" style="margin-top:12px"><label>Style</label><div class="seg" id="rStyle"><button data-v="Little Kids" data-k="easy">Little Kids</button><button data-v="Whimsical" data-k="whimsical" aria-pressed="true">Whimsical</button><button data-v="Realistic" data-k="realistic">Realistic</button><button data-v="Intricate" data-k="intricate">Intricate</button></div></div>
       <p class="hint" style="margin-top:12px">We can't draw characters from movies, shows or games, or real people. Please leave out names and personal details.</p>
-      <div class="cta"><button class="btn pri wide" id="rSend">Send my request</button></div>
+      <div class="cta" style="flex-direction:column;gap:10px"><button class="btn pri wide" id="rNow" style="display:none">🪄 Draw it now</button><button class="btn pri wide" id="rSend">Send my request</button></div>
+      <p class="hint" id="rLeft" style="display:none;margin-top:10px;text-align:center"></p>
     </div>
     <div class="in" id="rDone" style="display:none">
       <h2>Got it!</h2>
@@ -394,24 +395,27 @@ var S={themes:[],pages:[],byId:{},ready:{art:{},guide:{}},pal:{},theme:'all',sty
   cur:null,list:[]};
 var V='?v='+Math.floor(Date.now()/6e5);
 
-function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('show')},2400)}
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('show')},m.length>60?6000:2400)}
 function busy(m){$('#busyMsg').textContent=m||'Getting it ready…';$('#busy').classList.add('on')}
 function idle(){$('#busy').classList.remove('on')}
 function tick(){return new Promise(function(r){setTimeout(r,30)})}
 var imgCache={};
 function loadImg(src){if(imgCache[src])return imgCache[src];var p=new Promise(function(res,rej){var i=new Image();i.onload=function(){res(i)};i.onerror=function(){delete imgCache[src];rej(new Error('Could not load '+src))};i.src=src});imgCache[src]=p;return p}
-function pageUrl(p){return p.theme+'/'+p.title.toLowerCase().replace(/['\u2019]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'/'}
+function artSrc(p){return p.src||('art/'+p.id+'.webp')}
+function thumbSrc(p){return p.src||('thumb/'+p.id+'.webp')}
+function pageUrl(p){if(p.src)return '#p='+p.id;return p.theme+'/'+p.title.toLowerCase().replace(/['\u2019]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'/'}
 function themeName(k){var t=S.themes.filter(function(t){return t.key===k})[0];return t?t.name:''}
 function hasGuide(id){return !!S.ready.guide[id]}
 function seasonal(){var m=new Date().getMonth()+1,d=new Date().getDate();if(m===11)return 'thanksgiving';if(m===12)return 'christmas';if(m===10)return 'halloween';if(m===2&&d<=15)return 'valentines';if(m===3||m===4)return 'easter';if(m===6||m===7)return 'summer';return null}
 
 /* ---------- data ---------- */
 function getJSON(u){return fetch(u+V).then(function(r){if(!r.ok)throw new Error(u);return r.json()})}
-Promise.all([getJSON('catalog.json'),getJSON('ready.json').catch(function(){return {art:[],guide:[]}}),getJSON('palettes.json').catch(function(){return {}})]).then(function(a){
+Promise.all([getJSON('catalog.json'),getJSON('ready.json').catch(function(){return {art:[],guide:[]}}),getJSON('palettes.json').catch(function(){return {}}),mineAll()]).then(function(a){
   S.themes=a[0].themes;(a[1].art||[]).forEach(function(i){S.ready.art[i]=1});(a[1].guide||[]).forEach(function(i){S.ready.guide[i]=1});S.pal=a[2]||{};
   S.pages=a[0].pages.filter(function(p){return S.ready.art[p.id]}).map(function(p){return {id:p.id,theme:p.t,style:p.s,title:p.n}});
-  S.pages.forEach(function(p){S.byId[p.id]=p});
   S.themes=S.themes.filter(function(t){return S.pages.some(function(p){return p.theme===t.key})});
+  var mine=(a[3]||[]).sort(function(x,y){return y.t-x.t});if(mine.length){S.themes.unshift(MINE);S.pages=mine.concat(S.pages)}
+  S.pages.forEach(function(p){S.byId[p.id]=p});
   S.favs=S.favs.filter(function(i){return S.byId[i]});S.book=S.book.filter(function(i){return S.byId[i]});
   if(hasGuide('thanksgiving-02'))$('#heroCol').src='guide/thanksgiving-02.webp';
   var se=seasonal();var h=location.hash.match(/t=([a-z]+)/);
@@ -435,7 +439,7 @@ function filtered(){return S.pages.filter(function(p){
   if(S.q){var hay=(p.title+' '+themeName(p.theme)+' '+STYLES[p.style]).toLowerCase();if(S.q.split(/\s+/).some(function(w){return hay.indexOf(w)<0}))return false}
   return true})}
 function cardHTML(p){var f=S.favs.indexOf(p.id)>=0,b=S.book.indexOf(p.id)>=0;
-  return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="thumb/'+p.id+'.webp" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3><a href="'+pageUrl(p)+'" data-open>'+p.title+'</a></h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Favorite" aria-pressed="'+f+'">♥</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button></div></article>'}
+  return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="'+thumbSrc(p)+'" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3><a href="'+pageUrl(p)+'" data-open>'+p.title+'</a></h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Favorite" aria-pressed="'+f+'">♥</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button></div></article>'}
 function render(){S.list=filtered();var g=$('#grid');
   $('#secTitle').textContent=S.onlyFav?'Your favorites':(S.q?'Search results':(S.theme==='all'?'All coloring pages':themeName(S.theme)));
   $('#secCount').textContent=S.list.length+(S.list.length===1?' page':' pages');
@@ -461,7 +465,7 @@ document.addEventListener('keydown',function(e){var top=$$('.ov.open').pop();if(
 
 /* ---------- page composer ---------- */
 function fontsReady(){return (document.fonts&&document.fonts.load)?Promise.all([document.fonts.load('700 60px Fredoka'),document.fonts.load('700 30px Nunito')]).catch(function(){}):Promise.resolve()}
-function compose(page,o){return Promise.all([loadImg('art/'+page.id+'.webp'),(o.guide!=='off'&&hasGuide(page.id))?loadImg('guide/'+page.id+'.webp').catch(function(){return null}):null,fontsReady()]).then(function(r){
+function compose(page,o){return Promise.all([loadImg(artSrc(page)),(o.guide!=='off'&&hasGuide(page.id))?loadImg('guide/'+page.id+'.webp').catch(function(){return null}):null,fontsReady()]).then(function(r){
   var art=r[0],gimg=r[1],P=PAPER[o.paper]||PAPER.letter,c=document.createElement('canvas');c.width=P.w;c.height=P.h;var x=c.getContext('2d');
   x.fillStyle='#fff';x.fillRect(0,0,P.w,P.h);x.imageSmoothingQuality='high';
   var m=72,top=m,bottom=P.h-m,ink='#1D1B2F';
@@ -503,7 +507,7 @@ function run(msg,fn){busy(msg);return tick().then(fn).catch(function(e){console.
 var pvTok=0;
 function openDetail(id){S.cur=S.byId[id];if(!S.cur)return;T('open_page',{page_id:id,theme:S.cur.theme,style:S.cur.style});T('page_view',{page_title:S.cur.title+' Coloring Page',page_location:location.origin+location.pathname.replace(/index\.html$/,'')+pageUrl(S.cur)});if(S.list.indexOf(S.cur)<0)S.list=S.pages.filter(function(p){return p.theme===S.cur.theme});open('#ovDetail');history.replaceState(null,'','#p='+id);fillDetail()}
 function fillDetail(){var p=S.cur;$('#dTitle').textContent=p.title;var b=$('#dBadge');b.className='badge s-'+p.style;b.textContent=STYLES[p.style];$('#dTheme').textContent=themeName(p.theme)+' · '+STYLE_HINT[p.style];
-  var g=hasGuide(p.id);$('#optGuide').style.display=g?'':'none';
+  var g=hasGuide(p.id);$('#optGuide').style.display=g?'':'none';$('#dShare').style.display=p.src?'none':'';
   $('#dSw').innerHTML=(g&&S.opts.guide==='full')?(S.pal[p.id]||[]).map(function(h){return '<span class="sw" style="background:'+h+'" title="'+nameOf(h)+'"></span>'}).join(''):'';
   $$('#ovDetail .seg').forEach(function(seg){var k=seg.dataset.opt;$$('button',seg).forEach(function(bt){bt.setAttribute('aria-pressed',String(S.opts[k])===bt.dataset.v)})});
   $$('#ovDetail input[data-opt]').forEach(function(i){i.checked=!!S.opts[i.dataset.opt]});$('#dWho').value=S.opts.who||'';
@@ -527,6 +531,42 @@ $('#rSend').addEventListener('click',function(){var t=$('#rIdea').value.replace(
   var day=new Date().toISOString().slice(0,10),log=store.get('req',{d:day,n:0});if(log.d!==day)log={d:day,n:0};if(log.n>=3){toast('That is 3 requests today. Come back tomorrow!');return}
   var fd=new FormData();fd.append(REQ_FIELD,'['+reqStyle+'] '+t);$('#rSend').disabled=true;
   fetch(REQ_URL,{method:'POST',mode:'no-cors',body:fd}).catch(function(){}).then(function(){$('#rSend').disabled=false;log.n++;store.set('req',log);T('request_page',{style:reqStyle});$('#rIdea').value='';$('#rForm').style.display='none';$('#rDone').style.display=''})});
+/* ---------- instant pages: type an idea, get a page ---------- */
+var MINE={key:'mine',name:'My Pages',emoji:'🪄'},MINE_MAX=24,INSTANT={on:false,left:0},MDB=null;
+function mdb(){if(MDB)return MDB;MDB=new Promise(function(res,rej){try{var r=indexedDB.open('fcp',1);r.onupgradeneeded=function(){r.result.createObjectStore('mine',{keyPath:'id'})};r.onsuccess=function(){res(r.result)};r.onerror=function(){rej(r.error)}}catch(e){rej(e)}});return MDB}
+function mineAll(){return mdb().then(function(db){return new Promise(function(res){var q=db.transaction('mine').objectStore('mine').getAll();q.onsuccess=function(){res(q.result||[])};q.onerror=function(){res([])}})}).catch(function(){return []})}
+function mineTx(fn){return mdb().then(function(db){return new Promise(function(res){var t=db.transaction('mine','readwrite');fn(t.objectStore('mine'));t.oncomplete=res;t.onerror=res;t.onabort=res})}).catch(function(){})}
+function addMine(pg){if(!themeName('mine')){S.themes.unshift(MINE);var all=$('.tab[data-t="all"]');if(all)all.insertAdjacentHTML('afterend','<button class="tab" role="tab" data-t="mine" aria-selected="false"><span aria-hidden="true">'+MINE.emoji+'</span>'+MINE.name+'</button>')}
+  S.pages.unshift(pg);S.byId[pg.id]=pg;var old=S.pages.filter(function(p){return p.src}).slice(MINE_MAX);
+  old.forEach(function(p){S.pages.splice(S.pages.indexOf(p),1);delete S.byId[p.id];[S.favs,S.book].forEach(function(l){var i=l.indexOf(p.id);if(i>=0)l.splice(i,1)})});
+  if(old.length){store.set('favs',S.favs);store.set('book',S.book)}
+  return mineTx(function(st){st.put(pg);old.forEach(function(p){st.delete(p.id)})})}
+/* Clean the drawing: pure black and white, trim the empty edges, center it on a 3:4 sheet. */
+function cleanArt(src){return new Promise(function(res,rej){var im=new Image();im.onload=function(){try{
+  var w=im.naturalWidth,h=im.naturalHeight,c=document.createElement('canvas');c.width=w;c.height=h;var x=c.getContext('2d',{willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0);
+  var id=x.getImageData(0,0,w,h),d=id.data,x0=w,y0=h,x1=-1,y1=-1,dark=0,i,px,py,v;
+  for(py=0;py<h;py++)for(px=0;px<w;px++){i=(py*w+px)*4;v=d[i]*.299+d[i+1]*.587+d[i+2]*.114;v=v<=70?0:(v>=205?255:Math.round((v-70)*255/135));d[i]=d[i+1]=d[i+2]=v;d[i+3]=255;if(v<128){dark++;if(px<x0)x0=px;if(px>x1)x1=px;if(py<y0)y0=py;if(py>y1)y1=py}}
+  var share=dark/(w*h);if(x1<0||share<.004||share>.45||(x1-x0)<w*.2||(y1-y0)<h*.2)throw new Error('blank or too dark');
+  x.putImageData(id,0,0);var W=1500,H=2000,m=56,cw=x1-x0+1,ch=y1-y0+1,k=Math.min((W-2*m)/cw,(H-2*m)/ch),o=document.createElement('canvas');o.width=W;o.height=H;var y=o.getContext('2d');y.fillStyle='#fff';y.fillRect(0,0,W,H);y.imageSmoothingQuality='high';y.drawImage(c,x0,y0,cw,ch,(W-cw*k)/2,(H-ch*k)/2,cw*k,ch*k);
+  res(o.toDataURL('image/webp',.9))}catch(e){rej(e)}};im.onerror=function(){rej(new Error('bad image'))};im.src=src})}
+function ideaTitle(t){t=t.replace(/[.!?]+$/,'');if(t.length>44)t=t.slice(0,44).replace(/\s+\S*$/,'')+'…';return t.charAt(0).toUpperCase()+t.slice(1)}
+function instantUI(){var on=INSTANT.on;$('#rNow').style.display=on?'':'none';$('#rSend').classList.toggle('pri',!on);$('#rSend').textContent=on?'Or ask us to add it to the site':'Send my request';
+  $('#rTitle').textContent=on?'Make your own coloring page':'Request a coloring page';$('#reqBtn').innerHTML=on?MINE.emoji+' Draw my idea':'✏️ Request a page';
+  $('#rHint').textContent=on?'Type what you want and we will draw it while you wait, in about a minute. Then print it, save it or color it right here.':"Tell us what to draw. If we can draw it, we'll add it to the site for free. We make a batch of new pages every day.";
+  var l=$('#rLeft');l.style.display=on?'':'none';l.textContent=INSTANT.left>0?(INSTANT.left+' free instant '+(INSTANT.left===1?'page':'pages')+' left today'):'You have used your free instant pages for today.';$('#rNow').disabled=on&&INSTANT.left<=0}
+function instantCheck(){return fetch('/api/make/status',{cache:'no-store'}).then(function(r){return r.ok?r.json():{ok:false}}).then(function(j){INSTANT.on=!!(j&&j.ok);INSTANT.left=(j&&j.left)||0;instantUI()}).catch(function(){})}
+instantCheck();
+var WAITS=['Sharpening the pencils…','Sketching your idea…','Inking the lines…','Erasing the smudges…','Almost there…'];
+$('#rNow').addEventListener('click',function(){var t=$('#rIdea').value.replace(/\s+/g,' ').trim();if(t.length<4){toast('Tell us a little more about what to draw.');return}
+  var b=$('#rStyle button[aria-pressed="true"]'),style=(b&&b.dataset.k)||'whimsical',k=0,ctl=window.AbortController?new AbortController():null,msg='';
+  T('instant_make',{style:style});busy(WAITS[0]);var iv=setInterval(function(){k=Math.min(k+1,WAITS.length-1);$('#busyMsg').textContent=WAITS[k]},9000),to=setTimeout(function(){if(ctl)ctl.abort()},170000);
+  fetch('/api/make',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({idea:t,style:style}),signal:ctl?ctl.signal:undefined})
+  .then(function(r){return r.json().catch(function(){return {}}).then(function(j){if(!r.ok){msg=j.message||'';throw new Error(j.error||'failed')}return j})})
+  .then(function(j){var d=j.data&&j.data[0]&&j.data[0].b64_json;if(!d)throw new Error('empty');$('#busyMsg').textContent='Tidying it up…';return cleanArt('data:image/'+(j.output_format||'webp')+';base64,'+d)})
+  .then(function(src){var pg={id:'mine-'+Date.now(),theme:'mine',style:style,title:ideaTitle(t),src:src,t:Date.now()};return addMine(pg).then(function(){return pg})})
+  .then(function(pg){T('instant_done',{style:style});INSTANT.left=Math.max(0,INSTANT.left-1);instantUI();$('#rIdea').value='';close('#ovReq');S.theme='mine';S.onlyFav=false;S.q='';$('#q').value='';$$('.tab').forEach(function(x){x.setAttribute('aria-selected',x.dataset.t==='mine')});render();openDetail(pg.id)})
+  .catch(function(e){console.error(e);T('instant_fail',{reason:String(e&&e.message||e).slice(0,40)});toast(msg||'The drawing did not come out. Please try again.');instantCheck()})
+  .then(function(){clearInterval(iv);clearTimeout(to);idle()})});
 (function(){var d=new Date(),m=d.getMonth(),day=d.getDate();if((m===10&&day>=20)||(m===11&&day<=25))$('#adventBtn').style.display=''})();
 $('#dPrint').addEventListener('click',function(){var p=S.cur;T('print',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Sending to your printer…',function(){return sheetFor(p,S.opts).then(function(c){idle();return printCanvases([c],S.opts.paper)})})});
 $('#dPdf').addEventListener('click',function(){var p=S.cur;T('pdf',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Making your PDF…',function(){return sheetFor(p,S.opts).then(function(c){return makePdf([c],S.opts.paper,slug(p))}).then(function(){toast('PDF saved')})})});
@@ -547,7 +587,7 @@ function setTool(t){ST.tool=t;$$('#stTools .ico').forEach(function(b){b.setAttri
 function setZoom(z){ST.zoom=z;var e=$('#easel'),base=Math.min(e.clientWidth-30,(Math.min(window.innerHeight*.84,900))*CW/CH);stC.style.width=Math.round(base*z)+'px';$$('#stZoom button').forEach(function(b){b.setAttribute('aria-pressed',+b.dataset.v===z)})}
 function redraw(){stX.globalCompositeOperation='source-over';stX.fillStyle='#fff';stX.fillRect(0,0,CW,CH);stX.drawImage(paint,0,0);stX.globalCompositeOperation='multiply';stX.drawImage(artW,0,0);stX.globalCompositeOperation='source-over'}
 function snap(){try{ST.undo.push(pX.getImageData(0,0,CW,CH));if(ST.undo.length>6)ST.undo.shift()}catch(e){}}
-function openStudio(page){T('color_online',{page_id:page.id});run('Opening the crayons…',function(){return loadImg('art/'+page.id+'.webp').then(function(art){ST.page=page;ST.art=art;ST.undo=[];
+function openStudio(page){T('color_online',{page_id:page.id});run('Opening the crayons…',function(){return loadImg(artSrc(page)).then(function(art){ST.page=page;ST.art=art;ST.undo=[];
   var ax=artW.getContext('2d',{willReadFrequently:true});ax.fillStyle='#fff';ax.fillRect(0,0,CW,CH);ax.imageSmoothingQuality='high';ax.drawImage(art,0,0,CW,CH);
   var d=ax.getImageData(0,0,CW,CH).data,m=new Uint8Array(CW*CH);for(var i=0,j=0;i<m.length;i++,j+=4)m[i]=d[j]>=196?1:0;ST.mask=m;
   pX.clearRect(0,0,CW,CH);$('#stTitle').textContent=page.title;
@@ -586,12 +626,12 @@ window.addEventListener('resize',function(){if($('#ovStudio').classList.contains
 function openBook(){renderBook();open('#ovBook')}
 $('#bookBtn').addEventListener('click',openBook);$('#fab').addEventListener('click',openBook);
 function renderBook(){var l=$('#bList');$('#bTitle').textContent='My coloring book ('+S.book.length+')';
-  l.innerHTML=S.book.map(function(id){var p=S.byId[id];return '<div class="bitem"><img loading="lazy" src="thumb/'+id+'.webp" alt="'+p.title+'"><button data-rm="'+id+'" aria-label="Remove '+p.title+'">✕</button></div>'}).join('');
+  l.innerHTML=S.book.map(function(id){var p=S.byId[id];return '<div class="bitem"><img loading="lazy" src="'+thumbSrc(p)+'" alt="'+p.title+'"><button data-rm="'+id+'" aria-label="Remove '+p.title+'">✕</button></div>'}).join('');
   l.style.display=S.book.length?'':'none';$('#bHint').style.display=S.book.length?'none':'';
   ['#bPdf','#bPrint','#bClear'].forEach(function(s){$(s).disabled=!S.book.length})}
 $('#bList').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){toggleBook(b.dataset.rm);renderBook()}});
 $('#bClear').addEventListener('click',function(){S.book.slice().forEach(function(id){var i=S.book.indexOf(id);S.book.splice(i,1);syncCard(id)});store.set('book',S.book);counts();renderBook()});
-function cover(paper,pages){return Promise.all(pages.slice(0,4).map(function(p){return loadImg('art/'+p.id+'.webp')}).concat([fontsReady()])).then(function(im){var P=PAPER[paper],c=document.createElement('canvas');c.width=P.w;c.height=P.h;var x=c.getContext('2d'),ink='#1D1B2F';x.fillStyle='#fff';x.fillRect(0,0,P.w,P.h);x.imageSmoothingQuality='high';
+function cover(paper,pages){return Promise.all(pages.slice(0,4).map(function(p){return loadImg(artSrc(p))}).concat([fontsReady()])).then(function(im){var P=PAPER[paper],c=document.createElement('canvas');c.width=P.w;c.height=P.h;var x=c.getContext('2d'),ink='#1D1B2F';x.fillStyle='#fff';x.fillRect(0,0,P.w,P.h);x.imageSmoothingQuality='high';
   x.strokeStyle=ink;x.lineWidth=10;x.setLineDash([2,34]);x.lineCap='round';x.strokeRect(110,110,P.w-220,P.h-220);x.setLineDash([]);
   x.fillStyle=ink;x.textAlign='center';x.textBaseline='middle';var title=($('#bName').value||'My Coloring Book').trim();var fs=190;x.font='700 '+fs+'px Fredoka, "Trebuchet MS", sans-serif';while(x.measureText(title).width>P.w-420&&fs>70){fs-=8;x.font='700 '+fs+'px Fredoka, "Trebuchet MS", sans-serif'}x.fillText(title,P.w/2,420);
   var who=$('#bFor').value.trim();x.font='700 64px Nunito, sans-serif';x.fillText(who?('Made for '+who):(pages.length+' pages to color'),P.w/2,590);
