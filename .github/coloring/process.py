@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Download generated coloring art and turn it into web/print assets.
 
-queue.tsv lines:  KIND <tab> PAGE_ID <tab> STAMP     (KIND = L line art, C colored guide)
+queue.tsv lines:  KIND <tab> PAGE_ID <tab> STAMP     (KIND = L line art, C colored guide,
+  A colored guide made by coloring the page's own raw line art: it gets the same crop and centering as the line art,
+    so it lines up with art/ and thumb/)
 """
 import sys, os, io, json, colorsys, datetime, http.client, urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -115,8 +117,35 @@ def palette(rgb):
     return ["#%02x%02x%02x" % tuple(int(round(v)) for v in c) for c in picked]
 
 
-def guide(data, out, pid):
+def raw_box(data):
+    """Crop box of a raw line-art file as fractions (top, bottom, left, right), the same box line_art() trims to."""
+    g = np.asarray(flat(data).convert("L"), dtype=np.float32)
+    a = np.clip((g - 70.0) / (205.0 - 70.0), 0, 1)
+    dark = a < 0.55
+    rows = np.where(dark.sum(1) > 2)[0]
+    cols = np.where(dark.sum(0) > 2)[0]
+    h, w = dark.shape
+    if not len(rows) or not len(cols):
+        return (0, 1, 0, 1)
+    return (rows[0] / h, (rows[-1] + 1) / h, cols[0] / w, (cols[-1] + 1) / w)
+
+
+def aligned(rgb, box):
+    """Crop a coloring of the raw line art to the line art's box and center it on the page like line_art()."""
+    t, b, l, r = box
+    w, h = rgb.size
+    im = rgb.crop((round(l * w), round(t * h), round(r * w), round(b * h)))
+    s = min((W - 2 * M) / im.width, (H - 2 * M) / im.height)
+    im = im.resize((max(1, round(im.width * s)), max(1, round(im.height * s))), Image.LANCZOS)
+    page = Image.new("RGB", (W, H), "white")
+    page.paste(im, ((W - im.width) // 2, (H - im.height) // 2))
+    return page
+
+
+def guide(data, out, pid, box=None):
     rgb = flat(data)
+    if box:
+        rgb = aligned(rgb, box)
     rgb.resize((510, 680), Image.LANCZOS).save(os.path.join(out, "guide", pid + ".webp"), quality=74, method=6)
     return palette(rgb)
 
@@ -136,14 +165,14 @@ def main(queue, out):
         parts = line.split()
         if len(parts) == 2 and parts[0] == "D":
             day = parts[1]
-        elif len(parts) == 4 and parts[0] in ("L", "C"):
+        elif len(parts) == 4 and parts[0] in ("L", "C", "A"):
             kind, idx, uuid, hint = parts
-            jobs[(kind, ids.get(idx, idx))] = (uuid, day, hint)  # later lines replace earlier ones
+            jobs[("C" if kind == "A" else kind, ids.get(idx, idx))] = (uuid, day, hint, kind == "A")  # later lines replace earlier ones
     todo = [(k, pid) + v for (k, pid), v in jobs.items() if done.get(k + ":" + pid, "").split("|")[0][-36:] != v[0] or not done[k + ":" + pid].endswith("|" + VER)]
     print("to process:", len(todo))
 
     def work(job):
-        kind, pid, uuid, day, hint = job
+        kind, pid, uuid, day, hint, al = job
         try:
             stamp = resolve(day, hint, uuid)
             if not stamp:
@@ -152,13 +181,19 @@ def main(queue, out):
             if kind == "L":
                 line_art(data, out, pid)
                 return job, stamp, None, None
-            return job, stamp, guide(data, out, pid), None
+            box = None
+            if al:
+                lst = done.get("L:" + pid, "").split("|")[0]
+                if not lst:
+                    return job, None, None, "no line art to align to"
+                box = raw_box(fetch(lst))
+            return job, stamp, guide(data, out, pid, box), None
         except Exception as e:  # noqa
             return job, None, None, repr(e)
 
     missing = []
     with ThreadPoolExecutor(8) as ex:
-        for (kind, pid, uuid, day, hint), stamp, p, err in ex.map(work, todo):
+        for (kind, pid, uuid, day, hint, al), stamp, p, err in ex.map(work, todo):
             if err:
                 missing.append(kind + ":" + pid)
                 print("MISSING", kind, pid, uuid, err, flush=True)
