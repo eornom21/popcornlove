@@ -291,7 +291,7 @@ async function teamImg(tid, env) {
   const v = await env.KV.getWithMetadata("team:img:" + tid, "stream");
   if (!v || !v.value) return new Response("not found", { status: 404 });
   // A drawn page comes back as OpenAI's JSON ({data:[{b64_json}]}); the team page and the Action decode it.
-  return new Response(v.value, { headers: { "content-type": (v.metadata && v.metadata.type) || "image/png", "cache-control": "private, max-age=600" } });
+  return new Response(v.value, { headers: { "content-type": (v.metadata && v.metadata.type) || "image/png", "cache-control": "no-store" } });
 }
 async function team(q, env, u, ctx) {
   const path = u.pathname.slice(10); // after /api/team/
