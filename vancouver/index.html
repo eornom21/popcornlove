@@ -109,10 +109,10 @@ h2.sec small{font-family:var(--body);font-weight:600;letter-spacing:0;text-trans
 .wxnow i{font-style:normal;font-size:34px}.wxnow b{font-size:22px;color:var(--navy)}
 .small{font-size:13px;color:var(--muted)}
 /* heads-up */
-.hu{border:2px solid #ecc566;background:#fff8e6;border-radius:18px;padding:12px 14px;margin:10px 0}
-.hu h3{font-size:16px;color:#7a3d00;font-weight:800;line-height:1.25}
-.hu p{font-size:14.5px;margin-top:4px;color:#4d3a10}
-.hu p b{color:#1f5b45}
+.hu{border:2px solid #c9dcd6;background:#f1f7f4;border-radius:18px;padding:12px 14px;margin:10px 0}
+.hu h3{font-size:16px;color:#1f5b45;font-weight:800;line-height:1.25}
+.hu p{font-size:14.5px;margin-top:4px;color:var(--ink)}
+.hu p b{color:var(--navy)}
 /* checklists */
 .chk{list-style:none}
 .chk li{display:flex;gap:11px;align-items:flex-start;padding:10px 2px;border-bottom:1px dashed var(--line)}
@@ -199,7 +199,7 @@ nav.tabs button.on i{filter:none;opacity:1}
   </div>
   <h2 class="sec">❄️ Weather <small id="wx-src"></small></h2>
   <div class="card c3" id="wx"><div class="small">Loading Vancouver weather…</div></div>
-  <h2 class="sec">⚠️ Fix before we go <small>5 things</small></h2>
+  <h2 class="sec">✏️ Changed from the poster <small>5 things</small></h2>
   <div id="heads"></div>
   <h2 class="sec">✅ Book ahead <small class="prog" id="p-book"></small></h2>
   <div class="card"><ul class="chk" id="l-book"></ul></div>
@@ -258,7 +258,7 @@ nav.tabs button.on i{filter:none;opacity:1}
   <h2 class="sec">🎪 Christmas Market hours <small>our dates</small></h2>
   <div class="card c2" style="border-color:#e3a59c">
     <div class="kv"><b>Thu Dec 3</b><span>4:00 – 9:30 PM</span><b>Fri Dec 4</b><span>4:00 – 9:30 PM</span><b>Sat Dec 5</b><span>11:30 AM – 10:00 PM</span><b>Sun Dec 6</b><span>11:30 AM – 9:30 PM</span></div>
-    <p class="small" style="margin-top:8px">Jack Poole Plaza, 1055 Canada Place — about a 15-minute walk from Woodward's. Single tickets need a 30-minute arrival window; stay as long as you like. Kids 6 and under are free. Confirm the hours when you pick your slot.</p>
+    <p class="small" style="margin-top:8px">Jack Poole Plaza, 1055 Canada Place — about a 15-minute walk from Woodward's. Single tickets need a 30-minute arrival window; stay as long as you like. Kids 6 and under are free. Friday's 4:00 slot is sold out; ours is 4:30.</p>
   </div>
   <h2 class="sec">💱 Money</h2>
   <div class="card">
@@ -275,7 +275,7 @@ nav.tabs button.on i{filter:none;opacity:1}
   <div class="card"><img class="poster" id="poster-thumb" src="img/poster.jpg" alt="Courtenay's Vancouver Christmas Market Trip poster" loading="lazy"><div class="btns"><button class="btn" id="open-poster2">Open full size</button><button class="btn pri" id="shareapp">Share this app</button></div></div>
 </section>
 
-<div class="foot">♡ Same family ♡ New traditions ♡ Vancouver ♡<small>Itinerary by Courtenay · Checked Nov 27, 2026 — hours change, so tap through before you go.</small></div>
+<div class="foot">♡ Same family ♡ New traditions ♡ Vancouver ♡<small>Itinerary by Courtenay · Updated Nov 27, 2026 — hours change, so tap through before you go.</small></div>
 </main>
 </div>
 
@@ -355,34 +355,33 @@ var DAYS=[
   {m:685,tm:'11:25 AM',ic:'✈️',tt:'Flight UA 8504',sb:'SFO 11:25 AM → YVR 2:47 PM · Air Canada Express/Jazz'},
   {m:920,tm:'~3:20 PM',ic:'🚆',tt:'Airport to downtown',sb:'Canada Line SkyTrain to Waterfront Station (under 30 min), then ~7 min walk to Woodward\'s W43.',li:['Tap a credit card or Apple Pay at the gate — one per adult. Kids ride free.','Sit at the very front: there\'s no driver, so the kids get the windshield.'],map:P.wf},
   {m:1005,tm:'~4:45 PM',ic:'🏠',tt:'Check into Woodward\'s W43',sb:'128 West Cordova Street, Gastown',home:1},
-  {m:1020,tm:'Afternoon',ic:'🚌',tt:'Hop-on hop-off bus tour',sb:'Stanley Park, Gastown, Chinatown, Granville Island, Canada Place — 60 min loop.',flag:'<b>Won\'t work today.</b> In winter the last buses leave mid-afternoon and we land at 2:47. Swap in the Gastown stroll below, or ride it Friday in the 1–3 PM gap (hourly from Canada Place in winter).',links:[['Big Bus Vancouver','https://bigbustours.com/en/vancouver']]},
   {m:1035,tm:'~5:15 PM',ic:'⛸️',tt:'Explore Gastown & Robson Square',sb:'Or just stroll. It\'s dark by 4:15, so Water Street is all lights.',li:['Steam Clock whistles every 15 minutes — 3 minutes from the door.','Lee\'s Donuts is right across from it (open to 7 PM).','Robson Square rink: free skating, rentals about $5, usually open 9–9 from the start of December. Check that it\'s open first.','The Christmas Market is open tonight 4–9:30 and Thursdays are calm — a good night to sneak a first look.'],map:P.steam,links:[['Rink status','https://www.robsonsquare.com/']]},
-  {m:1110,tm:'~6:30 PM',ic:'🍴',tt:'Dinner: Water St. Café',sb:'300 Water Street — across from the Steam Clock. Kitchen closes 9 PM.',star:1,map:P.water,tel:'+16046892832',links:[['Reserve','https://www.exploretock.com/waterstcafe']],alt:'thu-dinner'}
+  {m:1125,tm:'6:45 PM',ic:'🍴',tt:'Dinner: Water St. Café',sb:'300 Water Street — across from the Steam Clock. Table for 5 at 6:45, under Nate.',star:1,bk:1,map:P.water,tel:'+16046892832',links:[['Reserve','https://www.exploretock.com/waterstcafe']],alt:'thu-dinner'}
  ]},
  {c:'c2',n:'Day 2',d:'Friday, Dec 4',s:'Fri',num:'4',t:'Stanley Park + Market + Family Photos 🎄',sub:'Family photo session at Stanley Park ♡',art:'img/polaroid.jpg',items:[
   {m:495,tm:'~8:15 AM',ic:'☕',tt:'Breakfast: Nemesis Coffee',sb:'Gastown, 302 W Hastings St. Counter service — quick, which is what a 10:00 photo call needs.',star:1,map:P.nemesis,alt:'fri-breakfast'},
   {m:570,tm:'9:30 AM',ic:'🚕',tt:'Taxi to Brockton Point',sb:'About 10 minutes. Leave a cushion — everyone in photo outfits, coats off at the last second.',add:1},
   {m:600,tm:'10:00 – 11:00 AM',ic:'🌲',tt:'Family Photo Session',sb:'Brockton Point, Stanley Park — totem poles, lighthouse, skyline behind you.',map:P.brock},
   {m:660,tm:'11:00 AM – 12:30 PM',ic:'🔭',tt:'Vancouver Aquarium',sb:'About a 12-minute walk through the park. Open 10–5; book a timed ticket online.',li:['Sea otters, sea lions, touch pools, 4D theatre. Most families take 90 minutes to 2 hours.','Cards only — no cash.'],map:P.aqua,links:[['Tickets','https://www.vanaqua.org/visit']]},
-  {m:765,tm:'~12:45 PM',ic:'🍴',tt:'Lunch — open slot',sb:'The poster skips lunch. Three good ways to fill it.',add:1,alt:'fri-lunch'},
-  {m:840,tm:'2:00 – 4:00 PM',ic:'🛋️',tt:'Open window',sb:'Rest at the Airbnb, or see "If there\'s a spare hour" on the Fun tab.',add:1},
-  {m:960,tm:'4:00 PM',ic:'🎪',tt:'Vancouver Christmas Market',sb:'90+ huts and the 5-storey Christmas Pyramid at Jack Poole Plaza.',flag:'<b>Opens at 4:00 PM on Fridays</b>, not in the afternoon. Book the 4:00–4:30 arrival slot: you walk in as the lights come on and before the Friday-night crowd.',li:['Carousel, walk-through 35-foot tree, snow showers every 30 minutes, Santa\'s Workshop.','Kinderpunsch for the kids, Glühwein for the grown-ups.','Very little cover — hoods up if it rains.'],map:P.market,links:[['Tickets','https://tickets.vancouverchristmasmarket.com/']]},
-  {m:1050,tm:'Snack',ic:'🍩',tt:'Snack: Lee\'s Donuts',sb:'199 Water St, across from the Steam Clock. Open daily 8 AM – 7 PM.',flag:'<b>Cartems Donuterie closed for good in February 2025.</b> Lee\'s is the swap — a Vancouver classic since 1979, two minutes from the Airbnb. Get the Honey Dip.',map:P.lees},
-  {m:1125,tm:'~6:45 PM',ic:'🍴',tt:'Dinner: Old Spaghetti Factory',sb:'53 Water St, Gastown. There\'s a streetcar inside. Book it — Friday night.',star:1,map:P.osf,tel:'+16046841288',alt:'fri-dinner'}
+  {m:780,tm:'~1:00 PM',ic:'🍴',tt:'Lunch: Tap & Barrel · Convention Centre',sb:'At Jack Poole Plaza, right beside the Market. Kids\' menu, harbour views, seaplanes landing outside. About a 10-minute taxi from the Aquarium.',add:1,map:P.tapcc,alt:'fri-lunch'},
+  {m:855,tm:'2:15 – 4:30 PM',ic:'🛋️',tt:'Seawall, Canada Place, or a rest',sb:'You\'re already on the waterfront: watch the seaplanes, walk Canada Place, or head back to the Airbnb for an hour (15-minute walk).',add:1,map:P.canpl},
+  {m:990,tm:'4:30 PM',ic:'🎪',tt:'Vancouver Christmas Market',sb:'90+ huts and the 5-storey Christmas Pyramid at Jack Poole Plaza. Gates open at 4:00 on Fridays; that first slot sold out, so ours is the 4:30–5:00 arrival. The lights are on by then.',li:['Carousel, walk-through 35-foot tree, snow showers every 30 minutes, Santa\'s Workshop.','Kinderpunsch for the kids, Glühwein for the grown-ups.','Very little cover — hoods up if it rains.'],map:P.market,links:[['Tickets','https://tickets.vancouverchristmasmarket.com/']]},
+  {m:1095,tm:'~6:15 PM',ic:'🍩',tt:'Snack: Lee\'s Donuts',sb:'199 Water St, across from the Steam Clock — it\'s on the walk to dinner. A Vancouver classic since 1979. Grab a box of Honey Dips before they close at 7.',map:P.lees},
+  {m:1110,tm:'6:30 PM',ic:'🍴',tt:'Dinner: Old Spaghetti Factory',sb:'53 Water St, Gastown. Table for 5 at 6:30, under Nate — we asked for a spot in or near the streetcar.',star:1,bk:1,map:P.osf,tel:'+16046841288',alt:'fri-dinner'}
  ]},
  {c:'c3',n:'Day 3',d:'Saturday, Dec 5',s:'Sat',num:'5',t:'Granville Island + Capilano Canyon Lights 🌲',sub:'Lights, mountains & magic ♡',art:'img/bridge.jpg',items:[
-  {m:540,tm:'9:00 AM',ic:'🍴',tt:'Breakfast: Café Medina',sb:'780 Richards St. Opens 9:00 on weekends.',star:1,flag:'<b>Saturday waits run up to 90 minutes.</b> Reserve on Tock (by donation, up to 3 weeks ahead — Saturday is bookable now) or be at the door at 9:00. It\'s famous for Belgian waffles.',map:P.medina,links:[['Reserve','https://www.exploretock.com/medinacafe']],alt:'sat-breakfast'},
+  {m:540,tm:'9:00 AM',ic:'🍴',tt:'Breakfast: Café Medina',sb:'780 Richards St. Opens 9:00 on weekends.',star:1,flag:'<b>Not reserved yet.</b> A 9:00 table for 5 is open on Tock; a C$50 donation holds it. Without one, weekend waits can run 90 minutes. Famous for Belgian waffles.',map:P.medina,links:[['Reserve','https://www.exploretock.com/medinacafe/search?date=2026-12-05&size=5&time=09%3A00']],alt:'sat-breakfast'},
   {m:630,tm:'~10:30 AM',ic:'⛴️',tt:'Granville Island Public Market',sb:'Aquabus from downtown (10–15 min).',li:['Food stalls, artisans, Kids Market.','The original Lee\'s Donuts stall is here.'],map:P.gi,links:[['Aquabus dock',null,'Aquabus Hornby Street Dock']]},
   {m:750,tm:'~12:30 PM',ic:'🍴',tt:'Lunch: Granville Island Public Market',sb:'Graze. On the list: Nanaimo bars and candied salmon.',star:1,alt:'sat-lunch'},
   {m:885,tm:'~2:45 PM',ic:'🚌',tt:'Head to Capilano',sb:'Free shuttle from Canada Place, or a 20–25 minute taxi over the Lions Gate Bridge.',add:1,map:P.canpl,links:[['Shuttle schedule','https://capbridge.com/shuttle-schedule']]},
-  {m:930,tm:'3:30 – 4:00 PM',ic:'🌉',tt:'Capilano Suspension Bridge Park — Canyon Lights',sb:'Arrive in daylight, stay as the lights come on around 4. Allow 1.5–2 hours.',li:['Book the timed ticket now — Saturday slots are limited. Park is open 11 AM – 10 PM.','Bridge, Cliffwalk and Treetops are all lit. Ask for the kids\' Activity Card (stickers → gingerbread house).','Free ponchos if it rains.'],map:P.cap,tel:'+16049857474',links:[['Tickets','https://www.capbridge.com/']]},
+  {m:930,tm:'3:30 – 4:00 PM',ic:'🌉',tt:'Capilano Suspension Bridge Park — Canyon Lights',sb:'Arrive in daylight, stay as the lights come on around 4. Allow 1.5–2 hours.',li:['Tickets still to buy: the 3:30–4:00 PM arrival window is open. Park hours 11 AM – 10 PM.','Bridge, Cliffwalk and Treetops are all lit. Ask for the kids\' Activity Card (stickers → gingerbread house).','Free ponchos if it rains.'],map:P.cap,tel:'+16049857474',links:[['Tickets','https://www.capbridge.com/tickets-and-hours/']]},
   {m:1110,tm:'~6:30 PM',ic:'🍴',tt:'Dinner (Courtenay & kids)',sb:'Near the Airbnb — Gastown options.',alt:'sat-dinner'},
   {m:1170,tm:'Evening',ic:'🌙',tt:'Kids down early',sb:'With Courtenay. Grown-ups\' night-out ideas are on the Eat tab.',alt:'sat-night'}
  ]},
  {c:'c4',n:'Day 4',d:'Sunday, Dec 6',s:'Sun',num:'6',t:'Last Wander + Departure ✈',sub:'Back in San Francisco by evening — no jet lag, no school Monday! ♡',art:'img/seaplane.jpg',items:[
   {m:540,tm:'~9:00 AM',ic:'☕',tt:'Breakfast: Café Medina',sb:'780 Richards St (opens 9:00 Sundays) — or Nemesis Coffee in Gastown.',star:1,map:P.medina,alt:'sun-breakfast'},
-  {m:615,tm:'~10:15 AM',ic:'🎁',tt:'Last stroll',sb:'Browse Robson Street or Water Street for gifts.',flag:'<b>The Christmas Market doesn\'t open until 11:30 AM on Sunday</b> — too late with a 12:30 airport arrival. Get the market gifts Friday (or a second visit Thursday or Saturday night).',map:P.steam},
-  {m:660,tm:'Snack',ic:'🍩',tt:'Snack: Lee\'s Donuts',sb:'The Cartems swap. Gastown shop opens at 8; there\'s also one at the airport.',map:P.lees},
+  {m:615,tm:'~10:15 AM',ic:'🎁',tt:'Last stroll',sb:'Water Street and Robson Street for gifts, and one more Steam Clock whistle. (The Market doesn\'t open until 11:30 on Sundays, so market gifts are a Friday job.)',map:P.steam},
+  {m:660,tm:'Snack',ic:'🍩',tt:'Snack: Lee\'s Donuts',sb:'Gastown shop opens at 8; there\'s also one at the airport.',map:P.lees},
   {m:705,tm:'11:45 AM',ic:'🚆',tt:'Leave for the airport',sb:'Canada Line from Waterfront (no airport fee in this direction), or a taxi van with the bags.',add:1,map:P.wf},
   {m:750,tm:'12:30 – 1:00 PM',ic:'♡',tt:'Be at the airport',sb:'You clear U.S. customs here in Vancouver, before the gate.',map:P.yvr},
   {m:880,tm:'2:40 PM',ic:'✈️',tt:'Flight UA 8577',sb:'YVR 2:40 PM → SFO 4:06 PM'}
@@ -391,21 +390,21 @@ var DAYS=[
 
 /* ---------- data: heads-ups ---------- */
 var HEADS=[
- ['Cartems Donuterie is gone','It closed for good in February 2025. It\'s on the poster twice. <b>Swap: Lee\'s Donuts, 199 Water St</b> — across from the Steam Clock, two minutes from the Airbnb.'],
- ['No hop-on hop-off bus on Thursday','Winter buses stop mid-afternoon; we land at 2:47 PM. <b>Swap: Gastown lights + Steam Clock + donuts</b>, or a first look at the Market (open 4–9:30 Thursday, the calm night).'],
- ['Friday: the Market opens at 4:00 PM','The poster has it in the afternoon. <b>Book the 4:00–4:30 slot</b> and use 12:30–4 for lunch and a rest.'],
- ['Sunday: the Market opens at 11:30 AM','That\'s too late for a 12:30 airport arrival. <b>Do the last-day gifts on Water Street or Robson</b>, and buy market gifts Friday.'],
- ['Café Medina on a Saturday','Walk-in waits can hit 90 minutes. <b>Reserve on Tock now</b> (by donation) or be there at 9:00 sharp.']
+ ['Donuts: Lee\'s instead of Cartems','Cartems closed for good in February 2025. <b>Lee\'s Donuts, 199 Water St</b>, is across from the Steam Clock, two minutes from the Airbnb.'],
+ ['Thursday: Gastown instead of the bus tour','Winter hop-on hop-off buses stop mid-afternoon and we land at 2:47 PM. <b>Steam Clock, lights and donuts</b> on foot instead. The Market is open 4–9:30 if anyone wants a first look.'],
+ ['Friday: lunch added, Market at 4:30','The Market doesn\'t open until 4:00 PM on Fridays. <b>Lunch at Tap & Barrel</b> next door, then the seawall or a rest, then in at 4:30 (the 4:00 slot sold out).'],
+ ['Sunday: gifts on Water Street','The Market opens at 11:30 AM Sunday, too late for a 12:30 airport arrival. <b>Last wander is Gastown and Robson.</b>'],
+ ['Saturday: Café Medina with a reservation','Walk-in waits can hit 90 minutes on weekends, so <b>this one needs its reservation</b> (see Book ahead).']
 ];
 
 /* ---------- data: checklists ---------- */
 var BOOK=[
- ['cap','Capilano Canyon Lights — Sat Dec 5','Timed ticket, 3:30–4:00 arrival. Saturdays go first.','https://www.capbridge.com/'],
- ['mkt','Christmas Market — Fri Dec 4, 4:00 PM slot','Kids 6 and under free, no ticket needed.','https://tickets.vancouverchristmasmarket.com/'],
- ['med','Café Medina — Sat Dec 5, 9:00 AM','Tock, by donation.','https://www.exploretock.com/medinacafe'],
- ['osf','Old Spaghetti Factory — Fri dinner','Call (604) 684-1288.','tel:+16046841288'],
- ['wsc','Water St. Café — Thu dinner','Tock. Kitchen closes at 9.','https://www.exploretock.com/waterstcafe'],
- ['aq','Vancouver Aquarium — Fri 11:00 AM','Timed entry; limited tickets at the door.','https://www.vanaqua.org/visit'],
+ ['wsc','Water St. Café — Thu Dec 3, 6:45 PM','Table for 5 under Nate. Free to cancel.',null,1],
+ ['osf','Old Spaghetti Factory — Fri Dec 4, 6:30 PM','Table for 5 under Nate, with a note asking for the streetcar.',null,1],
+ ['mkt','Christmas Market — Fri Dec 4, 4:30 PM slot','4:00 is sold out. 3 adult + 1 youth ticket (6 and under free), about C$61.','https://tickets.vancouverchristmasmarket.com/'],
+ ['cap','Capilano Canyon Lights — Sat Dec 5, 3:30–4:00 PM','3 adults + 2 children, C$305.30 with tax.','https://www.capbridge.com/tickets-and-hours/'],
+ ['med','Café Medina — Sat Dec 5, 9:00 AM','Table for 5 is open; a C$50 donation holds it.','https://www.exploretock.com/medinacafe/search?date=2026-12-05&size=5&time=09%3A00'],
+ ['aq','Vancouver Aquarium — Fri Dec 4, 11:00 AM entry','3 adults + 2 children, timed entry.','https://www.vanaqua.org/visit/tickets'],
  ['pp','Find all five passports','Check the expiry dates today, not Wednesday night.'],
  ['ph','Phones: turn on Canada roaming','And tell the card companies if yours still asks.'],
  ['ci','Check in with Air Canada, 24 hours out','Wed Dec 2, 11:25 AM.']
@@ -436,7 +435,7 @@ var HUNT=[
 var EXTRAS=[
  ['🛍️','Canada Place & the seawall','Free. Seaplanes, cruise-ship pier, mountains — right next to the Market.',P.canpl],
  ['⛸️','Robson Square skating','Free with your own skates, about $5 to rent; helmets included for kids. Check it\'s open.',P.robson],
- ['🚌','The hop-on hop-off bus','If the kids still want it: Friday 1–3 PM is the only slot it fits. Hourly in winter from Canada Place.',P.canpl],
+ 
  ['🍩','Steam Clock + Lee\'s Donuts','Ten minutes, zero planning, always a hit.',P.steam]
 ];
 
@@ -444,7 +443,7 @@ var EXTRAS=[
 function o(id,name,tag,meta,pros,cons,x){x=x||{};x.id=id;x.name=name;x.tag=tag;x.meta=meta;x.pros=pros;x.cons=cons;return x}
 var SLOTS=[
  {id:'thu-dinner',day:'Thu',t:'Thursday dinner',w:'Travel day. Everyone\'s tired; it\'s dark and probably wet. Close matters most.',opts:[
-  o('water','Water St. Café','star','On the poster · 4 min walk · $$–$$$',['Across from the Steam Clock — ask for a window','Fresh pasta, BC salmon: something for everyone','Takes reservations'],['Dressier and pricier than a travel-day dinner needs','Kitchen closes at 9 PM','Kids are ordering pasta'],{p:P.water,tel:'+16046892832',res:'https://www.exploretock.com/waterstcafe'}),
+  o('water','Water St. Café','star','On the poster · Booked Thu 6:45 PM · 4 min walk · $$–$$$',['Across from the Steam Clock — ask for a window','Fresh pasta, BC salmon: something for everyone','Takes reservations'],['Dressier and pricier than a travel-day dinner needs','Kitchen closes at 9 PM','Kids are ordering pasta'],{p:P.water,tel:'+16046892832',res:'https://www.exploretock.com/waterstcafe'}),
   o('steam','Steamworks Brew Pub','best','Best bet if the flight runs late · 6 min walk · $$',['Big, loud room — nobody notices tired kids','Pizza, burgers, fish and chips; harbour views','Open till midnight, so no clock-watching'],['It\'s a brewpub: noisy','Food is solid, not special','No promise of a kids\' menu — pizza covers it'],{p:P.steamworks,tel:'+16046892739',res:'https://steamworks.com/brew-pub/'}),
   o('taco','Tacofino Taco Bar','alt','Alternative · 2 min walk · $$',['Closest good dinner; the fish tacos are the thing','Burrito Bar take-out counter next door — carry it home','Fast'],['Bar energy picks up as the night goes on','Spicier menu than picky kids like','Entrance is off Blood Alley, a dim lane'],{p:P.tacofino,tel:'+16048997907'}),
   o('beppe','Di Beppe','alt','Alternative · 2 min walk · $$',['Pizza and pasta — the easy kid win','Takes bookings'],['Lively and loud at dinner','Tight tables for five'],{p:P.dibeppe})
@@ -460,14 +459,14 @@ var SLOTS=[
   o('home','Burritos + a rest at the Airbnb','alt','The low-key option · 2 min from the door · $',['Tacofino\'s Burrito Bar counter is quick','An hour of quiet before the Market pays off at 7 PM'],['Nothing new to see','Burritos twice if Thursday was tacos'],{p:P.tacofino})
  ]},
  {id:'fri-dinner',day:'Fri',t:'Friday dinner',w:'After the Market. Cold, happy, full of pretzels.',opts:[
-  o('osf','The Old Spaghetti Factory','star','On the poster · 3 min walk · $$',['A real streetcar and stained glass in the dining room','Kids\' meals come with bread, a drink and ice cream','Easy walk home'],['It\'s the chain you know: fine, not special','Friday waits without a booking'],{p:P.osf,tel:'+16046841288'}),
+  o('osf','The Old Spaghetti Factory','star','On the poster · Booked Fri 6:30 PM · 3 min walk · $$',['A real streetcar and stained glass in the dining room','Kids\' meals come with bread, a drink and ice cream','Easy walk home'],['It\'s the chain you know: fine, not special','Friday waits without a booking'],{p:P.osf,tel:'+16046841288'}),
   o('mkt','Make the Market dinner','best','Best bet if nobody wants to move · $$',['Bratwurst, schnitzel, raclette, Belgian fries, chimney cakes','No marching cold kids to a second stop','Kinderpunsch and Glühwein'],['Eating standing up, outdoors','It adds up fast','Almost no cover if it rains'],{p:P.market}),
   o('miku','Miku','alt','On Courtenay\'s list · 5 min from the Market · $$$',['Flame-seared sushi, waterfront room','The grown-up meal of the trip'],['Pricey','Not built for tired kids at 7 PM','Needs a reservation'],{p:'Miku Vancouver'}),
   o('dinesty','Dinesty Dumpling House','alt','On Courtenay\'s list · Robson St, taxi · $$',['Soup dumplings; kids can watch them being made','Shareable and good value'],['Ten-minute taxi each way','Loud and brisk'],{p:'Dinesty Dumpling House Robson Street'}),
   o('luigi','Ask for Luigi','alt','Alternative · 10 min walk east · $$–$$$',['The best pasta near Gastown','Takes bookings'],['Tiny room — five is a hard table','The walk east isn\'t one for kids after dark; taxi'],{p:P.luigi})
  ]},
  {id:'sat-breakfast',day:'Sat',t:'Saturday breakfast',w:'Big day: Granville Island, then Capilano by 3:30.',opts:[
-  o('med','Café Medina','star','On the poster · 15 min walk or short taxi · $$',['Michelin-recommended; the Belgian waffles are the reason','A real sit-down start to the biggest day'],['Weekend waits up to 90 minutes without a booking','Reserve on Tock or be there at 9:00','The opposite direction from Gastown'],{p:P.medina,res:'https://www.exploretock.com/medinacafe'}),
+  o('med','Café Medina','star','On the poster · 15 min walk or short taxi · $$',['Michelin-recommended; the Belgian waffles are the reason','A real sit-down start to the biggest day'],['Weekend waits up to 90 minutes without a booking','Reserve on Tock or be there at 9:00','The opposite direction from Gastown'],{p:P.medina,res:'https://www.exploretock.com/medinacafe/search?date=2026-12-05&size=5&time=09%3A00'}),
   o('gi-bk','Breakfast at Granville Island','best','Best bet if Medina isn\'t booked · $',['Skips a stop: go straight to the island','Lee\'s original stall opens at 8; bakeries and coffee all around','More market time before the crowds'],['Grazing, not a sit-down','Saturday tables are scarce'],{p:P.gi}),
   o('fork','Twisted Fork','alt','Alternative · Gastown · $$',['Sit-down brunch close to home: stuffed French toast, eggs benny'],['Small room, weekend line'],{p:'Twisted Fork Bistro'})
  ]},
@@ -517,7 +516,7 @@ function btns(it){
   return h?'<div class="btns">'+h+'</div>':'';
 }
 function itemHtml(it){
-  var tag=it.add?'<span class="tag add">added</span>':'';
+  var tag=(it.add?'<span class="tag add">added</span>':'')+(it.bk?'<span class="tag best">✓ booked</span>':'');
   return '<div class="it"><div class="ic">'+it.ic+'</div><div class="bd"><div class="tm">'+esc(it.tm)+'</div><div class="tt">'+esc(it.tt)+tag+'</div><div class="sb">'+esc(it.sb)+'</div>'+
     (it.li?'<ul>'+it.li.map(function(x){return'<li>'+esc(x)+'</li>'}).join('')+'</ul>':'')+
     (it.flag?'<div class="flag">⚠️ '+it.flag+'</div>':'')+btns(it)+'</div></div>';
@@ -540,7 +539,7 @@ function renderToday(){
     c.innerHTML='<div class="big">'+before+(before===1?' sleep':' sleeps')+' to go</div><div class="lbl">Wheels up Thursday, Dec 3 · 11:25 AM</div>';
     var f=DAYS[0].items[0];
     w.className='card now';
-    w.innerHTML='<div class="k">First up</div><div class="t">'+esc(f.tt)+'</div><div class="s">Thursday '+esc(f.tm)+' — '+esc(f.sb)+'</div><div class="btns"><button class="btn pri" data-go="plan">See the plan</button><button class="btn" data-scroll="heads">What to fix</button></div>';
+    w.innerHTML='<div class="k">First up</div><div class="t">'+esc(f.tt)+'</div><div class="s">Thursday '+esc(f.tm)+' — '+esc(f.sb)+'</div><div class="btns"><button class="btn pri" data-go="plan">See the plan</button><button class="btn" data-scroll="heads">What changed</button></div>';
   }else if(idx>=0){
     var d=DAYS[idx],cur=null,nx=null;
     d.items.forEach(function(it){if(it.flag&&/Won't work/.test(it.flag))return;if(it.m<=n.min)cur=it;else if(!nx)nx=it});
@@ -566,8 +565,9 @@ function renderList(el,key,items,prog){
   var st=get(key,{});
   $(el).innerHTML=items.map(function(x){
     var link=x[3]?(' <a href="'+x[3]+'"'+(x[3].indexOf('tel:')===0?'':' target="_blank" rel="noopener"')+' data-stop>'+(x[3].indexOf('tel:')===0?'Call':'Open')+' ›</a>'):'';
+    if(x[4])return'<li class="done"><div class="box">✓</div><div class="tx" style="opacity:1;text-decoration:none">'+esc(x[1])+'<small><b style="color:var(--green)">Booked.</b> '+esc(x[2])+'</small></div></li>';
     return'<li class="'+(st[x[0]]?'done':'')+'" data-k="'+key+'" data-id="'+x[0]+'"><div class="box">✓</div><div class="tx">'+esc(x[1])+(x[2]?'<small>'+esc(x[2])+link+'</small>':(link?'<small>'+link+'</small>':''))+'</div></li>'}).join('');
-  var n=items.filter(function(x){return st[x[0]]}).length;
+  var n=items.filter(function(x){return st[x[0]]||x[4]}).length;
   if(prog)$(prog).textContent=n+' / '+items.length;
 }
 function renderHunt(){
