@@ -56,8 +56,8 @@ h1 .squig svg{position:absolute;left:-2%;bottom:-.18em;width:104%;height:.3em;ov
 .stage{position:relative;justify-self:center;width:min(100%,360px);aspect-ratio:3/4;transform:rotate(3deg)}
 .stage .sheet{position:absolute;inset:0;border:3px solid var(--ink);border-radius:14px;background:#fff;box-shadow:8px 8px 0 var(--ink);overflow:hidden}
 .stage .sheet img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.stage .sheet img.col{animation:wipe 7s ease-in-out infinite}
-@keyframes wipe{0%,12%{clip-path:inset(0 100% 0 0)}45%,62%{clip-path:inset(0 0 0 0)}92%,100%{clip-path:inset(0 100% 0 0)}}
+.stage .sheet img.col{clip-path:inset(0 100% 0 0)}
+.stage .sheet .heroCur{position:absolute;inset:0;background:#fff}
 .stage .back{position:absolute;inset:0;border:3px solid var(--ink);border-radius:14px;background:var(--sun);transform:rotate(-9deg) translate(-14px,6px)}
 .stage .back.b2{background:var(--gum);transform:rotate(-4deg) translate(-6px,4px)}
 .stage .tag{position:absolute;right:-14px;top:-16px;z-index:3;font:700 15px/1 var(--display);background:var(--leaf);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:9px 13px;transform:rotate(8deg);box-shadow:3px 3px 0 var(--ink)}
@@ -98,6 +98,7 @@ h1 .squig svg{position:absolute;left:-2%;bottom:-.18em;width:104%;height:.3em;ov
 .ico{flex:1;height:36px;white-space:nowrap;min-width:0;border:2px solid var(--ink);border-radius:10px;background:var(--paper);font:800 13px/1 var(--text);color:var(--ink);display:flex;align-items:center;justify-content:center;gap:5px}
 .ico.on{background:var(--tomato);color:#fff}
 .ico.add.on{background:var(--leaf)}
+.ico.shr{flex:0 0 36px}
 .acts .fav,.acts [data-peek]{flex:0 0 40px}
 .ico:active{transform:translateY(1px)}
 .empty{grid-column:1/-1;text-align:center;padding:50px 10px;color:var(--muted);font-weight:700}
@@ -209,7 +210,7 @@ footer b{color:var(--ink)}
   .pv{padding-top:calc(64px + env(safe-area-inset-top,0px))}
   .easel{padding-top:calc(58px + env(safe-area-inset-top,0px))}
 }
-@media (prefers-reduced-motion:reduce){.stage .sheet img.col{animation:none;clip-path:inset(0 50% 0 0)}html{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){.stage .sheet img.col{clip-path:inset(0 50% 0 0)}html{scroll-behavior:auto}}
 @media print{
   html,body{background:#fff!important;margin:0!important;padding:0!important}
   body>*:not(#printHost){display:none!important}
@@ -240,7 +241,7 @@ footer b{color:var(--ink)}
     </div>
     <div class="stage" aria-hidden="true">
       <div class="back"></div><div class="back b2"></div>
-      <div class="sheet"><img src="thumb/thanksgiving-02.webp" alt=""><img class="col" id="heroCol" alt=""></div>
+      <div class="sheet"><img id="heroNext" alt=""><div class="heroCur" id="heroCur"><img id="heroLine" src="thumb/christmas-05.webp" alt=""><img class="col" id="heroCol" alt=""></div></div>
       <div class="tag">color guide included</div>
     </div>
   </div>
@@ -278,7 +279,7 @@ footer b{color:var(--ink)}
     </div>
     <div class="side">
       <div>
-        <h2 id="dTitle"></h2>
+        <h2 id="dTitle"></h2><div id="dRenameBox" style="display:none;margin:4px 0 6px"><input class="field" id="dRenameIn" maxlength="40" aria-label="Page name"> <button class="btn sm" id="dRenameOk">Save name</button></div><button class="btn sm" id="dRename" style="display:none;margin:4px 0 6px">✎ Rename</button>
         <div class="sub"><span class="badge" id="dBadge"></span><span id="dTheme"></span></div>
       </div>
       <div class="opt" id="optGuide">
@@ -449,7 +450,7 @@ Promise.all([getJSON('catalog.json'),getJSON('ready.json').catch(function(){retu
   var mine=(a[3]||[]).sort(function(x,y){return y.t-x.t});if(mine.length){S.themes.unshift(MINE);S.pages=mine.concat(S.pages)}
   S.pages.forEach(function(p){S.byId[p.id]=p});
   S.favs=S.favs.filter(function(i){return S.byId[i]});S.book=S.book.filter(function(i){return S.byId[i]});
-  if(hasGuide('thanksgiving-02'))$('#heroCol').src='guide/thanksgiving-02.webp';
+  heroRun();
   var se=seasonal();var h=location.hash.match(/t=([a-z]+)/);
   S.theme=(h&&themeName(h[1]))?h[1]:(se||'all');
   buildTabs(se);buildChips();render();counts();
@@ -471,7 +472,7 @@ function filtered(){return S.pages.filter(function(p){
   if(S.q){var hay=(p.title+' '+themeName(p.theme)+' '+STYLES[p.style]).toLowerCase();if(S.q.split(/\s+/).some(function(w){return hay.indexOf(w)<0}))return false}
   return true})}
 function cardHTML(p){var f=S.favs.indexOf(p.id)>=0,b=S.book.indexOf(p.id)>=0;
-  return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="'+thumbSrc(p)+'" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3><a href="'+pageUrl(p)+'" data-open>'+p.title+'</a></h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Favorite" aria-pressed="'+f+'">♥</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button></div></article>'}
+  return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="'+thumbSrc(p)+'" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3><a href="'+pageUrl(p)+'" data-open>'+p.title+'</a></h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Favorite" aria-pressed="'+f+'">♥</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button>'+(p.src?'':'<button class="ico shr" data-share aria-label="Share '+p.title+' with a friend" title="Share with a friend">↗</button>')+'</div></article>'}
 function render(){S.list=filtered();var g=$('#grid');
   $('#secTitle').textContent=S.onlyFav?'Your favorites':(S.q?'Search results':(S.theme==='all'?'All coloring pages':themeName(S.theme)));
   $('#secCount').textContent=S.list.length+(S.list.length===1?' page':' pages');var kn=$('#mineNote');if(kn)kn.style.display=(S.theme==='mine'&&!S.onlyFav&&!S.q)?'':'none';
@@ -480,6 +481,7 @@ function render(){S.list=filtered();var g=$('#grid');
 $('#grid').addEventListener('click',function(e){var c=e.target.closest('.card');if(!c)return;var id=c.dataset.id;
   if(e.target.closest('[data-fav]')){toggleFav(id);return}
   if(e.target.closest('[data-add]')){toggleBook(id);return}
+  if(e.target.closest('[data-share]')){sharePage(S.byId[id]);return}
   if(e.target.closest('[data-peek]')){var im=$('.peek',c);if(im&&!im.src)im.src=im.dataset.src;c.classList.toggle('peeking');return}
   if(e.target.closest('[data-open]')){e.preventDefault();openDetail(id)}});
 function syncCard(id){var c=$('.card[data-id="'+id+'"]');if(!c)return;var f=S.favs.indexOf(id)>=0,b=S.book.indexOf(id)>=0;var fb=$('[data-fav]',c),ab=$('[data-add]',c);fb.classList.toggle('on',f);fb.setAttribute('aria-pressed',f);ab.classList.toggle('on',b);ab.setAttribute('aria-pressed',b);ab.textContent=b?'✓ In book':'＋ Book'}
@@ -494,6 +496,24 @@ function open(id){$(id).classList.add('open');document.body.style.overflow='hidd
 function close(id){$(id).classList.remove('open');if(!$('.ov.open'))document.body.style.overflow=''}
 $$('.ov').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o||e.target.closest('[data-close]')){if(o.id==='ovDetail'&&history.state&&history.state.ov){history.back();return}close('#'+o.id);if(o.id==='ovDetail')history.replaceState(null,'',location.pathname+location.search)}})});
 document.addEventListener('keydown',function(e){var top=$$('.ov.open').pop();if(!top)return;if(e.key==='Escape'){close('#'+top.id)}else if(top.id==='ovDetail'&&!/INPUT/.test(e.target.tagName)){if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)}});
+
+/* ---------- hero: color a page left to right, then wipe it away to reveal the next one ----------
+   Only pages whose color guide is a true coloring of the same drawing belong in this list. */
+var HERO_IDS=['christmas-05','christmas-06','christmas-01','christmas-02','thanksgiving-02'];
+function heroRun(){var ids=HERO_IDS.filter(hasGuide);if(!ids.length)return;var i=0,cur=$('#heroCur'),line=$('#heroLine'),col=$('#heroCol'),nxt=$('#heroNext');
+  function load(src){return new Promise(function(r){var im=new Image();im.onload=im.onerror=function(){r()};im.src=src})}
+  function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
+  function anim(el,from,to,ms){el.style.clipPath=from;if(!el.animate)return wait(ms).then(function(){el.style.clipPath=to});var a=el.animate([{clipPath:from},{clipPath:to}],{duration:ms,easing:'ease-in-out',fill:'forwards'});return a.finished.then(function(){el.style.clipPath=to;a.cancel()},function(){el.style.clipPath=to})}
+  function set(id){line.src='thumb/'+id+'.webp';col.src='guide/'+id+'.webp';col.style.clipPath='inset(0 100% 0 0)'}
+  set(ids[0]);
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){col.style.clipPath='inset(0 50% 0 0)';return}
+  (function loop(){var id=ids[i],nid=ids[(i+1)%ids.length];
+    Promise.all([load('guide/'+id+'.webp'),load('thumb/'+nid+'.webp')]).then(function(){return wait(900)})
+    .then(function(){return anim(col,'inset(0 100% 0 0)','inset(0 0% 0 0)',2600)})
+    .then(function(){return wait(1900)})
+    .then(function(){nxt.src='thumb/'+nid+'.webp';return anim(cur,'inset(0 0 0 0%)','inset(0 0 0 100%)',2200)})
+    .then(function(){set(nid);return load('thumb/'+nid+'.webp')})
+    .then(function(){return wait(60)}).then(function(){cur.style.clipPath='inset(0 0 0 0%)';i=(i+1)%ids.length;loop()})})()}
 
 /* ---------- page composer ---------- */
 function fontsReady(){return (document.fonts&&document.fonts.load)?Promise.all([document.fonts.load('700 60px Fredoka'),document.fonts.load('700 30px Nunito')]).catch(function(){}):Promise.resolve()}
@@ -539,7 +559,7 @@ function run(msg,fn){busy(msg);return tick().then(fn).catch(function(e){console.
 var pvTok=0;
 function openDetail(id){S.cur=S.byId[id];if(!S.cur)return;T('open_page',{page_id:id,theme:S.cur.theme,style:S.cur.style});T('page_view',{page_title:S.cur.title+' Coloring Page',page_location:location.origin+location.pathname.replace(/index\.html$/,'')+pageUrl(S.cur)});if(S.list.indexOf(S.cur)<0)S.list=S.pages.filter(function(p){return p.theme===S.cur.theme});var was=$('#ovDetail').classList.contains('open');open('#ovDetail');if(!was&&!/p=/.test(location.hash))history.pushState({ov:1},'','#p='+id);else history.replaceState(history.state,'','#p='+id);fillDetail()}
 function fillDetail(){var p=S.cur;$('#dTitle').textContent=p.title;var b=$('#dBadge');b.className='badge s-'+p.style;b.textContent=STYLES[p.style];$('#dTheme').textContent=themeName(p.theme)+' · '+STYLE_HINT[p.style];
-  var g=hasGuide(p.id);$('#optGuide').style.display=g?'':'none';$('#dShare').style.display=p.src?'none':'';var rd=$('#dRedo'),canRedo=!!(p.src&&p.redo&&p.idea&&INSTANT.on);rd.style.display=canRedo?'':'none';rd.textContent='↻ Redraw (1 free)';if(canRedo)tsLoad('#dTs');
+  var g=hasGuide(p.id);$('#optGuide').style.display=g?'':'none';$('#dShare').style.display='';$('#dShare').textContent=p.src?'↗ Send to a friend':'↗ Share with a friend';$('#dRename').style.display=p.src?'':'none';$('#dRenameBox').style.display='none';var rd=$('#dRedo'),canRedo=!!(p.src&&p.redo&&p.idea&&INSTANT.on);rd.style.display=canRedo?'':'none';rd.textContent='↻ Redraw (1 free)';if(canRedo)tsLoad('#dTs');
   $('#dSw').innerHTML=(g&&S.opts.guide==='full')?(S.pal[p.id]||[]).map(function(h){return '<span class="sw" style="background:'+h+'" title="'+nameOf(h)+'"></span>'}).join(''):'';
   $$('#ovDetail .seg').forEach(function(seg){var k=seg.dataset.opt;$$('button',seg).forEach(function(bt){bt.setAttribute('aria-pressed',String(S.opts[k])===bt.dataset.v)})});
   $$('#ovDetail input[data-opt]').forEach(function(i){i.checked=!!S.opts[i.dataset.opt]});$('#dWho').value=S.opts.who||'';
@@ -623,7 +643,8 @@ $('#dRedo').addEventListener('click',function(){var p=S.cur,btn=$('#dRedo');if(!
 $('#dPrint').addEventListener('click',function(){var p=S.cur;T('print',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Sending to your printer…',function(){return sheetFor(p,S.opts).then(function(c){idle();return printCanvases([c],S.opts.paper)})})});
 $('#dPdf').addEventListener('click',function(){var p=S.cur;T('pdf',{page_id:p.id,guide:S.opts.guide,layout:S.opts.layout});run('Making your PDF…',function(){return sheetFor(p,S.opts).then(function(c){return makePdf([c],S.opts.paper,slug(p))}).then(function(){toast('PDF saved')})})});
 $('#dPng').addEventListener('click',function(){var p=S.cur;T('image',{page_id:p.id});run('Saving the image…',function(){return sheetFor(p,S.opts).then(function(c){return toBlob(c)}).then(function(b){saveBlob(b,slug(p)+'.png');toast('Image saved')})})});
-$('#dShare').addEventListener('click',function(){var p=S.cur,url=location.origin+location.pathname.replace(/index\.html$/,'')+pageUrl(p),data={title:p.title+' coloring page',text:'Free coloring page: '+p.title,url:url};
+function sharePage(p){var url=location.origin+location.pathname.replace(/index\.html$/,'')+pageUrl(p),data={title:p.title+' coloring page',text:'Free coloring page: '+p.title,url:url};T('share',{page_id:p.id,from:'card'});if(navigator.share){navigator.share(data).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast('Link copied. Paste it to a friend!')})}else{prompt('Copy this link',url)}}
+$('#dShare').addEventListener('click',function(){var p=S.cur;if(p.src){T('share_mine',{});run('Getting your picture ready…',function(){return sheetFor(p,S.opts).then(function(c){return toBlob(c)}).then(function(b){var nm=slug(p)+'.png',f=new File([b],nm,{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]})){idle();return navigator.share({files:[f],title:p.title}).catch(function(){})}saveBlob(b,nm);toast('Picture saved. Send it to a friend!')})});return}var url=location.origin+location.pathname.replace(/index\.html$/,'')+pageUrl(p),data={title:p.title+' coloring page',text:'Free coloring page: '+p.title,url:url};
   T('share',{page_id:p.id});if(navigator.share){navigator.share(data).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast('Link copied')})}else{prompt('Copy this link',url)}});
 $('#dFav').addEventListener('click',function(){toggleFav(S.cur.id)});
 $('#dAdd').addEventListener('click',function(){toggleBook(S.cur.id)});
@@ -673,6 +694,10 @@ $('#stSave').addEventListener('click',function(){T('save_colored',{page_id:ST.pa
   saveBlob(b,name);toast('Picture saved')})})});
 $('#stPrint').addEventListener('click',function(){T('print_colored',{page_id:ST.page.id});run('Sending to your printer…',function(){var src=colored(),P=PAPER[S.opts.paper],c=document.createElement('canvas');c.width=P.w;c.height=P.h;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,P.w,P.h);x.imageSmoothingQuality='high';var s=Math.min((P.w-144)/src.width,(P.h-144)/src.height);x.drawImage(src,(P.w-src.width*s)/2,(P.h-src.height*s)/2,src.width*s,src.height*s);idle();return printCanvases([c],S.opts.paper)})});
 window.addEventListener('resize',function(){if($('#ovStudio').classList.contains('open'))setZoom(ST.zoom)});
+
+$('#dRename').addEventListener('click',function(){$('#dRenameIn').value=S.cur.title;$('#dRename').style.display='none';$('#dRenameBox').style.display='';$('#dRenameIn').focus();$('#dRenameIn').select()});
+function saveRename(){var p=S.cur,v=($('#dRenameIn').value||'').replace(/\s+/g,' ').trim().slice(0,40);$('#dRenameBox').style.display='none';$('#dRename').style.display=p&&p.src?'':'none';if(!p||!p.src||!v||v===p.title)return;p.title=v;T('rename_mine',{});mineTx(function(st){st.put(p)});$('#dTitle').textContent=v;render();preview();toast('Renamed')}
+$('#dRenameOk').addEventListener('click',saveRename);$('#dRenameIn').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();saveRename()}if(e.key==='Escape'){e.stopPropagation();$('#dRenameBox').style.display='none';$('#dRename').style.display=''}});
 
 /* ---------- book ---------- */
 function openBook(){renderBook();open('#ovBook')}
