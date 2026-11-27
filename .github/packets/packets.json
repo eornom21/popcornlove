@@ -1,11 +1,14 @@
 {
  "art": {
-  "husky": "20261127_040313_b80aed23-0d6f-41fe-8400-38d54e36f82b",
-  "schoolhouse": "20261127_040312_856d6043-77b3-48f2-bf47-785bf54aaab8"
+  "owl-1": "20261127_043716_e1b02775-e73e-4cfe-b3eb-8c032605ea33",
+  "owl-2": "20261127_043716_797a5297-07d1-4d88-9ed3-9e382f40fac3",
+  "owl-3": "20261127_043716_ddf85394-254f-47c3-bb3a-c5713cccc73f",
+  "owl-4": "20261127_043717_d61ccc68-d097-4a0b-b34b-20c5423eab8c",
+  "owl-5": "20261127_043716_9562a283-f387-48d9-bf79-63f22ad05eca"
  },
- "library": ["christmas-01", "christmas-09", "christmas-18", "christmas-22"],
+ "library": [],
  "schools": [
-  {"slug": "hughson-elementary-x7k2", "name": "Hughson Elementary", "mascot": "husky"},
-  {"slug": "samuel-vaughn-elementary-q4m9", "name": "Samuel Vaughn Elementary", "mascot": ""}
+  {"slug": "amador-elementary-dublin-r8w3", "name": "Amador Elementary",
+   "pages": [["owl-1", "Amador Elementary"], ["owl-2", "Merry Christmas, Owls!"], ["owl-3", "Amador Owls"], ["owl-4", "Happy Holidays, Amador!"], ["owl-5", "Amador Holiday Party"]]}
  ]
 }

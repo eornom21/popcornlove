@@ -171,21 +171,28 @@ def main():
     out = os.path.join(SITE, "schools"); os.makedirs(out, exist_ok=True)
     prev = os.path.join(HERE, "previews"); os.makedirs(prev, exist_ok=True)
     art = {k: fetch(v, cache) for k, v in cfg["art"].items()}
-    lib = [Image.open(os.path.join(SITE, "art", pid + ".webp")).convert("L") for pid in cfg["library"]]
-    lib_pages = [page(im) for im in lib]
+    lib = {pid: page(Image.open(os.path.join(SITE, "art", pid + ".webp")).convert("L")) for pid in cfg.get("library", [])}
     report = []
     for sc in cfg["schools"]:
         pages, ok = [], []
-        keys = ([sc["mascot"]] if sc.get("mascot") else []) + ["schoolhouse"]
-        for k in keys:
-            im, fitted = stamp_name(art[k], sc["name"])
-            ok.append(fitted)
-            pages.append(page(im))
-        pages += lib_pages
+        if sc.get("pages"):
+            # custom packet: [[art key, banner text], ...]
+            for k, text in sc["pages"]:
+                im, fitted = stamp_name(art[k], text)
+                ok.append(fitted)
+                pages.append(page(im))
+        else:
+            keys = ([sc["mascot"]] if sc.get("mascot") else []) + ["schoolhouse"]
+            for k in keys:
+                im, fitted = stamp_name(art[k], sc["name"])
+                ok.append(fitted)
+                pages.append(page(im))
+            pages += list(lib.values())
         rgb = [p.convert("RGB") for p in pages]
         rgb[0].save(os.path.join(out, sc["slug"] + ".pdf"), save_all=True, append_images=rgb[1:], resolution=DPI,
                     title="Christmas coloring pages for " + sc["name"], author="Make a Coloring Book")
-        pages[0].resize((PW // 3, PH // 3), Image.LANCZOS).save(os.path.join(prev, sc["slug"] + ".png"))
+        for i, p in enumerate(pages):
+            p.resize((PW // 4, PH // 4), Image.LANCZOS).save(os.path.join(prev, "%s-%d.png" % (sc["slug"], i + 1)))
         report.append({"slug": sc["slug"], "pages": len(pages), "banner_found": ok})
     json.dump(report, open(os.path.join(prev, "report.json"), "w"), indent=1)
     print(json.dumps(report, indent=1))
