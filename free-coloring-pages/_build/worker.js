@@ -961,6 +961,12 @@ async function orders(q, env, u, ctx) {
     if (o.extraPrint) return json({ error: "already", job: o.extraPrint });
     const P = PRODUCTS[o.product]; if (!P.gen && o.product !== "picked") return json({ error: "nope" }, 400);
     if (!o.pages) { o.pages = 4 + 2 * o.n; if (o.pages < 32) o.pages = 32; }
+    if (!o.coverPt) {
+      const d = await lulu(env, "POST", "/cover-dimensions/", { pod_package_id: POD, interior_page_count: o.pages, unit: "pt" });
+      if (!d.ok) return json({ error: "lulu", why: d.t.slice(0, 200) }, 502);
+      o.coverPt = [parseFloat(d.j.width), parseFloat(d.j.height)];
+    }
+    await oPut(env, o); // the print-file URLs read coverPt and pages from storage when Lulu fetches them
     const copy = Object.assign({}, o, { ship: "std", pay: Object.assign({}, o.pay, { ship: src.pay.ship, phone: src.pay.phone }) });
     const r = await luluSubmit(env, copy, "COPY");
     if (!r.ok) return json({ error: "lulu", why: r.why }, 502);
