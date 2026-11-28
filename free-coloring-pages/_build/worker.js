@@ -422,14 +422,17 @@ async function mailbox(q, env, u) {
 // ---------- OpenAI text planning ----------
 const PLAN_SCHEMA = { type: "object", additionalProperties: false, required: ["title", "dedication", "character", "pages"], properties: {
   title: { type: "string" }, dedication: { type: "string" }, character: { type: "string" },
-  pages: { type: "array", items: { type: "object", additionalProperties: false, required: ["caption", "scene"], properties: { caption: { type: "string" }, scene: { type: "string" } } } } } };
+  pages: { type: "array", items: { type: "object", additionalProperties: false, required: ["caption", "scene", "shot"], properties: { caption: { type: "string" }, scene: { type: "string" }, shot: { type: "string" } } } } } };
+// Every page gets its own framing and pose. Without this the drawings copy the reference's head angle and gaze page after page.
+const SHOT_RULES = "For every page also write 'shot', one sentence on how the picture is framed and posed: camera distance (close-up, medium, full body, or a wide view with the character small in a big scene); camera angle (eye level, from a little above, from low down, from behind or over the shoulder); the main character's body pose and action; which way their head is turned (three-quarter view to the left or right, side profile, turned away, tilted down at something, looking up); where they are looking (at the pet, at a thing in their hands, at another character, at something in the distance; straight at the viewer on no more than 3 pages); and their facial expression. " +
+  "Across the whole book: neighboring pages never share the same framing or head direction; the face is straight on toward the viewer on at most 3 pages; at least 8 pages show a three-quarter or side view; at least 3 show the character from behind, over the shoulder, or small in a wide scene; at least 3 are close-ups; use at least 8 different expressions (laughing, concentrating, surprised, proud, giggling, curious, determined, sleepy, amazed); the character is often off to one side, not always centered. Pets and friends turn and look in different directions too.";
 const PLAN_RULES = "You plan personalized coloring books for a family-friendly print shop. Every scene must work as black-and-white line art: one clear moment, a full scene, no text, signs, letters or numbers in the picture. " +
   "Never use characters from movies, TV, books, games or toys, real celebrities, sports teams, brands or logos: replace any the customer mentions with an original generic version (for example 'a friendly blue cartoon puppy'). " +
-  "Nothing scary, violent, romantic, crude or unkind. Describe the main character once in 'character' (age, build, hair, face, glasses, usual outfit), plus any pet or sidekick who recurs, so an illustrator draws them the same on every page; use only looks the customer gave plus neutral clothing. Use names exactly as written.";
-async function askJSON(env, system, user) {
+  "Nothing scary, violent, romantic, crude or unkind. Describe the main character once in 'character' (age, build, hair, face, glasses, usual outfit), plus any pet or sidekick who recurs, so an illustrator draws them the same on every page; use only looks the customer gave plus neutral clothing. Use names exactly as written. " + SHOT_RULES;
+async function askJSON(env, system, user, schema) {
   const models = [env.TEXT_MODEL || "gpt-5-mini", "gpt-4.1-mini"];
   for (const model of models) {
-    const body = { model, input: [{ role: "system", content: system }, { role: "user", content: user }], text: { format: { type: "json_schema", name: "plan", schema: PLAN_SCHEMA, strict: true } } };
+    const body = { model, input: [{ role: "system", content: system }, { role: "user", content: user }], text: { format: { type: "json_schema", name: "plan", schema: schema || PLAN_SCHEMA, strict: true } } };
     if (/^(gpt-5|o\d)/.test(model)) body.reasoning = { effort: "low" };
     const r = await fetch("https://api.openai.com/v1/responses", { method: "POST", headers: { authorization: "Bearer " + env.OPENAI_API_KEY, "content-type": "application/json" }, body: JSON.stringify(body) });
     if (!r.ok) { console.log("plan", model, r.status, (await r.text()).slice(0, 300)); continue; }
@@ -454,14 +457,60 @@ function levelFor(o) {
   if (o.product === "joke") return "whimsical";
   return STYLES[o.form.level] ? o.form.level : "whimsical";
 }
+// The attached reference is either the character model sheet (new books) or page 1 (older books).
+const IDENTITY_ONLY = "Copy only who they are: face shape, eyes, hair, build, glasses and clothes; for a pet the breed, size, ears and markings. Do NOT copy the reference's pose, head angle, gaze direction, facial expression, framing, camera distance or layout; those come only from the scene and shot below. ";
 function pagePrompt(o, n) {
   const sc = o.scenes[n - 1];
-  return (n > 1 ? "Use the attached coloring page only as the model for how the main character and any pet look (same face, hair, build and outfit; same breed, size and markings for the pet); draw a completely new picture of this scene. " : "") +
-    "Black and white coloring book page, portrait orientation. Scene: " + sc.scene + (o.character ? " Main character: " + o.character : "") + " " + STYLES[o.level] + " " + WHOLE + " " + TAIL + " " + RULES;
+  const ref = o.sheet && !(o.product === "idea" && n === 1)
+    ? "The attached image is a character model sheet, not a scene: it shows the same character several times only so you know what they look like. " + IDENTITY_ONLY + "Draw each character only once in this picture. Draw a completely new picture. "
+    : n > 1 ? "Use the attached coloring page only as the model for how the main character and any pet look. " + IDENTITY_ONLY + "Draw a completely new picture. " : "";
+  const shot = sc.shot ? " Framing and pose: " + sc.shot + " Follow this framing, head direction, gaze and expression exactly; they must be different from the reference." : "";
+  return ref + "Black and white coloring book page, portrait orientation. Scene: " + sc.scene + shot + (o.character ? " Main character: " + o.character : "") + " " + STYLES[o.level] + " " + WHOLE + " " + TAIL + " " + RULES;
+}
+// A turnaround of the main character (and pet). Every page and the cover copy identity from it, never a pose.
+function sheetPrompt(o) {
+  const lead = o.product === "idea"
+    ? "Make a character model sheet of the main subject in the attached drawing, keeping its design exactly. "
+    : "Character model sheet for an illustrator. ";
+  return lead + "Black and white line art on a plain white background. Show the main character five times in a row, full body, standing in a neutral pose: front view, three-quarter view facing left, side profile facing right, three-quarter view from behind, and a close-up of the head. Calm, relaxed, closed-mouth expression in every view, so the pages can give each moment its own expression. " +
+    "If there is a pet or sidekick, draw it below in front, side and three-quarter views. Same outfit and details in every view. No background, no scene, no text, no labels, no arrows. " +
+    (o.character ? "Character: " + o.character + " " : "") + "Line style to match (ignore anything it says about scenes or backgrounds): " + STYLES[o.level] + " " + WHOLE + " " + RULES;
 }
 function coverPrompt(o) {
-  return "Turn the attached coloring page into a full-color children's picture book cover illustration: the same main character, bright cheerful flat colors with clean outlines, a fun scene that sums up a book called \"" + o.title + "\". " +
+  const lead = o.sheet
+    ? "The attached image is a character model sheet. " + IDENTITY_ONLY + "Paint a full-color children's picture book cover illustration with the main character drawn once, in a lively new pose (three-quarter view, mid-action, delighted), "
+    : "Turn the attached coloring page into a full-color children's picture book cover illustration: the same main character, ";
+  return lead + "bright cheerful flat colors with clean outlines, a fun scene that sums up a book called \"" + o.title + "\". " +
     "Keep the top third of the picture simple open sky or plain background, because a title will be printed there. No text, letters, words, numbers or logos anywhere. Full bleed, no border, no frame. " + RULES;
+}
+
+// Redraw an existing book the new way: write a shot for every existing scene, draw a model sheet, redraw every page and the cover.
+// mode "hold": a printed book stops before Lulu (status "held") until KV "release:<id>" is set; "keep": a PDF just gets new pages (same link).
+const SHOTS_SCHEMA = { type: "object", additionalProperties: false, required: ["shots"], properties: { shots: { type: "array", items: { type: "string" } } } };
+async function redrawBook(env, o, mode) {
+  if (!o || !o.scenes || !o.scenes.length || !PRODUCTS[o.product].gen) return "not a drawn book";
+  const list = o.scenes.map((sc, i) => (i + 1) + ". " + sc.scene).join("\n");
+  const j = await askJSON(env, "You direct the drawings for a personalized coloring book. " + SHOT_RULES,
+    "Main character: " + (o.character || "") + "\n\nScenes:\n" + list + "\n\nWrite exactly " + o.scenes.length + " shots, one per scene, in the same order.", SHOTS_SCHEMA);
+  if (!j || !j.shots || j.shots.length < o.scenes.length) return "planner failed";
+  o.scenes.forEach((sc, i) => { sc.shot = clip(j.shots[i], 400); });
+  if (o.lulu) { (o.luluPast = o.luluPast || []).push(o.lulu.job); delete o.lulu; }
+  o.sheet = true; o.have = o.product === "idea" ? { 1: 1 } : {}; o.fails = {}; delete o.luluFails; o.status = "paid"; o.redrawn = (o.redrawn || 0) + 1;
+  if (mode === "hold" && o.format !== "pdf") o.holdPrint = true;
+  log(o, "redraw with model sheet (" + (mode || "keep") + ")");
+  await oPut(env, o); await activeSet(env, o.id, true);
+  return "ok";
+}
+async function adminFlags(env, notes) {
+  for (const kind of ["redraw:", "release:"]) {
+    const l = await env.KV.list({ prefix: kind, limit: 10 });
+    for (const k of l.keys) {
+      const id = k.name.slice(kind.length), mode = (await env.KV.get(k.name)) || ""; await env.KV.delete(k.name);
+      const o = await oGet(env, id); if (!o) { notes.push(k.name + " no order"); continue; }
+      if (kind === "redraw:") notes.push(k.name + " " + (await redrawBook(env, o, mode)));
+      else if (o.status === "held") { delete o.holdPrint; o.status = "ready"; log(o, "released to print"); await oPut(env, o); await activeSet(env, o.id, true); notes.push(k.name + " released"); }
+    }
+  }
 }
 
 // ---------- drafts and previews ----------
@@ -511,10 +560,10 @@ async function orderDraft(q, env) {
     const plan = await askJSON(env, PLAN_RULES, planPrompt(o));
     if (!plan || !plan.pages || plan.pages.length < 10) return json({ error: "upstream", message: "We couldn't plan the book just now. Please try again." }, 502);
     const want = product === "idea" ? 23 : 24;
-    const pages = plan.pages.slice(0, want).map((p) => ({ caption: clip(p.caption, 60), scene: clip(p.scene, 400) }));
+    const pages = plan.pages.slice(0, want).map((p) => ({ caption: clip(p.caption, 60), scene: clip(p.scene, 400), shot: clip(p.shot || "", 400) }));
     while (pages.length < want) pages.push(pages[pages.length % Math.max(1, pages.length)]);
     o.scenes = product === "idea" ? [{ caption: "Where it started", scene: f.idea }].concat(pages) : pages;
-    o.n = o.scenes.length; o.title = clip(plan.title, 40); o.dedication = clip(plan.dedication, 70); o.character = clip(plan.character, 400);
+    o.n = o.scenes.length; o.title = clip(plan.title, 40); o.dedication = clip(plan.dedication, 70); o.character = clip(plan.character, 400); o.sheet = true;
   }
   log(o, "draft " + product);
   await oPut(env, o);
@@ -535,8 +584,10 @@ async function orderUpload(q, env, u) {
 async function drawPage(env, o, n) {
   // n = page number, or "c" for the color cover art. Page 1 of "idea" is the customer's drawing (uploaded).
   let prompt, refs = null, size = PRINT_SIZE;
-  if (n === "c") { const p1 = await iGet(env, o.id, 1); if (!p1) return { ok: false, why: "no page 1" }; refs = [{ bytes: p1, type: "image/jpeg" }]; prompt = coverPrompt(o); size = "1536x2048"; }
-  else { prompt = pagePrompt(o, n); if (n > 1) { const p1 = await iGet(env, o.id, 1); if (p1) refs = [{ bytes: p1, type: "image/jpeg" }]; } }
+  const ref = async (k) => { const v = await iGet(env, o.id, k); return v ? [{ bytes: v, type: "image/jpeg" }] : null; };
+  if (n === "s") { prompt = sheetPrompt(o); size = "1536x1024"; if (o.product === "idea") { refs = await ref(1); if (!refs) return { ok: false, why: "no page 1" }; } }
+  else if (n === "c") { refs = (o.sheet && (await ref("s"))) || (await ref(1)); if (!refs) return { ok: false, why: "no reference" }; prompt = coverPrompt(o); size = "1536x2048"; }
+  else { prompt = pagePrompt(o, n); if (o.sheet && !(o.product === "idea" && n === 1)) { refs = await ref("s"); if (!refs) return { ok: false, why: "no sheet" }; } else if (n > 1) refs = await ref(1); }
   const d = await drawImage(env, prompt, { size, quality: env.PRINT_QUALITY || "medium", format: "jpeg", refs, who: "order-" + o.id });
   if (d.ok) await iPut(env, o, n, d.bytes, "image/jpeg");
   return d;
@@ -549,7 +600,11 @@ async function orderPreview(q, env) {
   if (redo) { if (o.redraws >= 3) return json({ error: "limit", message: "That's all the redraws for this preview." }, 429); o.redraws++; delete o.have[redo]; }
   if (!o.have[1] && o.product === "idea" && (await kvHas(env, iKey(o.id, 1)))) o.have[1] = 1;
   const jobs = [];
-  if (!o.have[1]) { const d = await drawPage(env, o, 1); if (!d.ok) return json({ error: d.blocked ? "blocked" : "upstream", message: d.blocked ? "Our safety check stopped a page. Try rewording." : "A page didn't come out. Please try again." }, 502); }
+  const bad = (d) => json({ error: d.blocked ? "blocked" : "upstream", message: d.blocked ? "Our safety check stopped a page. Try rewording." : "A page didn't come out. Please try again." }, 502);
+  if (o.sheet) {
+    if (!o.have.s) { const d = await drawPage(env, o, "s"); if (!d.ok) return bad(d); }
+    if (!o.have[1]) jobs.push(drawPage(env, o, 1));
+  } else if (!o.have[1]) { const d = await drawPage(env, o, 1); if (!d.ok) return bad(d); }
   if (!o.have.c) jobs.push(drawPage(env, o, "c"));
   if (!o.have[2]) jobs.push(drawPage(env, o, 2));
   await Promise.all(jobs);
@@ -663,7 +718,7 @@ async function orderStatus(env, u) {
   let o = await owned(env, u.searchParams.get("id"), u.searchParams.get("tok"));
   if (!o) return json({ error: "gone" }, 404);
   if (o.status === "draft" && o.session) o = await confirmPaid(env, o);
-  const drawn = Object.keys(o.have || {}).filter((k) => k !== "c").length;
+  const drawn = Object.keys(o.have || {}).filter((k) => k !== "c" && k !== "s").length;
   return json({ id: o.id, status: o.status, product: o.product, title: o.title, dedication: o.dedication || "", n: o.n, drawn, have: Object.keys(o.have || {}),
     captions: (o.scenes || []).map((s) => s.caption), ship: o.ship || "", tracking: o.lulu && o.lulu.url ? o.lulu.url : "", redrawsLeft: Math.max(0, 3 - (o.redraws || 0)), format: o.format || "", download: o.status === "delivered" ? dlUrl(o) : "" });
 }
@@ -861,15 +916,16 @@ async function advance(env, o) {
   if (o.status === "draft") { if (o.session) await confirmPaid(env, o); if (o.status === "draft" && Date.now() - o.created > 2 * DAY * 1000) return "drop"; return o.status === "draft" ? "wait" : "save"; }
   if (o.status === "paid" || o.status === "drawing") {
     const missing = [];
-    if (P.gen) { if (!o.have.c) missing.push("c"); for (let n = 1; n <= o.n; n++) if (!o.have[n]) missing.push(n); }
+    if (P.gen) { if (o.sheet && !o.have.s) missing.push("s"); if (!o.have.c) missing.push("c"); for (let n = 1; n <= o.n; n++) if (!o.have[n]) missing.push(n); }
     if (missing.length) {
       o.status = "drawing";
-      if (missing[0] !== "c" && !o.have[1] && missing.indexOf(1) >= 0) missing.splice(0, missing.length, 1); // page 1 first: the others copy its character
+      if (missing[0] === "s") missing.splice(1); // the model sheet first: every page copies the character from it
+      else if (!o.sheet && missing[0] !== "c" && !o.have[1] && missing.indexOf(1) >= 0) missing.splice(0, missing.length, 1); // older books: page 1 first, the others copy it
       const batch = missing.slice(0, num(env.PAGES_PER_RUN, 5));
       const res = await Promise.all(batch.map((n) => drawPage(env, o, n).then((d) => [n, d])));
       for (const [n, d] of res) if (!d.ok && !/^429/.test(d.why || "")) {
         o.fails = o.fails || {}; o.fails[n] = (o.fails[n] || 0) + 1; log(o, "page " + n + " failed: " + (d.why || ""));
-        if (d.blocked && n !== "c" && o.fails[n] >= 2) { o.scenes[n - 1] = { caption: o.scenes[n - 1].caption, scene: "The main character smiling and waving in a sunny park with trees, flowers and a few birds." }; }
+        if (d.blocked && n !== "c" && n !== "s" && o.fails[n] >= 2) { o.scenes[n - 1] = { caption: o.scenes[n - 1].caption, scene: "The main character smiling and waving in a sunny park with trees, flowers and a few birds." }; }
         if (o.fails[n] === 6) await alertNate(env, o, "a page keeps failing to draw", "Page " + n + " failed 6 times: " + (d.why || "") + "\nOften this means the OpenAI balance is used up.");
       }
       return "save";
@@ -879,6 +935,7 @@ async function advance(env, o) {
   if (o.status === "ready" && o.format === "pdf") {
     o.status = "delivered"; o.deliveredAt = Date.now(); await send(env, o, "pdfready"); return "done";
   }
+  if (o.status === "ready" && o.holdPrint) { o.status = "held"; log(o, "redrawn; holding before print until released"); return "done"; }
   if (o.status === "ready") {
     // Guard against two workers submitting the same book twice (each submit is a real print charge).
     const gk = "lulusub:" + o.id + ":" + (o.luluPast || []).length + ":" + (o.luluFails || 0);
@@ -910,6 +967,7 @@ async function cron(env, force) {
   const lock = await env.KV.get("lock:cron", { cacheTtl: 30 });
   if (!force && lock && Date.now() - +lock < 50000) return ["locked " + (Date.now() - +lock)];
   await env.KV.put("lock:cron", String(Date.now()), { expirationTtl: 120 });
+  try { await adminFlags(env, notes); } catch (e) { notes.push("flags error " + String(e).slice(0, 120)); }
   const ids = (await env.KV.get("orders:active", { type: "json", cacheTtl: 30 })) || []; let drew = 0;
   notes.push("active " + ids.join(","));
   for (const id of ids) {
@@ -984,6 +1042,11 @@ async function orders(q, env, u, ctx) {
   if (p === "/api/admin/tags" && q.method === "POST") {
     if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
     return json(await tagMissing(env, Math.min(60, num(u.searchParams.get("n"), 24))));
+  }
+  if (p === "/api/admin/redraw" && q.method === "POST") {
+    if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
+    const b = await q.json().catch(() => ({})); const o = await oGet(env, b.id); if (!o || !o.pay) return json({ error: "nope" }, 404);
+    return json({ result: await redrawBook(env, o, b.mode === "hold" ? "hold" : "keep") });
   }
   if (p === "/api/admin/retry" && q.method === "POST") {
     if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
