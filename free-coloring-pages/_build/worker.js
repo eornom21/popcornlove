@@ -857,20 +857,26 @@ async function advance(env, o) {
   }
   return "done";
 }
-async function cron(env) {
-  if (!env.STRIPE_SECRET) return;
-  const lock = await env.KV.get("lock:cron"); if (lock && Date.now() - +lock < 55000) return;
-  await env.KV.put("lock:cron", String(Date.now()), { expirationTtl: 60 });
-  const ids = await activeGet(env); let drew = 0;
+async function cron(env, force) {
+  const notes = [];
+  if (!env.STRIPE_SECRET) return ["no stripe"];
+  const lock = await env.KV.get("lock:cron", { cacheTtl: 30 });
+  if (!force && lock && Date.now() - +lock < 50000) return ["locked " + (Date.now() - +lock)];
+  await env.KV.put("lock:cron", String(Date.now()), { expirationTtl: 120 });
+  const ids = (await env.KV.get("orders:active", { type: "json", cacheTtl: 30 })) || []; let drew = 0;
+  notes.push("active " + ids.join(","));
   for (const id of ids) {
-    const o = await oGet(env, id); if (!o) { await activeSet(env, id, false); continue; }
-    if ((o.status === "paid" || o.status === "drawing") && drew >= num(env.ORDERS_PER_RUN, 1)) continue;
+    const o = await env.KV.get(oKey(id), { type: "json", cacheTtl: 30 }); if (!o) { notes.push(id + " missing"); continue; }
+    if ((o.status === "paid" || o.status === "drawing") && drew >= num(env.ORDERS_PER_RUN, 1)) { notes.push(id + " skip (busy)"); continue; }
     if (o.status === "paid" || o.status === "drawing") drew++;
-    let r; try { r = await advance(env, o); } catch (e) { log(o, "error " + String(e).slice(0, 120)); r = "save"; }
+    let r; try { r = await advance(env, o); } catch (e) { log(o, "error " + String(e).slice(0, 120)); r = "save"; notes.push(id + " error " + String(e).slice(0, 200)); }
+    notes.push(id + " " + o.status + " -> " + r);
     if (r === "drop") { await activeSet(env, id, false); continue; }
     if (r !== "wait") await oPut(env, o);
     if (r === "done") await activeSet(env, id, false);
   }
+  console.log("cron", notes.join(" | "));
+  return notes;
 }
 
 // ---------- problems: the fixed policy ----------
@@ -928,6 +934,10 @@ async function orders(q, env, u, ctx) {
   if (p.startsWith("/api/download/")) return downloadFile(env, u);
   if (p.startsWith("/api/mail/")) return mailbox(q, env, u);
   if (p === "/api/admin/orders") return adminOrders(q, env, u);
+  if (p === "/api/admin/tick" && q.method === "POST") {
+    if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
+    return json({ notes: await cron(env, true) });
+  }
   if (p === "/api/admin/test-mail" && q.method === "POST") {
     if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
     await mail(env, "hello@makeacoloringbook.com", "Mailer test", "This is a test from the website's order mailer. If you're reading it in the hello@ inbox, order emails will go out.");
@@ -966,5 +976,5 @@ export default {
     if (l) h.set("location", l.replace("https://popcornlove.net", "").replace("/free-coloring-pages", ""));
     return new Response(r.body, { status: r.status, headers: h });
   },
-  async scheduled(ev, env, ctx) { ctx.waitUntil(cron(env).catch((e) => console.log("cron failed", String(e)))); },
+  async scheduled(ev, env, ctx) { ctx.waitUntil(cron(env).catch((e) => console.log("cron failed", String(e), e && e.stack))); },
 };
