@@ -468,8 +468,15 @@ async function previewSlot(q, env) {
   await Promise.all([env.KV.put(ipk, String(num(a, 0) + 1), { expirationTtl: 2 * DAY }), env.KV.put(dk, String(num(b, 0) + 1), { expirationTtl: 2 * DAY })]);
   return true;
 }
+// Orders are public only when var ORDERS_LIVE is "1". Before that, a browser with the cookie mcb_team=<team key> can test.
+async function ordersOpen(q, env) {
+  if (!env.STRIPE_SECRET) return false;
+  if (env.ORDERS_LIVE === "1") return true;
+  const m = /(?:^|;\s*)mcb_team=([^;]+)/.exec(q.headers.get("cookie") || "");
+  return !!m && (await teamOk(q, env, decodeURIComponent(m[1])));
+}
 async function orderDraft(q, env) {
-  if (!env.STRIPE_SECRET || !env.OPENAI_API_KEY) return json({ error: "off", message: "Printed books are not open yet. Check back soon!" }, 503);
+  if (!(await ordersOpen(q, env)) || !env.OPENAI_API_KEY) return json({ error: "off", message: "Printed books are not open yet. Check back soon!" }, 503);
   if (!okOrigin(q)) return json({ error: "origin" }, 403);
   let b; try { b = await q.json(); } catch (e) { return json({ error: "bad", message: "That did not come through." }, 400); }
   const product = PRODUCTS[b.product] ? b.product : "";
@@ -865,7 +872,7 @@ async function orders(q, env, u, ctx) {
   if (p === "/api/order/checkout" && q.method === "POST") return orderCheckout(q, env);
   if (p === "/api/order/status") return orderStatus(env, u);
   if (p === "/api/order/help" && q.method === "POST") return orderHelp(q, env);
-  if (p === "/api/order/open") return json({ open: !!env.STRIPE_SECRET, prices: Object.fromEntries(Object.entries(PRODUCTS).map(([k, v]) => [k, v.price])), rush: RUSH_PRICE, ts: env.TURNSTILE_SECRET ? TS_SITEKEY : "" });
+  if (p === "/api/order/open") return json({ open: await ordersOpen(q, env), prices: Object.fromEntries(Object.entries(PRODUCTS).map(([k, v]) => [k, v.price])), rush: RUSH_PRICE, ts: env.TURNSTILE_SECRET ? TS_SITEKEY : "" });
   if (p.startsWith("/api/print/")) return printFile(env, u);
   if (p.startsWith("/api/mail/")) return mailbox(q, env, u);
   if (p === "/api/admin/orders") return adminOrders(q, env, u);
