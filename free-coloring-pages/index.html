@@ -452,7 +452,7 @@ function seasonal(){var m=new Date().getMonth()+1,d=new Date().getDate();if(m===
 function getJSON(u){return fetch(u+V).then(function(r){if(!r.ok)throw new Error(u);return r.json()})}
 Promise.all([getJSON('catalog.json'),getJSON('ready.json').catch(function(){return {art:[],guide:[]}}),getJSON('palettes.json').catch(function(){return {}}),mineAll()]).then(function(a){
   S.themes=a[0].themes;(a[1].art||[]).forEach(function(i){S.ready.art[i]=1});(a[1].guide||[]).forEach(function(i){S.ready.guide[i]=1});S.pal=a[2]||{};
-  S.pages=a[0].pages.filter(function(p){return S.ready.art[p.id]}).map(function(p){return {id:p.id,theme:p.t,style:p.s,title:p.n}});
+  S.pages=a[0].pages.filter(function(p){return S.ready.art[p.id]}).map(function(p){return {id:p.id,theme:p.t,style:p.s,title:p.n,k:p.k||''}});
   S.themes=S.themes.filter(function(t){return S.pages.some(function(p){return p.theme===t.key})});
   var mine=(a[3]||[]).sort(function(x,y){return y.t-x.t});if(mine.length){S.themes.unshift(MINE);S.pages=mine.concat(S.pages)}
   S.pages.forEach(function(p){S.byId[p.id]=p});
@@ -478,8 +478,14 @@ $('#q').addEventListener('input',function(e){S.q=e.target.value.trim().toLowerCa
 function filtered(){return S.pages.filter(function(p){
   if(S.onlyFav){if(S.favs.indexOf(p.id)<0)return false}else if(S.theme!=='all'&&p.theme!==S.theme&&!S.q)return false;
   if(S.style!=='all'&&p.style!==S.style)return false;
-  if(S.q){var hay=(p.title+' '+themeName(p.theme)+' '+STYLES[p.style]).toLowerCase();if(S.q.split(/\s+/).some(function(w){return hay.indexOf(w)<0}))return false}
-  return true})}
+  if(S.q){p._sc=qScore(p);if(p._sc<0)return false}
+  return true}).sort(function(a,b){return S.q?b._sc-a._sc:0})}
+// Search: every word must match the start of a word in the title, theme, level or the page's hidden tags (k),
+// allowing plurals (dogs→dog, bunnies→bunny). Title matches rank first.
+function qVars(w){var v=[w];if(/ies$/.test(w))v.push(w.slice(0,-3)+'y');if(/(ch|sh|x|s|z)es$/.test(w))v.push(w.slice(0,-2));if(/[^s]s$/.test(w))v.push(w.slice(0,-1));return v}
+function qHit(text,v){for(var i=0;i<v.length;i++){var at=text.indexOf(v[i]);while(at>=0){if(at===0||!/[a-z0-9]/.test(text.charAt(at-1)))return /[a-z0-9]/.test(text.charAt(at+v[i].length)||' ')?1:2;at=text.indexOf(v[i],at+1)}}return 0}
+function qScore(p){var t=(p.title||'').toLowerCase(),o=(themeName(p.theme)+' '+STYLES[p.style]+' '+(p.k||'')+' '+(p.idea||'')).toLowerCase(),sc=0,ws=S.q.split(/\s+/);
+  for(var i=0;i<ws.length;i++){if(!ws[i])continue;var v=qVars(ws[i]),a=qHit(t,v);if(a){sc+=a*3;continue}var b=qHit(o,v);if(!b)return -1;sc+=b}return sc}
 function cardHTML(p){var f=S.favs.indexOf(p.id)>=0,b=S.book.indexOf(p.id)>=0;
   return '<article class="card" data-id="'+p.id+'"><button class="thumb" data-open aria-label="Open '+p.title+'"><span class="badge s-'+p.style+'">'+STYLES[p.style]+'</span><img loading="lazy" decoding="async" width="390" height="520" src="'+thumbSrc(p)+'" alt="'+p.title+' coloring page">'+(hasGuide(p.id)?'<img class="peek" alt="" data-src="guide/'+p.id+'.webp">':'')+'</button><div class="meta"><h3><a href="'+pageUrl(p)+'" data-open>'+p.title+'</a></h3></div><div class="acts"><button class="ico fav'+(f?' on':'')+'" data-fav aria-label="Heart this page" title="Heart it" aria-pressed="'+f+'">♥'+heartNum(p)+'</button>'+(hasGuide(p.id)?'<button class="ico" data-peek aria-label="Show it colored in">🎨</button>':'')+'<button class="ico add'+(b?' on':'')+'" data-add aria-pressed="'+b+'">'+(b?'✓ In book':'＋ Book')+'</button>'+(p.src?'':'<button class="ico shr" data-share aria-label="Share '+p.title+' with a friend" title="Share with a friend">↗</button>')+'</div></article>'}
 function render(){S.list=filtered();var g=$('#grid');

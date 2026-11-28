@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Source of truth for the coloring-page catalog. Builds catalog.json (site) and batch request files (generation)."""
-import json, os, sys
+import json, os, re, sys
 
 THEMES = [
     ("thanksgiving", "Thanksgiving", "🦃"),
@@ -475,6 +475,19 @@ def build():
         pages.append({"id": r["id"], "theme": r.get("theme", "requests"), "style": r["style"], "title": r["title"], "subject": r["subject"]})
     return pages
 
+# Hidden search words. tags.json ({id: "word, word"}) is made by the Worker from each picture and copied here by the
+# team-pages Action; a page without tags yet falls back to the words of its description.
+_TAGS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tags.json")
+TAGS = json.load(open(_TAGS)) if os.path.exists(_TAGS) else {}
+_STOP = set("a an the and or of with in on at to its it's his her their from for by is are as one two three four five six into over under "
+            "behind next all around up down out each every big small little who that this these some many made full front side top".split())
+
+def keywords(p):
+    if TAGS.get(p["id"]):
+        return TAGS[p["id"]]
+    words = re.findall(r"[a-z][a-z'-]+", p["subject"].lower())
+    return ", ".join(dict.fromkeys(w for w in words if w not in _STOP and len(w) > 2))
+
 def prompt_for(p):
     return f"Black and white coloring book page, portrait orientation. {p['subject']} {STYLES[p['style']]} {TAIL}"
 
@@ -487,7 +500,7 @@ if __name__ == "__main__":
             assert len(P[k][st]) == 6, (k, st)
     os.makedirs(out, exist_ok=True)
     cat = {"themes": [{"key": k, "name": n, "emoji": e} for k, n, e in THEMES],
-           "pages": [{"id": p["id"], "t": p["theme"], "s": p["style"], "n": p["title"]} for p in pages]}
+           "pages": [{"id": p["id"], "t": p["theme"], "s": p["style"], "n": p["title"], "k": keywords(p)} for p in pages]}
     json.dump(cat, open(os.path.join(out, "catalog.json"), "w"), ensure_ascii=False, separators=(",", ":"))
     json.dump([{"i": i, "id": p["id"], "prompt": prompt_for(p)} for i, p in enumerate(pages)],
               open(os.path.join(out, "prompts.json"), "w"), ensure_ascii=False, indent=0)

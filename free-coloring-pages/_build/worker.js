@@ -563,6 +563,41 @@ async function orderImg(env, u) {
   return new Response(v, { headers: { "content-type": "image/jpeg", "cache-control": "private, max-age=300" } });
 }
 
+// ---------- Search tags ----------
+// Each page gets a hidden list of search words (what's in the picture, synonyms, kid words, occasions) so a search
+// finds it even when the word isn't in the title. Kept in KV "tags:all" ({id: "word word ..."}); the team-pages
+// Action copies it into _build/tags.json, which goes into catalog.json as "k".
+const TAG_SCHEMA = { type: "object", additionalProperties: false, required: ["tags"], properties: { tags: { type: "array", items: { type: "string" } } } };
+async function tagOne(env, pg) {
+  const sys = "You write hidden search keywords for a free coloring-page website. Return 30 to 45 lowercase keywords for the picture: " +
+    "every animal, character, object, food, plant, vehicle and place you can see; what they are doing; the season, holiday or occasion; " +
+    "the singular form of each noun; common synonyms and kid words (puppy, kitty, bunny, bday, xmas); broader groups (pet, farm animal, insect, bird, vehicle, sea creature); " +
+    "and popular things people search for that this page truly fits. One to three words each. No brand or character names, no words about color or coloring, nothing the picture does not show.";
+  const user = [{ type: "input_text", text: "Title: " + pg.n + "\nTheme: " + pg.t + (pg.sub ? "\nDescription: " + pg.sub : "") },
+    { type: "input_image", image_url: "https://" + HOME + "/art/" + pg.id + ".webp", detail: "low" }];
+  const body = { model: env.TAG_MODEL || "gpt-4.1-mini", input: [{ role: "system", content: sys }, { role: "user", content: user }], text: { format: { type: "json_schema", name: "tags", schema: TAG_SCHEMA, strict: true } } };
+  const r = await fetch("https://api.openai.com/v1/responses", { method: "POST", headers: { authorization: "Bearer " + env.OPENAI_API_KEY, "content-type": "application/json" }, body: JSON.stringify(body) });
+  if (!r.ok) { console.log("tags", pg.id, r.status, (await r.text()).slice(0, 200)); return null; }
+  const j = await r.json(); let t = j.output_text || "";
+  if (!t && j.output) for (const it of j.output) for (const c of it.content || []) if (c.type === "output_text") t += c.text;
+  let w; try { w = JSON.parse(t).tags; } catch (e) { return null; }
+  const seen = new Set(), out = [];
+  for (const x of w || []) { const v = String(x).toLowerCase().replace(/[^a-z0-9' -]/g, " ").replace(/\s+/g, " ").trim(); if (v && v.length < 30 && !seen.has(v)) { seen.add(v); out.push(v); } }
+  return out.slice(0, 50).join(", ");
+}
+async function tagMissing(env, max) {
+  const all = (await env.KV.get("tags:all", "json")) || {};
+  const cat = await fetch(SRC + "/catalog.json?t=" + Date.now()).then((r) => r.json()).catch(() => null);
+  if (!cat) return { error: "no catalog" };
+  const todo = cat.pages.filter((pg) => !all[pg.id]).slice(0, max), done = [];
+  for (let i = 0; i < todo.length; i += 6) {
+    const res = await Promise.all(todo.slice(i, i + 6).map((pg) => tagOne(env, pg).catch(() => null)));
+    res.forEach((v, k) => { if (v) { all[todo[i + k].id] = v; done.push(todo[i + k].id); } });
+  }
+  if (done.length) await env.KV.put("tags:all", JSON.stringify(all));
+  return { done, left: cat.pages.filter((pg) => !all[pg.id]).length, total: Object.keys(all).length };
+}
+
 // ---------- Stripe ----------
 async function stripe(env, method, path, pairs) {
   const r = await fetch("https://api.stripe.com/v1" + path, { method, headers: { authorization: "Bearer " + env.STRIPE_SECRET, "content-type": "application/x-www-form-urlencoded" }, body: pairs ? new URLSearchParams(pairs).toString() : undefined });
@@ -946,6 +981,10 @@ async function orders(q, env, u, ctx) {
   if (p.startsWith("/api/download/")) return downloadFile(env, u);
   if (p.startsWith("/api/mail/")) return mailbox(q, env, u);
   if (p === "/api/admin/orders") return adminOrders(q, env, u);
+  if (p === "/api/admin/tags" && q.method === "POST") {
+    if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
+    return json(await tagMissing(env, Math.min(60, num(u.searchParams.get("n"), 24))));
+  }
   if (p === "/api/admin/retry" && q.method === "POST") {
     if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
     const b = await q.json().catch(() => ({})); const o = await oGet(env, b.id); if (!o || !o.pay) return json({ error: "nope" }, 404);
@@ -1001,6 +1040,7 @@ export default {
     }
     if (u.pathname === "/api/make/status") return status(q, env || {});
     if (u.pathname === "/api/hearts") return heartsAll(q, env, ctx);
+    if (u.pathname === "/api/tags") return new Response((await env.KV.get("tags:all", { cacheTtl: 300 })) || "{}", { headers: { "content-type": "application/json", "cache-control": "public, max-age=300" } });
     if (u.pathname === "/api/heart") return q.method === "POST" ? heart(q, env) : json({ error: "method" }, 405);
     if (/^\/api\/(order|print|download|mail|admin)\//.test(u.pathname)) { try { return await orders(q, env, u, ctx); } catch (e) { console.log("orders failed", String(e), e && e.stack); return json({ error: "server", message: "Something went wrong. Please try again." }, 500); } }
     if (u.pathname.startsWith("/api/team/")) { try { return await team(q, env, u, ctx); } catch (e) { console.log("team failed", String(e)); return json({ error: "server", message: "Something went wrong: " + String(e).slice(0, 120) }, 500); } }
@@ -1015,5 +1055,9 @@ export default {
     if (l) h.set("location", l.replace("https://popcornlove.net", "").replace("/free-coloring-pages", ""));
     return new Response(r.body, { status: r.status, headers: h });
   },
-  async scheduled(ev, env, ctx) { ctx.waitUntil(cron(env).catch((e) => console.log("cron failed", String(e), e && e.stack))); },
+  async scheduled(ev, env, ctx) {
+    ctx.waitUntil(cron(env).catch((e) => console.log("cron failed", String(e), e && e.stack)));
+    // Once an hour, tag any new pages (team pages, request pages) that don't have search words yet.
+    if (new Date(ev.scheduledTime || Date.now()).getUTCMinutes() === 17) ctx.waitUntil(tagMissing(env, 12).then((r) => console.log("tags", JSON.stringify(r))).catch((e) => console.log("tags failed", String(e))));
+  },
 };

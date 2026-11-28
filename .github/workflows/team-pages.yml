@@ -25,8 +25,12 @@ jobs:
           python .github/team/pull.py > /tmp/new.txt
           cat /tmp/new.txt
           echo "ids=$(tr '\n' ' ' < /tmp/new.txt)" >> "$GITHUB_OUTPUT"
+      - name: Sync search tags
+        id: tags
+        continue-on-error: true
+        run: echo "changed=$(python .github/team/tags.py)" >> "$GITHUB_OUTPUT"
       - name: Rebuild site pages
-        if: steps.pull.outputs.ids != ' ' && steps.pull.outputs.ids != ''
+        if: (steps.pull.outputs.ids != ' ' && steps.pull.outputs.ids != '') || steps.tags.outputs.changed == 'changed'
         run: sh free-coloring-pages/_build/rebuild.sh
       - name: Share images
         if: steps.pull.outputs.ids != ' ' && steps.pull.outputs.ids != ''
@@ -35,13 +39,13 @@ jobs:
           pip install --quiet playwright
           python free-coloring-pages/_build/pins.py ${{ steps.pull.outputs.ids }}
       - name: Commit
-        if: steps.pull.outputs.ids != ' ' && steps.pull.outputs.ids != ''
+        if: (steps.pull.outputs.ids != ' ' && steps.pull.outputs.ids != '') || steps.tags.outputs.changed == 'changed'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A free-coloring-pages .github/coloring/prompts.json
           if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
-          git commit -q -m "Team pages: ${{ steps.pull.outputs.ids }}"
+          git commit -q -m "Team pages: ${{ steps.pull.outputs.ids }} ${{ steps.tags.outputs.changed == 'changed' && '(search tags)' || '' }}"
           for i in 1 2 3 4 5 6; do
             git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0
             sleep 6
