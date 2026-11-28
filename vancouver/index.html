@@ -108,11 +108,6 @@ h2.sec small{font-family:var(--body);font-weight:600;letter-spacing:0;text-trans
 .wxnow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .wxnow i{font-style:normal;font-size:34px}.wxnow b{font-size:22px;color:var(--navy)}
 .small{font-size:13px;color:var(--muted)}
-/* heads-up */
-.hu{border:2px solid #c9dcd6;background:#f1f7f4;border-radius:18px;padding:12px 14px;margin:10px 0}
-.hu h3{font-size:16px;color:#1f5b45;font-weight:800;line-height:1.25}
-.hu p{font-size:14.5px;margin-top:4px;color:var(--ink)}
-.hu p b{color:var(--navy)}
 /* checklists */
 .chk{list-style:none}
 .chk li{display:flex;gap:11px;align-items:flex-start;padding:10px 2px;border-bottom:1px dashed var(--line)}
@@ -199,8 +194,6 @@ nav.tabs button.on i{filter:none;opacity:1}
   </div>
   <h2 class="sec">❄️ Weather <small id="wx-src"></small></h2>
   <div class="card c3" id="wx"><div class="small">Loading Vancouver weather…</div></div>
-  <h2 class="sec">✏️ Changed from the poster <small>5 things</small></h2>
-  <div id="heads"></div>
   <h2 class="sec">✅ Book ahead <small class="prog" id="p-book"></small></h2>
   <div class="card"><ul class="chk" id="l-book"></ul></div>
 </section>
@@ -402,16 +395,6 @@ var DAYS=[
  ]}
 ];
 
-/* ---------- data: heads-ups ---------- */
-var HEADS=[
- ['Donuts: Lee\'s instead of Cartems','Cartems closed for good in February 2025. <b>Lee\'s Donuts, 199 Water St</b>, is across from the Steam Clock, two minutes from the Airbnb.'],
- ['Bus tour moved from Thursday to Friday','Winter hop-on hop-off buses stop mid-afternoon and we land at 2:47 PM. It now starts <b>Friday at 9:40 AM from the Gastown stop</b>, outside Lee\'s Donuts. Thursday is <b>Steam Clock, lights and donuts</b> on foot.'],
- ['Family photos moved to Friday afternoon','Was 10:00 AM at Brockton Point. Now a <b>30-minute session about 3:30 PM at the Steam Clock</b>, which works in any weather and frees the morning for the bus. Time and spot are still to confirm with the photographer.'],
- ['Friday: lunch added, Market at 4:30','The Market doesn\'t open until 4:00 PM on Fridays. <b>Lunch at Tap & Barrel</b> next door, then the seawall or a rest, then in at 4:30 (the 4:00 slot sold out).'],
- ['Sunday: gifts on Water Street','The Market opens at 11:30 AM Sunday, too late for a 12:30 airport arrival. <b>Last wander is Gastown and Robson.</b>'],
- ['Saturday: Café Medina with a reservation','Walk-in waits can hit 90 minutes on weekends, so we <b>reserved a 9:00 table for 5</b>.']
-];
-
 /* ---------- data: checklists ---------- */
 var BOOK=[
  ['din','Dinesty Dumpling House — Thu Dec 3, about 5:45 PM','Thursday dinner. No online booking: call (604) 669-7769 to hold a table for 5, or walk in.'],
@@ -473,7 +456,7 @@ var SLOTS=[
   o('pure','Purebread','best','Best bet with a 10:00 deadline · 2 min walk · $',['A wall of baked goods — everyone points at what they want','In and out in 15 minutes','Savoury options too'],['Few seats','It\'s mostly sugar','Opens at 8'],{p:P.purebread,tel:'+16045638060'}),
   o('lees1','Lee\'s Donuts','alt','Alternative · 2 min walk · $',['Donuts and the Steam Clock in one stop','Opens at 8'],['Donuts for breakfast — your call'],{p:P.lees})
  ]},
- {id:'fri-lunch',day:'Fri',t:'Friday lunch',w:'Not on the poster. Tap & Barrel is reserved for 11:30, table for 5. The bus drops you at Canada Place a little after 11.',opts:[
+ {id:'fri-lunch',day:'Fri',t:'Friday lunch',w:'Tap & Barrel is reserved for 11:30, table for 5. The bus drops you at Canada Place a little after 11.',opts:[
   o('tapcc','Tap & Barrel · Convention Centre','best','Booked for 11:30 · at Jack Poole Plaza · $$',['Full kids\' menu','Floor-to-ceiling harbour views — seaplanes land outside','You\'re already at the Market when it opens'],['Big and busy','Comfort food at view prices'],{p:P.tapcc}),
   o('japa','Japadog','alt','A poster specialty · Robson St · $',['Checks off a Vancouver specialty','Fast and cheap, and kids think it\'s funny','Plain dogs exist'],['Counter service, very few seats','Seaweed on a hot dog isn\'t for everyone'],{p:'Japadog Robson Street'}),
   o('home','Burritos + a rest at the Airbnb','alt','The low-key option · 2 min from the door · $',['Tacofino\'s Burrito Bar counter is quick','An hour of quiet before the Market pays off at 7 PM'],['Nothing new to see','Burritos twice if Thursday was tacos'],{p:P.tacofino})
@@ -570,7 +553,7 @@ function renderToday(){
     c.innerHTML='<div class="big">'+before+(before===1?' sleep':' sleeps')+' to go</div><div class="lbl">Wheels up Thursday, Dec 3 · 11:25 AM</div>';
     var f=DAYS[0].items[0];
     w.className='card now';
-    w.innerHTML='<div class="k">First up</div><div class="t">'+esc(f.tt)+'</div><div class="s">Thursday '+esc(f.tm)+' — '+esc(f.sb)+'</div><div class="btns"><button class="btn pri" data-go="plan">See the plan</button><button class="btn" data-scroll="heads">What changed</button></div>';
+    w.innerHTML='<div class="k">First up</div><div class="t">'+esc(f.tt)+'</div><div class="s">Thursday '+esc(f.tm)+' — '+esc(f.sb)+'</div><div class="btns"><button class="btn pri" data-go="plan">See the plan</button></div>';
   }else if(idx>=0){
     var d=DAYS[idx],cur=null,nx=null;
     d.items.forEach(function(it){if(it.flag&&/Won't work/.test(it.flag))return;if(it.m<=n.min)cur=it;else if(!nx)nx=it});
@@ -587,7 +570,6 @@ function renderToday(){
     c.innerHTML='<div class="big">Home again ♡</div><div class="lbl">Same family · New traditions</div>';
     w.className='card now';w.innerHTML='<div class="t">That\'s a wrap.</div><div class="s">The plan, the picks and the hunt are all still here.</div><div class="btns"><button class="btn pri" data-go="plan">Look back</button></div>';
   }
-  $('heads').innerHTML=HEADS.map(function(x){return'<div class="hu"><h3>'+esc(x[0])+'</h3><p>'+x[1]+'</p></div>'}).join('');
   $('home-dir').href=dir(HOME);$('home-dir2').href=dir(HOME);
 }
 
