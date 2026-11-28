@@ -288,6 +288,14 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
 .night nav.tabs{background:rgba(16,28,54,.96);border-top-color:#2a3d66}
 .night nav.tabs button{color:#b9c6de}
 .night nav.tabs button.on{color:#fff;background:#24386a}
+/* house hunt */
+.hh-h{font-family:var(--cond);font-weight:700;letter-spacing:.07em;text-transform:uppercase;font-size:13px;color:#b3261e;margin:16px 0 2px}
+.hh-l{list-style:none;margin:4px 0}
+.hh-l li{padding:8px 0;border-bottom:1px dashed var(--line)}
+.hh-l li:last-child{border-bottom:0}
+.hh-l a{font-weight:800;font-size:16px;color:var(--navy)}
+.hh-l small{display:block;font-size:12.5px;color:var(--muted)}
+.lnk{color:var(--navy);text-decoration:underline;font-size:13px;font-weight:700;padding:2px 0}
 /* family sharing */
 .fam{list-style:none;margin:6px 0 2px}
 .fam li{padding:6px 0;border-bottom:1px dashed var(--line);font-size:15px;color:var(--ink)}
@@ -315,6 +323,8 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
     <button class="tile" id="show-addr"><i>🚕</i>Show the driver<small>Our address, big</small></button>
     <button class="tile" data-spot><i>📍</i>Text my spot<small>Send the family your map pin</small></button>
     <button class="tile" data-kid><i>🧒</i>Kid mode<small>What's next, read aloud</small></button>
+    <button class="tile" data-goto="sec-homes"><i>🏡</i>House hunt<small>Zillow, here or near you</small></button>
+    <button class="tile" data-goto="sec-games"><i>🎲</i>Line games<small>Trivia, I spy and more</small></button>
     <button class="tile" data-go="eat"><i>🍴</i>Where to eat<small>Picks + alternatives</small></button>
     <button class="tile" id="open-poster"><i>🖼️</i>Courtenay's poster<small>The original board</small></button>
   </div>
@@ -347,7 +357,7 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
 
 <!-- FUN -->
 <section class="view" id="v-fun">
-  <div class="jump"><button data-scroll="sec-doors">Doors</button><button data-scroll="sec-hunt">Hunt</button><button data-scroll="sec-treats">Treats</button><button data-scroll="sec-games">Games</button><button data-scroll="sec-wrap">Wrapped</button><button data-kid>Kid mode</button></div>
+  <div class="jump"><button data-scroll="sec-doors">Doors</button><button data-scroll="sec-hunt">Hunt</button><button data-scroll="sec-treats">Treats</button><button data-scroll="sec-games">Games</button><button data-scroll="sec-wrap">Wrapped</button><button data-scroll="sec-homes">Houses</button><button data-kid>Kid mode</button></div>
   <h2 class="sec" id="sec-doors">🚪 Countdown doors <small class="prog" id="p-doors"></small></h2>
   <div class="doors" id="doors"></div>
   <div class="card c2 count" id="sec-hunt" style="background:#fbe3de;border-color:#e3a59c"><div class="big" style="font-size:32px">The Great Vancouver Hunt</div><div class="lbl">Tap when you find it, or snap a 📷 for proof · <span class="prog" id="p-hunt"></span></div></div>
@@ -358,6 +368,8 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
   <div class="card" id="games"></div>
   <h2 class="sec" id="sec-wrap">🎁 Trip Wrapped</h2>
   <div class="card" id="wrapcard"></div>
+  <h2 class="sec" id="sec-homes">🏡 Courtenay's house hunt <small>on Zillow</small></h2>
+  <div class="card" id="homes"></div>
   <h2 class="sec">✨ If there's a spare hour</h2>
   <div id="extras"></div>
 </section>
@@ -804,7 +816,7 @@ function loadFx(){showFx();if(!window.fetch)return;
    v19 additions: sheet, show-the-driver, text my spot, forecast per stop,
    timers, doors, photo hunt, treats, games, Trip Wrapped, kid mode, night
    ==================================================================== */
-var BUILD='van-v20';
+var BUILD='van-v21';
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],WDL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 /* ---------- sheet ---------- */
@@ -1150,7 +1162,7 @@ function checkUpdate(){
     var m=/var BUILD='([^']+)'/.exec(t);if(m&&m[1]!==BUILD&&!sheetOpen())location.reload()}).catch(function(){});
 }
 
-function renderFun(){renderDoors();renderTreats();renderGames();renderWrapCard()}
+function renderFun(){renderDoors();renderTreats();renderGames();renderWrapCard();renderHomes()}
 
 /* ====================================================================
    Family sharing: one shared copy of checklists, the hunt, restaurant picks,
@@ -1159,7 +1171,7 @@ function renderFun(){renderDoors();renderTreats();renderGames();renderWrapCard()
    The service is vancouver/_build/worker.js.
    ==================================================================== */
 var SYNC_URL='https://vancouver-trip.natemonroe21.workers.dev/sync';
-var SYNCED={book:'c',pack:'c',spec:'c',hunt:'c',picks:'p',tally:'t',treats:'x'};
+var SYNCED={book:'c',pack:'c',spec:'c',hunt:'c',picks:'p',tally:'t',treats:'x',homes:'h'};
 var NOTE_LIFE=36*3600e3,QUICK=['At the Airbnb','Heading back','In line for food','Come find us'];
 var syncMap=get('sync',{}),syncCfg=get('synccfg',null),syncBusy=false,syncDirty=false,syncPending=false,syncLast=get('synclast',0),syncErr='',lastStamp=0,shareWho='';
 function rawSet(k,v){mem[k]=v;try{localStorage.setItem('van.'+k,JSON.stringify(v))}catch(e){}}
@@ -1192,6 +1204,7 @@ function unflat(k,v,stores){
   if((m=/^c:(book|pack|spec|hunt):(.+)$/.exec(k)))st(m[1])[m[2]]=!!v;
   else if(k.slice(0,2)==='p:')st('picks')[k.slice(2)]=v;
   else if(k.slice(0,2)==='t:')st('tally')[k.slice(2)]=+v||0;
+  else if(k.slice(0,2)==='h:')st('homes')[k.slice(2)]=(v&&typeof v==='object'&&/^https:\/\//.test(v.u||''))?v:null;
   else if(k.slice(0,3)==='tc:'){if(!tre().custom.some(function(c){return c[0]===k.slice(3)}))tre().custom.push([k.slice(3),String(v)])}
   else if(k.slice(0,3)==='tr:'){if(tre().raters.indexOf(k.slice(3))<0)tre().raters.push(k.slice(3))}
   else if(k.slice(0,2)==='r:'&&(i=k.indexOf('|'))>2){m=tre();m.r[k.slice(2,i)]=m.r[k.slice(2,i)]||{};m.r[k.slice(2,i)][k.slice(i+1)]=+v||0}
@@ -1209,7 +1222,7 @@ function typing(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA)$/
 function syncFlush(){
   if(!syncPending||typing())return;
   syncPending=false;var y=window.pageYOffset;
-  renderLists();renderEat();renderTreats();renderWrapCard();renderFam();window.scrollTo(0,y);
+  renderLists();renderEat();renderTreats();renderWrapCard();renderFam();renderHomes();window.scrollTo(0,y);
 }
 function syncNow(cb){
   if(!syncCfg||!window.fetch){if(cb)cb(false);return}
@@ -1250,7 +1263,7 @@ function shareConnect(){
     if(ok){rawSet('synccfg',syncCfg);if(el)el.blur();c2();toast('Connected ✓');return}
     var e=syncErr;syncCfg=null;syncErr='';toast(e==='code'?'That code didn\'t match':'Couldn\'t reach it. Check the signal and try again');
   });
-  function c2(){$('share').innerHTML='';renderShare();renderFam();renderTreats()}
+  function c2(){$('share').innerHTML='';renderShare();renderFam();renderTreats();renderHomes()}
 }
 function shareDisconnect(){syncCfg=null;syncErr='';try{localStorage.removeItem('van.synccfg')}catch(e){}delete mem.synccfg;$('share').innerHTML='';renderShare();renderFam();renderTreats();toast('Disconnected. This phone keeps its own copy.')}
 function famNotes(){var a=[],now=Date.now(),k,e;for(k in syncMap){e=syncMap[k];if(k.slice(0,2)==='s:'&&e[0]&&e[0].x&&now-e[1]<12*3600e3)a.push({t:e[1],w:e[0].w||'',x:e[0].x})}a.sort(function(p,q){return q.t-p.t});return a.slice(0,4)}
@@ -1273,6 +1286,60 @@ function syncSeed(){
   ['book','pack','spec','hunt','picks','tally','treats'].forEach(function(s){var f=flat(s,get(s,null)),k;for(k in f)if(!empty(f[k])&&!syncMap[k])syncMap[k]=[f[k],1]});
   rawSet('sync',syncMap);rawSet('syncseed',1);
 }
+
+/* ---------- Courtenay's house hunt (Zillow) ---------- */
+var HOODS=[
+ ['Around our Airbnb',49.2826,-123.1075,.25],['Gastown',49.2838,-123.1090,.35],['Coal Harbour',49.2900,-123.1235,.35],['Yaletown',49.2757,-123.1205,.35],
+ ['West End',49.2845,-123.1340,.5],['Granville Island',49.2705,-123.1340,.45],['Kitsilano',49.2684,-123.1640,.7],['Mount Pleasant',49.2630,-123.1005,.6],
+ ['North Van · Lonsdale',49.3115,-123.0790,.6],['By the Capilano bridge',49.3410,-123.1100,.8]
+];
+var RADII=[[.25,'¼ mile'],[.5,'½ mile'],[1,'1 mile'],[2,'2 miles']];
+var hhSpot=null;
+function zillowBox(lat,lng,mi){
+  var dlat=mi/69.0,dlng=mi/(69.17*Math.cos(lat*Math.PI/180));
+  var q={pagination:{},isMapVisible:true,mapBounds:{west:+(lng-dlng).toFixed(6),east:+(lng+dlng).toFixed(6),south:+(lat-dlat).toFixed(6),north:+(lat+dlat).toFixed(6)},filterState:{sort:{value:'globalrelevanceex'}},isListVisible:true};
+  return'https://www.zillow.com/homes/for_sale/?searchQueryState='+enc(JSON.stringify(q));
+}
+function money(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')}
+function hhUsd(){
+  var el=$('hh-cad'),out=$('hh-usd');if(!el||!out)return;
+  var v=parseFloat(String(el.value).replace(/[^0-9.]/g,''))||0;
+  out.textContent=v?'≈ US$'+money(v*rate):'≈ US$—';
+}
+function homesList(){var h=get('homes',{})||{},a=[],k;for(k in h)if(h[k]&&h[k].u)a.push({id:k,u:h[k].u,n:h[k].n||'',w:h[k].w||'',t:+k.split('-')[0]||0});a.sort(function(p,q){return q.t-p.t});return a}
+function renderHomes(){
+  var c=$('homes');if(!c)return;
+  var a=document.activeElement;if(a&&c.contains(a)&&/^(INPUT|TEXTAREA)$/.test(a.tagName))return;
+  var cadv=$('hh-cad')?$('hh-cad').value:'',urlv=$('hh-url')?$('hh-url').value:'',namev=$('hh-name')?$('hh-name').value:'',list=homesList();
+  var h='<div class="btns" style="margin-top:0"><a class="btn pri big" href="https://www.zillow.com/vancouver-bc/" target="_blank" rel="noopener">🏙️ All of Vancouver on Zillow</a></div>';
+  h+='<div class="hh-h">Right where I\'m standing</div>';
+  if(hhSpot&&Date.now()-hhSpot.t<10*60000){
+    h+='<div class="btns">'+RADII.map(function(r){return'<a class="btn" href="'+zillowBox(hhSpot.lat,hhSpot.lng,r[0])+'" target="_blank" rel="noopener">'+r[1]+'</a>'}).join('')+'</div><div class="small" style="margin-top:6px">Homes for sale within about that far of you, as of '+clockTime(hhSpot.t)+'. <button class="lnk" data-hhfind>Update my spot</button></div>';
+  }else{
+    h+='<div class="btns"><button class="btn" data-hhfind>📍 Find me</button></div><div class="small" style="margin-top:6px">Then pick ¼ mile, ½ mile, 1 mile or 2 miles. It sends Zillow the map area around you, nothing else.</div>';
+  }
+  h+='<div class="hh-h">Neighbourhoods on our trip</div><div class="btns">'+HOODS.map(function(x){return'<a class="btn" href="'+zillowBox(x[1],x[2],x[3])+'" target="_blank" rel="noopener">'+esc(x[0])+'</a>'}).join('')+'</div>';
+  h+='<div class="hh-h">What\'s that in U.S. dollars?</div><div class="conv"><input id="hh-cad" type="text" inputmode="numeric" placeholder="C$ price" aria-label="Price in Canadian dollars" value="'+esc(cadv)+'"><span class="eq" id="hh-usd">≈ US$—</span></div><div class="btns">'+[600000,900000,1500000,2500000].map(function(v){return'<button class="btn" data-hhcad="'+v+'">C$'+(v>=1e6?(v/1e6)+'M':(v/1e3)+'K')+'</button>'}).join('')+'</div>';
+  h+='<div class="hh-h">The shortlist</div>';
+  h+=list.length?'<ul class="hh-l">'+list.map(function(x){return'<li><a href="'+esc(x.u)+'" target="_blank" rel="noopener">'+esc(x.n||'A place we liked')+'</a><small>'+(x.w?esc(x.w)+' · ':'')+esc(x.u.replace(/^https:\/\/(www\.)?/,'').slice(0,38))+'</small><button class="lnk" data-hhdel="'+esc(x.id)+'">Remove</button></li>'}).join('')+'</ul>':'<div class="small">In Zillow, tap Share on a listing, copy the link and paste it here.</div>';
+  h+='<div class="mini"><input id="hh-url" type="url" maxlength="300" placeholder="Paste a listing link" aria-label="Listing link" autocapitalize="none" autocorrect="off" spellcheck="false" value="'+esc(urlv)+'"></div><div class="mini"><input id="hh-name" type="text" maxlength="50" placeholder="Nickname (the brick loft)" aria-label="Nickname" value="'+esc(namev)+'"><button class="btn pri" data-hhadd>Save</button></div>'+(syncCfg?'<div class="small" style="margin-top:6px">The shortlist is shared with the family\'s phones.</div>':'');
+  c.innerHTML=h;hhUsd();
+}
+function hhFind(){
+  if(!navigator.geolocation){toast('Location isn\'t available here');return}
+  toast('Finding you…');
+  navigator.geolocation.getCurrentPosition(function(p){hhSpot={lat:p.coords.latitude,lng:p.coords.longitude,t:Date.now()};renderHomes();toast('Got you. Pick a distance')},
+    function(){toast('Turn on Location for this app, then try again')},{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+}
+function hhAdd(){
+  var u=($('hh-url').value||'').replace(/^\s+|\s+$/g,''),n=($('hh-name').value||'').replace(/^\s+|\s+$/g,'');
+  var m=/https:\/\/[^\s"'<>]+/.exec(u);
+  if(!m){toast('Paste the listing\'s link first');$('hh-url').focus();return}
+  if(m[0].length>300){toast('That link is too long');return}
+  var hs=get('homes',{})||{};hs[stamp()+'-'+Math.random().toString(36).slice(2,6)]={u:m[0],n:n.slice(0,50),w:syncCfg?syncCfg.who:''};set('homes',hs);
+  $('hh-url').value='';$('hh-name').value='';if(document.activeElement)document.activeElement.blur();renderHomes();toast('Saved to the shortlist');
+}
+function hhDel(id){var hs=get('homes',{})||{};if(!(id in hs))return;hs[id]=null;set('homes',hs);renderHomes()}
 
 /* ---------- tabs ---------- */
 var TABS=['today','plan','eat','fun','info'];
@@ -1313,6 +1380,11 @@ document.addEventListener('click',function(e){
   if(up('data-wrapsend')){wrapSend();return}
   if(up('data-wrapshare')){share(wrapText(),false);return}
   if((el=up('data-delphoto'))){if(el.getAttribute('data-sure')){photoDel(el.getAttribute('data-delphoto'),function(){closeSheet();var y9=window.pageYOffset;renderLists();renderWrapCard();window.scrollTo(0,y9);toast('Photo removed')})}else{el.setAttribute('data-sure','1');el.textContent='Tap again to remove'}return}
+  if((el=up('data-goto'))){go('fun',true);var gt=$(el.getAttribute('data-goto'));if(gt)setTimeout(function(){window.scrollTo(0,gt.getBoundingClientRect().top+window.pageYOffset-60)},30);return}
+  if(up('data-hhfind')){hhFind();return}
+  if(up('data-hhadd')){hhAdd();return}
+  if((el=up('data-hhdel'))){hhDel(el.getAttribute('data-hhdel'));return}
+  if((el=up('data-hhcad'))){var hc=$('hh-cad');if(hc){hc.value=money(+el.getAttribute('data-hhcad'));hhUsd()}return}
   if((el=up('data-sharewho'))){shareWho=el.getAttribute('data-sharewho');Array.prototype.forEach.call(el.parentNode.children,function(b){b.className='btn'+(b===el?' pri':'')});return}
   if(up('data-shareconnect')){shareConnect();return}
   if(up('data-sharedisc')){shareDisconnect();return}
@@ -1350,6 +1422,7 @@ document.addEventListener('change',function(e){
   });
 });
 document.addEventListener('input',function(e){
+  if(e.target&&e.target.id==='hh-cad'){hhUsd();return}
   var t=e.target,i=t&&t.getAttribute&&t.getAttribute('data-moment');
   if(i===null||i===undefined)return;
   var mo=get('moments',{});mo[i]=t.value;set('moments',mo);
@@ -1358,6 +1431,7 @@ document.addEventListener('keydown',function(e){
   if(e.key!=='Enter'||!e.target)return;
   if(e.target.id==='rater-new'){var b1=document.querySelector('[data-addrater]');if(b1)b1.click()}
   if(e.target.id==='fam-text'){famPost(e.target.value)}
+  if(e.target.id==='hh-name'||e.target.id==='hh-url'){hhAdd()}
   if(e.target.id==='share-code'){shareConnect()}
   if(e.target.id==='treat-new'){var b2=document.querySelector('[data-addtreat]');if(b2)b2.click()}
 });
