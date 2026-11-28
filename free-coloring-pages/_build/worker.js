@@ -869,6 +869,11 @@ async function orders(q, env, u, ctx) {
   if (p.startsWith("/api/print/")) return printFile(env, u);
   if (p.startsWith("/api/mail/")) return mailbox(q, env, u);
   if (p === "/api/admin/orders") return adminOrders(q, env, u);
+  if (p === "/api/admin/test-mail" && q.method === "POST") {
+    if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
+    await mail(env, "hello@makeacoloringbook.com", "Mailer test", "This is a test from the website's order mailer. If you're reading it in the hello@ inbox, order emails will go out.");
+    return json({ ok: true });
+  }
   if (p === "/api/admin/lulu-check") {
     if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
     const pages = num(u.searchParams.get("pages"), 52);
