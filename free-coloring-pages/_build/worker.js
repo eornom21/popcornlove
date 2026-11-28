@@ -445,8 +445,8 @@ async function askJSON(env, system, user, schema) {
 const clip = (t, n) => cleanIdea(t, n);
 function planPrompt(o) {
   const f = o.form;
-  if (o.product === "kid") return "Make a 24-page coloring book starring a child.\nName: " + f.name + "\nAge: " + f.age + "\nWhat they look like: " + f.looks + "\nFavorite things: " + f.likes + "\nPet (if any): " + f.pet + "\nBest friend (if any): " + f.friend + "\nOccasion: " + (f.occasion || "just because") +
-    "\n\ncharacter: describe the child AND, if there is a pet, the pet (breed, size, coat color and markings, ears, collar) so both look exactly the same on every page.\ntitle: at most 36 characters, includes the child's name exactly as written (like \"Maya's Big Coloring Adventure\").\ndedication: at most 60 characters for the title page (like \"Made for Maya, age 6\" or \"Happy 6th birthday, Maya!\").\npages: exactly 24. caption: 2 to 6 words. scene: one or two sentences. The child is in nearly every scene, doing things with their favorite things in varied places; the pet and best friend appear in some; include the occasion if one was given; the last page is a happy ending.";
+  if (o.product === "kid") return "Make a 24-page coloring book starring a child.\nName: " + f.name + "\nAge: " + f.age + (f.is ? "\nA " + f.is : "") + "\nWhat they look like: " + f.looks + "\nFavorite things: " + f.likes + "\nPet (if any): " + f.pet + "\nBest friend (if any): " + f.friend + "\nOccasion: " + (f.occasion || "just because") +
+    "\n\ncharacter: start with the name, age and, if given or clear from the customer's words (pronouns, 'my daughter'), whether the child is a girl or a boy (like \"Maya, a 6-year-old girl\"); then describe the child AND, if there is a pet, the pet (breed, size, coat color and markings, ears, collar) so both look exactly the same on every page.\ntitle: at most 36 characters, includes the child's name exactly as written (like \"Maya's Big Coloring Adventure\").\ndedication: at most 60 characters for the title page (like \"Made for Maya, age 6\" or \"Happy 6th birthday, Maya!\").\npages: exactly 24. caption: 2 to 6 words. scene: one or two sentences. The child is in nearly every scene, doing things with their favorite things in varied places; the pet and best friend appear in some; include the occasion if one was given; the last page is a happy ending.";
   if (o.product === "joke") return "Make a 24-page inside-joke coloring book for an adult, as a funny, affectionate gift.\nWho it's for: " + f.name + "\nWho they are: " + f.who + "\nWhat they look like: " + f.looks + "\nInside jokes, hobbies and things they're known for: " + f.jokes + "\nFrom: " + f.from + "\nOccasion: " + (f.occasion || "just because") +
     "\n\nGentle teasing is fine; nothing sexual, crude, hateful, about drugs, or unkind about weight, looks, age, health or identity. Draw them as a friendly cartoon.\ntitle: at most 36 characters, includes their name. dedication: at most 60 characters like \"For Dave, from Nate\".\npages: exactly 24, each built on one of the jokes or hobbies, varied and funny; caption 2 to 6 words; scene one or two sentences.";
   return "Make a coloring book around this idea: \"" + f.idea + "\"" + (f.name ? " for " + f.name : "") + ". Page 1 is the customer's own drawing of the idea.\n\n" +
@@ -481,6 +481,7 @@ function coverPrompt(o) {
     ? "The attached image is a character model sheet. " + IDENTITY_ONLY + "Paint a full-color children's picture book cover illustration with the main character drawn once, in a lively new pose (three-quarter view, mid-action, delighted), "
     : "Turn the attached coloring page into a full-color children's picture book cover illustration: the same main character, ";
   return lead + "bright cheerful flat colors with clean outlines, a fun scene that sums up a book called \"" + o.title + "\". " +
+    (o.character ? "Main character: " + o.character + " Keep their age, height, body proportions, hair and face exactly as in the reference; do not make them look younger or older. " : "") +
     "Keep the top third of the picture simple open sky or plain background, because a title will be printed there. No text, letters, words, numbers or logos anywhere. Full bleed, no border, no frame. " + RULES;
 }
 
@@ -501,13 +502,17 @@ async function redrawBook(env, o, mode) {
   await oPut(env, o); await activeSet(env, o.id, true);
   return "ok";
 }
-async function adminFlags(env, notes) {
+async function adminFlags(env, notes, touched) {
   for (const kind of ["redraw:", "release:"]) {
     const l = await env.KV.list({ prefix: kind, limit: 10 });
     for (const k of l.keys) {
       const id = k.name.slice(kind.length), mode = (await env.KV.get(k.name)) || ""; await env.KV.delete(k.name);
       const o = await oGet(env, id); if (!o) { notes.push(k.name + " no order"); continue; }
-      if (kind === "redraw:") notes.push(k.name + " " + (await redrawBook(env, o, mode)));
+      touched.add(id); // this run's copy of the order list may be stale for it; leave it to the next run
+      if (kind === "redraw:") {
+        let m = mode; if (mode.charAt(0) === "{") { try { const j = JSON.parse(mode); m = j.mode || "keep"; if (j.character) o.character = clip(j.character, 500); } catch (e) {} }
+        notes.push(k.name + " " + (await redrawBook(env, o, m)));
+      }
       else if (o.status === "held") { delete o.holdPrint; o.status = "ready"; log(o, "released to print"); await oPut(env, o); await activeSet(env, o.id, true); notes.push(k.name + " released"); }
     }
   }
@@ -544,8 +549,9 @@ async function orderDraft(q, env) {
   if (!product) return json({ error: "bad", message: "Pick a book first." }, 400);
   if (!(await human(q, env, b.ts))) return json({ error: "human", message: "We could not confirm you are a person. Please try again." }, 403);
   const f = {}; const src = b.form || {};
-  ["name", "age", "looks", "likes", "pet", "friend", "occasion", "who", "jokes", "from", "idea", "level", "title"].forEach((k) => { f[k] = clip(src[k], k === "jokes" || k === "likes" || k === "looks" || k === "who" ? 500 : 120); });
+  ["name", "age", "is", "looks", "likes", "pet", "friend", "occasion", "who", "jokes", "from", "idea", "level", "title"].forEach((k) => { f[k] = clip(src[k], k === "jokes" || k === "likes" || k === "looks" || k === "who" ? 500 : 120); });
   const need = { kid: ["name", "age", "looks", "likes"], joke: ["name", "looks", "jokes", "from"], idea: ["idea"], picked: [] }[product];
+  f.is = f.is === "girl" || f.is === "boy" ? f.is : "";
   for (const k of need) if (!f[k]) return json({ error: "missing", field: k, message: "Please fill in every box marked *." }, 400);
   const all = Object.values(f).join(" \n ");
   if (BLOCK.test(all)) return json({ error: "blocked", message: "Something in there is a word we can't print. Please reword it." }, 400);
@@ -967,10 +973,12 @@ async function cron(env, force) {
   const lock = await env.KV.get("lock:cron", { cacheTtl: 30 });
   if (!force && lock && Date.now() - +lock < 50000) return ["locked " + (Date.now() - +lock)];
   await env.KV.put("lock:cron", String(Date.now()), { expirationTtl: 120 });
-  try { await adminFlags(env, notes); } catch (e) { notes.push("flags error " + String(e).slice(0, 120)); }
+  const touched = new Set();
+  try { await adminFlags(env, notes, touched); } catch (e) { notes.push("flags error " + String(e).slice(0, 120)); }
   const ids = (await env.KV.get("orders:active", { type: "json", cacheTtl: 30 })) || []; let drew = 0;
   notes.push("active " + ids.join(","));
   for (const id of ids) {
+    if (touched.has(id)) { notes.push(id + " changed by a flag; next run"); continue; }
     const o = await env.KV.get(oKey(id), { type: "json", cacheTtl: 30 }); if (!o) { notes.push(id + " missing"); continue; }
     if ((o.status === "paid" || o.status === "drawing") && drew >= num(env.ORDERS_PER_RUN, 1)) { notes.push(id + " skip (busy)"); continue; }
     if (o.status === "paid" || o.status === "drawing") drew++;

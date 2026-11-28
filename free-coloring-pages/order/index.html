@@ -80,6 +80,7 @@
   <div class="box">
     <div id="fKid" class="hide">
       <div class="two"><div><label for="kName">Child's first name *</label><input type="text" id="kName" maxlength="30"></div><div><label for="kAge">Age *</label><input type="number" id="kAge" min="1" max="14"></div></div>
+      <label for="kIs">Draw them as a</label><select id="kIs"><option value="">(you choose from the description)</option><option value="girl">Girl</option><option value="boy">Boy</option></select>
       <label for="kLooks">What do they look like? * <small>hair color and style, glasses, freckles, anything we should draw</small></label><textarea id="kLooks" maxlength="400" placeholder="Curly brown hair in a ponytail, round glasses, big smile, missing a front tooth"></textarea>
       <label for="kLikes">Favorite things * <small>animals, sports, foods, places, hobbies</small></label><textarea id="kLikes" maxlength="400" placeholder="Horses, soccer, pancakes, the beach, dinosaurs, painting"></textarea>
       <div class="two"><div><label for="kPet">Pet <small>(kind and name)</small></label><input type="text" id="kPet" maxlength="60" placeholder="A dachshund named Schnitzel"></div><div><label for="kFriend">Best friend's first name</label><input type="text" id="kFriend" maxlength="40"></div></div>
@@ -159,7 +160,7 @@ fetch('/api/order/open').then(function(r){return r.json()}).then(function(j){OPE
 function form(p){show('vForm');$('#fTitle').textContent=PROD[p].t;$('#fLede').textContent=PROD[p].l;['fKid','fIdea','fJoke'].forEach(function(x){$('#'+x).classList.add('hide')});$({kid:'#fKid',idea:'#fIdea',joke:'#fJoke'}[p]).classList.remove('hide');ts();T('order_form',{product:p});
   if(p==='idea'){try{MINE=JSON.parse(sessionStorage.getItem('fcp.orderIdea')||'null')}catch(e){MINE=null}if(MINE){$('#iIdea').value=MINE.idea||'';if(MINE.level)$('#iLevel').value=MINE.level;if(MINE.jpg){$('#iMine').src=MINE.jpg;$('#iMineBox').classList.remove('hide')}}else if(Q.get('idea'))$('#iIdea').value=Q.get('idea')}}
 $('#go').addEventListener('click',function(){
-  var f={};if(P==='kid')f={name:val('#kName'),age:val('#kAge'),looks:val('#kLooks'),likes:val('#kLikes'),pet:val('#kPet'),friend:val('#kFriend'),occasion:val('#kOcc')};
+  var f={};if(P==='kid')f={name:val('#kName'),age:val('#kAge'),is:$('#kIs').value,looks:val('#kLooks'),likes:val('#kLikes'),pet:val('#kPet'),friend:val('#kFriend'),occasion:val('#kOcc')};
   if(P==='joke')f={name:val('#jName'),from:val('#jFrom'),who:val('#jWho'),looks:val('#jLooks'),jokes:val('#jJokes'),occasion:val('#jOcc')};
   if(P==='idea')f={idea:val('#iIdea'),name:val('#iName'),level:$('#iLevel').value};
   if(OPEN.ts&&!TSTOK){msg($('#fMsg'),'One moment, checking that you are a person. Then press the button again.','bad');return}
