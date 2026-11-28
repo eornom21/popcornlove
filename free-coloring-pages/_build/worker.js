@@ -366,8 +366,9 @@ async function owned(env, id, tok) { const o = await oGet(env, id); return o && 
 
 // ---------- email (queued; the Apps Script mailer sends them from hello@) ----------
 const SIGN = "\n\nMake a Coloring Book\nhello@makeacoloringbook.com\nhttps://makeacoloringbook.com";
-async function mail(env, to, subject, text, order) {
-  const k = "mail:" + Date.now() + "-" + rid(4);
+async function mail(env, to, subject, text, order, key) {
+  // A customer email gets a fixed key (order + kind), so two workers racing on the same step queue it only once.
+  const k = key ? "mail:" + key : "mail:" + Date.now() + "-" + rid(4);
   await env.KV.put(k, JSON.stringify({ to, subject, text: text + SIGN, order: order || "" }), { expirationTtl: 14 * DAY });
 }
 async function alertNate(env, o, why, detail) {
@@ -398,7 +399,12 @@ const MAILS = {
   refund: (o) => ["Your refund for order " + o.id,
     "Hi " + first(o.pay.name) + ",\n\nWe've refunded " + money(o.problem.refunded) + " to your card. It usually shows up in 5 to 10 business days. Sorry your book didn't make it."],
 };
-async function send(env, o, kind) { const m = MAILS[kind](o); await mail(env, o.pay.email, m[0], m[1], o.id); (o.mailed = o.mailed || {})[kind] = Date.now(); log(o, "email " + kind); }
+async function send(env, o, kind) {
+  const n = kind === "shipped" || kind === "reprint" ? (o.lulu && o.lulu.job) || 0 : 0, mk = "mailed:" + o.id + ":" + kind + ":" + n;
+  if (await env.KV.get(mk)) { log(o, "email " + kind + " already sent"); return; }
+  await env.KV.put(mk, "1", { expirationTtl: 200 * DAY });
+  const m = MAILS[kind](o); await mail(env, o.pay.email, m[0], m[1], o.id, o.id + "-" + kind + "-" + n); (o.mailed = o.mailed || {})[kind] = Date.now(); log(o, "email " + kind);
+}
 async function mailbox(q, env, u) {
   if (!(await keyOk(q.headers.get("x-mail-key"), env.MAIL_KEY_HASH || MAIL_KEY_HASH))) return json({ error: "key" }, 403);
   if (u.pathname === "/api/mail/outbox") {
@@ -407,7 +413,7 @@ async function mailbox(q, env, u) {
     return json({ mails: out });
   }
   if (u.pathname === "/api/mail/sent" && q.method === "POST") {
-    const b = await q.json().catch(() => ({})); for (const id of b.ids || []) if (/^mail:\d+-[a-f0-9]{8}$/.test(id)) await env.KV.delete(id);
+    const b = await q.json().catch(() => ({})); for (const id of b.ids || []) if (/^mail:(\d+-[a-f0-9]{8}|MCB-[A-Z2-9]{6}-[a-z]+-\d+)$/.test(id)) await env.KV.delete(id);
     return json({ ok: true });
   }
   return json({ error: "nope" }, 404);
