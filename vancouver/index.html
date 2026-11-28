@@ -288,6 +288,8 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
 .night nav.tabs{background:rgba(16,28,54,.96);border-top-color:#2a3d66}
 .night nav.tabs button{color:#b9c6de}
 .night nav.tabs button.on{color:#fff;background:#24386a}
+.mrt{font-family:var(--body);font-weight:700;font-size:12.5px;letter-spacing:0;text-transform:none;color:var(--muted);white-space:nowrap}
+.chk .tx .lnk{display:inline-block;margin-top:3px}
 /* house hunt */
 .hh-h{font-family:var(--cond);font-weight:700;letter-spacing:.07em;text-transform:uppercase;font-size:13px;color:#b3261e;margin:16px 0 2px}
 .hh-l{list-style:none;margin:4px 0}
@@ -331,6 +333,7 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
   <div class="card note" id="spot-box" style="display:none"><div style="font-weight:800;color:var(--navy)">📍 Got your spot.</div><div class="btns"><a class="btn pri" id="spot-link" href="#">Text it to the family</a></div><div class="small" style="margin-top:6px">Opens Messages with a map link. Pick who gets it.</div></div>
   <div class="card" id="famcard" style="display:none"></div>
   <div class="card now" id="doorcard" style="display:none"></div>
+  <div class="card now" id="moviecard" style="display:none"></div>
   <h2 class="sec">⏱️ Right now in Vancouver</h2>
   <div class="card"><div class="timers" id="timers"></div><div class="small" style="margin-top:8px">At the Market: snow showers every 30 minutes, a light show on the Pyramid every hour, and the Prost Show at 7:00 PM.</div><div class="btns"><button class="btn" data-snow>❄️ Let it snow</button></div></div>
   <h2 class="sec">❄️ Weather <small id="wx-src"></small></h2>
@@ -357,9 +360,11 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
 
 <!-- FUN -->
 <section class="view" id="v-fun">
-  <div class="jump"><button data-scroll="sec-doors">Doors</button><button data-scroll="sec-hunt">Hunt</button><button data-scroll="sec-treats">Treats</button><button data-scroll="sec-games">Games</button><button data-scroll="sec-wrap">Wrapped</button><button data-scroll="sec-homes">Houses</button><button data-kid>Kid mode</button></div>
+  <div class="jump"><button data-scroll="sec-doors">Doors</button><button data-scroll="sec-movies">Movies</button><button data-scroll="sec-hunt">Hunt</button><button data-scroll="sec-treats">Treats</button><button data-scroll="sec-games">Games</button><button data-scroll="sec-wrap">Wrapped</button><button data-scroll="sec-homes">Houses</button><button data-kid>Kid mode</button></div>
   <h2 class="sec" id="sec-doors">🚪 Countdown doors <small class="prog" id="p-doors"></small></h2>
   <div class="doors" id="doors"></div>
+  <h2 class="sec" id="sec-movies">🎬 Movie nights before we go <small class="prog" id="p-movies"></small></h2>
+  <div id="movies"></div>
   <div class="card c2 count" id="sec-hunt" style="background:#fbe3de;border-color:#e3a59c"><div class="big" style="font-size:32px">The Great Vancouver Hunt</div><div class="lbl">Tap when you find it, or snap a 📷 for proof · <span class="prog" id="p-hunt"></span></div></div>
   <div id="hunt"></div>
   <h2 class="sec" id="sec-treats">🍩 Treat scorecard <small class="prog" id="p-treats"></small></h2>
@@ -590,7 +595,8 @@ var HUNT=[
  ['Around Gastown','c1',[['clock','Hear the Steam Clock whistle','Every 15 minutes'],['train','Ride at the front of the SkyTrain','No driver!'],['sea','Watch a seaplane take off','Coal Harbour, beside the Market'],['leaf','Find a maple leaf in a latte'],['car','Find the streetcar inside the restaurant','Old Spaghetti Factory']]],
  ['Stanley Park','c2',[['totem','Count the totem poles at Brockton Point'],['light','Find the red-and-white lighthouse'],['gun','Find the Nine O\'Clock Gun'],['plane','Watch a seaplane take off']]],
  ['Christmas Market','c2',[['caro','Ride the Christmas Carousel'],['tree','Walk through the giant Christmas tree','35 feet tall'],['snow','Get caught in a snow shower','Every 30 minutes'],['hans','Find Hans the Elf','Scavenger hunt'],['wish','Hang a wish in the Wishing Forest'],['punch','Drink a Kinderpunsch']]],
- ['Granville Island & Capilano','c3',[['aqb','Ride the tiny Aquabus ferry'],['dip','Eat a Honey Dip donut'],['bridge','Cross the big bridge','137 m long, 70 m up'],['tops','Walk all seven treetop bridges'],['cliff','Brave the Cliffwalk'],['stick','Collect the Rainforest Explorer stickers']]]
+ ['Granville Island & Capilano','c3',[['aqb','Ride the tiny Aquabus ferry'],['dip','Eat a Honey Dip donut'],['bridge','Cross the big bridge','137 m long, 70 m up'],['tops','Walk all seven treetop bridges'],['cliff','Brave the Cliffwalk'],['stick','Collect the Rainforest Explorer stickers']]],
+ ['Movie spots','c4',[['mvnes','Stand on the NeverEnding Story corner','Water and Cambie, by the Steam Clock'],['mvmi','Find the Mission: Impossible "Mumbai" street','Outside the Convention Centre, by the Market'],['mvgi','Granville Island, playing Seattle','The last scene of Ghost Protocol']]]
 ];
 var EXTRAS=[
  ['🛍️','Canada Place & the seawall','Free. Seaplanes, cruise-ship pier, mountains — right next to the Market.',P.canpl],
@@ -816,7 +822,7 @@ function loadFx(){showFx();if(!window.fetch)return;
    v19 additions: sheet, show-the-driver, text my spot, forecast per stop,
    timers, doors, photo hunt, treats, games, Trip Wrapped, kid mode, night
    ==================================================================== */
-var BUILD='van-v22';
+var BUILD='van-v23';
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],WDL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 /* ---------- sheet ---------- */
@@ -1167,7 +1173,7 @@ function checkUpdate(manual){
     if(manual)toast(m?'You have the newest version':'Couldn\'t check. Try again with a signal')}).catch(function(){if(manual)toast('Couldn\'t check. Try again with a signal')});
 }
 
-function renderFun(){renderDoors();renderTreats();renderGames();renderWrapCard();renderHomes()}
+function renderFun(){renderDoors();renderMovies();renderTreats();renderGames();renderWrapCard();renderHomes()}
 
 /* ====================================================================
    Family sharing: one shared copy of checklists, the hunt, restaurant picks,
@@ -1176,7 +1182,7 @@ function renderFun(){renderDoors();renderTreats();renderGames();renderWrapCard()
    The service is vancouver/_build/worker.js.
    ==================================================================== */
 var SYNC_URL='https://vancouver-trip.natemonroe21.workers.dev/sync';
-var SYNCED={book:'c',pack:'c',spec:'c',hunt:'c',picks:'p',tally:'t',treats:'x',homes:'h'};
+var SYNCED={book:'c',pack:'c',spec:'c',hunt:'c',mov:'c',picks:'p',tally:'t',treats:'x',homes:'h'};
 var NOTE_LIFE=36*3600e3,QUICK=['At the Airbnb','Heading back','In line for food','Come find us'];
 var syncMap=get('sync',{}),syncCfg=get('synccfg',null),syncBusy=false,syncDirty=false,syncPending=false,syncLast=get('synclast',0),syncErr='',lastStamp=0,shareWho='';
 function rawSet(k,v){mem[k]=v;try{localStorage.setItem('van.'+k,JSON.stringify(v))}catch(e){}}
@@ -1206,7 +1212,7 @@ function unflat(k,v,stores){
   var m,i;
   function st(name){return stores[name]||(stores[name]=get(name,{})||{})}
   function tre(){return stores.treats||(stores.treats=treatState())}
-  if((m=/^c:(book|pack|spec|hunt):(.+)$/.exec(k)))st(m[1])[m[2]]=!!v;
+  if((m=/^c:(book|pack|spec|hunt|mov):(.+)$/.exec(k)))st(m[1])[m[2]]=!!v;
   else if(k.slice(0,2)==='p:')st('picks')[k.slice(2)]=v;
   else if(k.slice(0,2)==='t:')st('tally')[k.slice(2)]=+v||0;
   else if(k.slice(0,2)==='h:')st('homes')[k.slice(2)]=(v&&typeof v==='object'&&/^https:\/\//.test(v.u||''))?v:null;
@@ -1227,7 +1233,7 @@ function typing(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA)$/
 function syncFlush(){
   if(!syncPending||typing())return;
   syncPending=false;var y=window.pageYOffset;
-  renderLists();renderEat();renderTreats();renderWrapCard();renderFam();renderHomes();window.scrollTo(0,y);
+  renderLists();renderEat();renderMovies();renderTreats();renderWrapCard();renderFam();renderHomes();window.scrollTo(0,y);
 }
 function syncNow(cb){
   if(!syncCfg||!window.fetch){if(cb)cb(false);return}
@@ -1346,6 +1352,55 @@ function hhAdd(){
 }
 function hhDel(id){var hs=get('homes',{})||{};if(!(id in hs))return;hs[id]=null;set('homes',hs);renderHomes()}
 
+/* ---------- movie nights: films shot in Vancouver ---------- */
+var MOVIES=[
+ ['Family nights','One a night gets you to wheels-up.',[
+  ['nes','The NeverEnding Story',1984,'PG','It opens and ends at Water and Cambie, the Steam Clock corner three minutes from our door. Bastian gets cornered in Blood Alley, also in Gastown.'],
+  ['elf','Elf',2003,'PG','Most of it was shot in Vancouver. The North Pole elf school was built inside the Pacific Coliseum.'],
+  ['wonder','Wonder',2017,'PG','Set in New York, shot almost entirely in Vancouver.'],
+  ['natm','Night at the Museum: Battle of the Smithsonian',2009,'PG','Scenes shot in Vancouver.'],
+  ['sonic','Sonic the Hedgehog 2',2022,'PG','Filmed in Vancouver.']
+ ]],
+ ['More for the kids','',[
+  ['wimpy','Diary of a Wimpy Kid: Dog Days',2012,'PG','The amusement park is Playland in Vancouver.'],
+  ['airbud','Air Bud: Golden Receiver',1998,'G','Filmed in Vancouver.'],
+  ['scooby','Scooby-Doo 2: Monsters Unleashed',2004,'PG','Filmed in Vancouver, playing the town of Coolsville.'],
+  ['deck','Deck the Halls',2006,'PG','A Christmas comedy shot around Metro Vancouver.']
+ ]],
+ ['After the kids are down','',[
+  ['mi4','Mission: Impossible – Ghost Protocol',2011,'PG-13','The Vancouver Convention Centre plays a street in Mumbai, right where the Christmas Market is. The last scene, "in Seattle," is Granville Island.'],
+  ['deadpool','Deadpool',2016,'R','The big freeway fight is the Georgia Viaduct downtown. Ryan Reynolds was born in Vancouver.'],
+  ['gilmore','Happy Gilmore',1996,'PG-13','Golf scenes at the Stanley Park Pitch and Putt and the Stanley Park Pavilion.'],
+  ['juno','Juno',2007,'PG-13','Set in Minnesota, shot in Vancouver and its suburbs.'],
+  ['5050','50/50',2011,'R','Set in Seattle, shot in Vancouver.'],
+  ['legends','Legends of the Fall',1994,'R','Alexander Street in Gastown plays Helena, Montana.'],
+  ['apes','Rise of the Planet of the Apes',2011,'PG-13','The zoo scenes were shot in Stanley Park.']
+ ]]
+];
+var MOVIE_NIGHTS=['2026-11-28','2026-11-29','2026-11-30','2026-12-01','2026-12-02'];
+function watchLink(t){return'https://www.justwatch.com/us/search?q='+enc(t)}
+function tonightsMovie(){
+  var n=vanNow().date,i=MOVIE_NIGHTS.indexOf(n),st=get('mov',{}),fam=MOVIES[0][2],k;
+  if(i<0)return null;
+  if(!st[fam[i][0]])return fam[i];
+  for(k=0;k<fam.length;k++)if(!st[fam[k][0]])return fam[k];
+  return null;
+}
+function movieRow(m,st){
+  return'<li class="'+(st[m[0]]?'done':'')+'" data-k="mov" data-id="'+m[0]+'"><span class="box">✓</span><div class="tx">'+esc(m[1])+' <span class="mrt">'+m[2]+' · '+m[3]+'</span><small>'+esc(m[4])+'</small><a class="lnk" data-stop href="'+watchLink(m[1])+'" target="_blank" rel="noopener">Where to watch</a></div></li>';
+}
+function renderMovies(){
+  var c=$('movies');if(!c)return;
+  var st=get('mov',{}),seen=0,tot=0,t=tonightsMovie(),h='';
+  MOVIES.forEach(function(g){g[2].forEach(function(m){tot++;if(st[m[0]])seen++})});
+  if(t)h+='<div class="card now" style="margin-top:0"><div class="k">Tonight\'s movie</div><div class="t">🍿 '+esc(t[1])+'</div><div class="s">'+esc(t[4])+'</div><div class="btns"><a class="btn pri" href="'+watchLink(t[1])+'" target="_blank" rel="noopener">Where to watch</a></div></div>';
+  h+='<div class="card note"><div style="font-weight:800;color:var(--navy)">Start here: "Vancouver Never Plays Itself"</div><div class="small">A short video essay by Vancouver-born Tony Zhou. Vancouver is the third-biggest filmmaking city in North America and almost never gets to be itself on screen. After this you\'ll spot it everywhere.</div><div class="btns"><a class="btn" href="https://vimeo.com/138807572" target="_blank" rel="noopener">▶ Watch the essay</a></div></div>';
+  h+=MOVIES.map(function(g){return'<div class="card chk"><div style="font-family:var(--cond);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);font-size:15px">'+esc(g[0])+(g[1]?' <span class="mrt">'+esc(g[1])+'</span>':'')+'</div><ul class="chk">'+g[2].map(function(m){return movieRow(m,st)}).join('')+'</ul></div>'}).join('');
+  c.innerHTML=h;$('p-movies').textContent=seen+' of '+tot+' watched';
+  var tc=$('moviecard');
+  if(tc){if(t&&TRIP.indexOf(vanNow().date)<0){tc.style.display='block';tc.innerHTML='<div class="k">Tonight\'s movie</div><div class="t">🍿 '+esc(t[1])+' <span class="mrt">'+t[3]+'</span></div><div class="s">'+esc(t[4])+'</div><div class="btns"><a class="btn pri" href="'+watchLink(t[1])+'" target="_blank" rel="noopener">Where to watch</a><button class="btn" data-goto="sec-movies">All the movies</button></div>'}else tc.style.display='none'}
+}
+
 /* ---------- tabs ---------- */
 var TABS=['today','plan','eat','fun','info'];
 function go(tab,noScroll){
@@ -1404,7 +1459,7 @@ document.addEventListener('click',function(e){
   if((el=up('data-jump'))){e.preventDefault();var s2=$('s-'+el.getAttribute('data-jump'));if(s2)window.scrollTo(0,s2.getBoundingClientRect().top+window.pageYOffset-64);return}
   if((el=up('data-scroll'))){var s3=$(el.getAttribute('data-scroll'));if(s3)window.scrollTo(0,s3.getBoundingClientRect().top+window.pageYOffset-60);return}
   if((el=up('data-pick'))){var p=el.getAttribute('data-pick').split('|'),pk=get('picks',{});pk[p[0]]=pk[p[0]]===p[1]?null:p[1];set('picks',pk);var y=window.pageYOffset;renderEat();window.scrollTo(0,y);return}
-  if((el=up('data-k'))){var k=el.getAttribute('data-k'),st=get(k,{}),id=el.getAttribute('data-id');st[id]=!st[id];set(k,st);var y2=window.pageYOffset;renderLists();window.scrollTo(0,y2);return}
+  if((el=up('data-k'))){var k=el.getAttribute('data-k'),st=get(k,{}),id=el.getAttribute('data-id');st[id]=!st[id];set(k,st);var y2=window.pageYOffset;renderLists();if(k==='mov')renderMovies();window.scrollTo(0,y2);return}
   if((el=up('data-m'))){mapPref=el.getAttribute('data-m');set('map',mapPref);renderAll();return}
   if(t.id==='ov-addr'||(t.parentNode&&t.parentNode.id==='ov-addr')||t.className==='addr'){$('ov-addr').className='ov';return}
 });
