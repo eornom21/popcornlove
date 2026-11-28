@@ -830,7 +830,7 @@ async function advance(env, o) {
     if (missing.length) {
       o.status = "drawing";
       if (missing[0] !== "c" && !o.have[1] && missing.indexOf(1) >= 0) missing.splice(0, missing.length, 1); // page 1 first: the others copy its character
-      const batch = missing.slice(0, num(env.PAGES_PER_RUN, 3));
+      const batch = missing.slice(0, num(env.PAGES_PER_RUN, 5));
       const res = await Promise.all(batch.map((n) => drawPage(env, o, n).then((d) => [n, d])));
       for (const [n, d] of res) if (!d.ok && !/^429/.test(d.why || "")) {
         o.fails = o.fails || {}; o.fails[n] = (o.fails[n] || 0) + 1; log(o, "page " + n + " failed: " + (d.why || ""));
