@@ -330,6 +330,7 @@ const PRODUCTS = {
   picked: { name: "Your coloring pages, printed and mailed", price: 1999, gen: false, max: 40 },
 };
 const RUSH_PRICE = 1500;
+const PDF_PRICE = 1499; // "Print it yourself": the same book as a PDF to print at home (Nate, Nov 27)
 const SHIP = {
   std: { lulu: "MAIL", label: "Standard shipping", eta: "about 2 to 3 weeks", lostDays: 35 },
   rush: { lulu: "EXPEDITED", label: "Faster shipping", eta: "about 1 to 2 weeks", lostDays: 18 },
@@ -343,6 +344,7 @@ const DAY = 86400;
 const newOid = () => { const a = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; return "MCB-" + [...crypto.getRandomValues(new Uint8Array(6))].map((b) => a[b % 32]).join(""); };
 const money = (c) => "$" + (c / 100).toFixed(2);
 const first = (n) => String(n || "").trim().split(/\s+/)[0] || "there";
+const dlUrl = (o) => "https://" + HOME + "/api/download/" + o.id + "/" + o.ptok + "/" + encodeURIComponent(String(o.title || "coloring-book").replace(/[^A-Za-z0-9 ]+/g, "").trim().replace(/\s+/g, "-") || "coloring-book") + ".pdf";
 const helpUrl = (o) => "https://" + HOME + "/order/help/?order=" + o.id;
 
 // ---------- storage ----------
@@ -386,6 +388,10 @@ const MAILS = {
     (o.lulu.tracking ? "\n" + (o.lulu.carrier ? o.lulu.carrier + " " : "") + "tracking number: " + o.lulu.tracking : "") +
     "\n\nIf it hasn't arrived by " + new Date(o.lulu.shippedAt + SHIP[o.ship].lostDays * DAY * 1000).toLocaleDateString("en-US", { month: "long", day: "numeric" }) +
     ", or it arrives damaged or misprinted, tell us here and we'll fix it: " + helpUrl(o)],
+  pdfready: (o) => ["Your coloring book is ready to print (" + o.id + ")",
+    "Hi " + first(o.pay.name) + ",\n\n\"" + o.title + "\" is ready! Download it here: " + dlUrl(o) + "\n\n" +
+    "It's " + o.n + " pages on regular 8.5 x 11 paper, one picture per sheet. The link works for 30 days, so save a copy.\n\n" +
+    "Something wrong? Tell us here and we'll fix it: " + helpUrl(o)],
   reprint: (o) => ["We're reprinting your book (" + o.id + ")",
     "Hi " + first(o.pay.name) + ",\n\nSorry about that. We're printing a new copy of \"" + o.title + "\" at no charge and sending it to the same address. " +
     "We'll email the tracking link when it ships. No need to send anything back."],
@@ -564,6 +570,18 @@ async function orderCheckout(q, env) {
   if (o.product === "picked") { for (const n of ["c"].concat([...Array(o.n)].map((_, i) => i + 1))) if (!(await kvHas(env, iKey(o.id, n)))) return json({ error: "pages", message: "Some pages didn't upload. Please try again." }, 400); }
   else if (!o.have[1] || !o.have.c) return json({ error: "preview", message: "Make the preview first." }, 400);
   const P = PRODUCTS[o.product], back = "https://" + HOME + "/order/?id=" + o.id + "&tok=" + o.tok;
+  const pdf = b.format === "pdf" && P.gen;
+  o.format = pdf ? "pdf" : "print";
+  if (pdf) {
+    const name = P.name.replace(/^An? /, "").replace(/^./, (c) => c.toUpperCase()) + ", printable PDF";
+    const s0 = await stripe(env, "POST", "/checkout/sessions", [["mode", "payment"], ["success_url", back + "&paid=1"], ["cancel_url", back], ["client_reference_id", o.id], ["metadata[order]", o.id], ["payment_intent_data[metadata][order]", o.id],
+      ["payment_intent_data[description]", name + " (" + o.id + ")"], ["line_items[0][quantity]", "1"], ["line_items[0][price_data][currency]", "usd"], ["line_items[0][price_data][unit_amount]", String(PDF_PRICE)],
+      ["line_items[0][price_data][product_data][name]", name], ["line_items[0][price_data][product_data][description]", "\"" + o.title + "\", " + o.n + " coloring pages to print at home. We email the download link when it's ready (usually within 30 minutes)."],
+      ["custom_text[submit][message]", "We start drawing your book as soon as you pay and email you the download link when it's ready."]]);
+    if (!s0 || !s0.url) return json({ error: "upstream", message: "Checkout didn't open. Please try again." }, 502);
+    o.session = s0.id; log(o, "checkout pdf " + s0.id.slice(0, 14)); await oPut(env, o); await activeSet(env, o.id, true);
+    return json({ url: s0.url });
+  }
   const pairs = [["mode", "payment"], ["success_url", back + "&paid=1"], ["cancel_url", back], ["client_reference_id", o.id], ["metadata[order]", o.id], ["payment_intent_data[metadata][order]", o.id],
     ["payment_intent_data[description]", P.name + " (" + o.id + ")"],
     ["line_items[0][quantity]", "1"], ["line_items[0][price_data][currency]", "usd"], ["line_items[0][price_data][unit_amount]", String(P.price)],
@@ -588,7 +606,7 @@ async function confirmPaid(env, o) {
   const sd = (s.collected_information && s.collected_information.shipping_details) || s.shipping_details || {}, a = sd.address || {}, cd = s.customer_details || {};
   o.pay = { email: cd.email || "", name: sd.name || cd.name || "", phone: cd.phone || "", amount: s.amount_total, pi: s.payment_intent,
     ship: { name: sd.name || cd.name || "", street1: a.line1 || "", street2: a.line2 || "", city: a.city || "", state: a.state || "", postcode: a.postal_code || "", country: a.country || "US" } };
-  o.ship = s.shipping_cost && s.shipping_cost.amount_total > 0 ? "rush" : "std";
+  o.ship = o.format === "pdf" ? "" : s.shipping_cost && s.shipping_cost.amount_total > 0 ? "rush" : "std";
   o.status = "paid"; o.paidAt = Date.now(); o.pages = 4 + 2 * o.n; if (o.pages < 32) o.pages = 32;
   // Re-save everything without the draft's 3-day expiry.
   for (const n of Object.keys(o.have).concat(o.product === "picked" ? ["c"].concat([...Array(o.n)].map((_, i) => String(i + 1))) : [])) {
@@ -596,7 +614,7 @@ async function confirmPaid(env, o) {
     o.have[n] = v ? 1 : o.have[n];
   }
   log(o, "paid " + money(o.pay.amount) + " " + o.ship);
-  await send(env, o, "confirm");
+  if (o.format !== "pdf") await send(env, o, "confirm"); // a PDF order gets one email, when the file is ready
   await oPut(env, o); await activeSet(env, o.id, true);
   return o;
 }
@@ -606,7 +624,7 @@ async function orderStatus(env, u) {
   if (o.status === "draft" && o.session) o = await confirmPaid(env, o);
   const drawn = Object.keys(o.have || {}).filter((k) => k !== "c").length;
   return json({ id: o.id, status: o.status, product: o.product, title: o.title, dedication: o.dedication || "", n: o.n, drawn, have: Object.keys(o.have || {}),
-    captions: (o.scenes || []).map((s) => s.caption), ship: o.ship || "", tracking: o.lulu && o.lulu.url ? o.lulu.url : "", redrawsLeft: Math.max(0, 3 - (o.redraws || 0)) });
+    captions: (o.scenes || []).map((s) => s.caption), ship: o.ship || "", tracking: o.lulu && o.lulu.url ? o.lulu.url : "", redrawsLeft: Math.max(0, 3 - (o.redraws || 0)), format: o.format || "", download: o.status === "delivered" ? dlUrl(o) : "" });
 }
 
 // ---------- Lulu ----------
@@ -757,6 +775,35 @@ async function coverPdf(env, o) {
   pdf.obj(cat, "<< /Type /Catalog /Pages " + pages + " 0 R >>");
   return pdf.finish(cat);
 }
+// "Print it yourself": one-sided letter pages. Page 1 is the color cover with the title; then "belongs to"; then one picture per sheet.
+async function homePdf(env, o) {
+  const W = 612, H = 792, pdf = new Pdf(), cat = pdf.next(), pages = pdf.next(), font = await fontObjs(pdf), kids = [];
+  const imgs = await Promise.all([...Array(o.n)].map((_, i) => iGet(env, o.id, i + 1))), art = await iGet(env, o.id, "c");
+  if (imgs.some((x) => !x) || !art) throw new Error("missing page");
+  const page = (content, xobjs) => { const c = pdf.next(), p = pdf.next(); pdf.obj(c, "<< >>", content);
+    pdf.obj(p, "<< /Type /Page /Parent " + pages + " 0 R /MediaBox [0 0 " + W + " " + H + "] /Resources << /Font << /F1 " + font + " 0 R >>" + (xobjs ? " /XObject << " + xobjs + " >>" : "") + " >> /Contents " + c + " 0 R >>"); kids.push(p); };
+  const ink = rgb("#1D1B2F") + " rg ";
+  const cv = imgObj(pdf, art), m = 36, bw = W - 2 * m, bh = H - 2 * m, s = Math.min(bw / cv.w, bh / cv.h), w = cv.w * s, h = cv.h * s, x = (W - w) / 2, y = (H - h) / 2;
+  const t = fitText(o.title, w - 110, 40, 22, 2), boxH = t.lines.length * t.size * 1.15 + 34, top = y + h - 40;
+  page("q " + w.toFixed(2) + " 0 0 " + h.toFixed(2) + " " + x.toFixed(2) + " " + y.toFixed(2) + " cm /Cv Do Q\n1 1 1 rg " + rgb("#1D1B2F") + " RG 4 w " + (x + 40).toFixed(2) + " " + (top - boxH).toFixed(2) + " " + (w - 80).toFixed(2) + " " + boxH.toFixed(2) + " re B\n" +
+    ink + centered(t.lines, t.size, W / 2, top - 17 - t.size * 0.8), "/Cv " + cv.n + " 0 R");
+  const who = o.product === "kid" || o.product === "joke" ? o.form.name : "";
+  page(ink + centered(["This book belongs to"], 26, W / 2, 470) + "\n" + rgb("#1D1B2F") + " RG 2 w 126 380 m 486 380 l S" + (who ? "\n" + ink + centered([who], fitText(who, 340, 34, 16, 1).size, W / 2, 392) : "") +
+    (o.dedication ? "\n" + rgb("#3B3852") + " rg " + centered(fitText(o.dedication, W - 160, 18, 12, 2).lines, 16, W / 2, 300) : ""));
+  for (let i = 0; i < o.n; i++) {
+    const im = imgObj(pdf, imgs[i]), k = Math.min(bw / im.w, bh / im.h), iw = im.w * k, ih = im.h * k;
+    page("q " + iw.toFixed(2) + " 0 0 " + ih.toFixed(2) + " " + ((W - iw) / 2).toFixed(2) + " " + ((H - ih) / 2).toFixed(2) + " cm /Im" + i + " Do Q", "/Im" + i + " " + im.n + " 0 R");
+  }
+  pdf.obj(pages, "<< /Type /Pages /Kids [" + kids.map((k) => k + " 0 R").join(" ") + "] /Count " + kids.length + " >>");
+  pdf.obj(cat, "<< /Type /Catalog /Pages " + pages + " 0 R >>");
+  return pdf.finish(cat);
+}
+async function downloadFile(env, u) {
+  const m = /^\/api\/download\/(MCB-[A-Z2-9]{6})\/([a-f0-9]{32})\/[^/]*\.pdf$/.exec(u.pathname); if (!m) return new Response("Not found", { status: 404 });
+  const o = await oGet(env, m[1]); if (!o || !same(o.ptok, m[2]) || o.format !== "pdf" || o.status !== "delivered") return new Response("Not found", { status: 404 });
+  if (Date.now() - o.deliveredAt > 45 * DAY * 1000) return new Response("This download link has expired. Write to hello@makeacoloringbook.com and we'll send a new one.", { status: 410 });
+  return new Response(await homePdf(env, o), { headers: { "content-type": "application/pdf", "content-disposition": "inline", "cache-control": "private, max-age=3600" } });
+}
 async function printFile(env, u) {
   const m = /^\/api\/print\/(MCB-[A-Z2-9]{6})\/([a-f0-9]{32})\/(interior|cover)\.pdf$/.exec(u.pathname); if (!m) return new Response("no", { status: 404 });
   const o = await oGet(env, m[1]); if (!o || !same(o.ptok, m[2]) || o.status === "draft") return new Response("no", { status: 404 });
@@ -785,6 +832,9 @@ async function advance(env, o) {
       return "save";
     }
     o.status = "ready"; log(o, "all pages drawn"); return "save";
+  }
+  if (o.status === "ready" && o.format === "pdf") {
+    o.status = "delivered"; o.deliveredAt = Date.now(); await send(env, o, "pdfready"); return "done";
   }
   if (o.status === "ready") {
     const r = await luluSubmit(env, o);
@@ -837,6 +887,7 @@ async function orderHelp(q, env) {
   if (ESCALATE.test(note)) return toNate("customer message needs a personal reply");
   if (o.problem && o.problem.used) return toNate("second problem on the same order");
   if (["misprint", "damaged", "lost"].indexOf(kind) < 0) return toNate("problem outside the policy");
+  if (o.format === "pdf") return toNate("problem with a printable (PDF) order");
   if (o.status !== "shipped") return reply(false, o.status === "printing" || o.status === "drawing" || o.status === "paid" || o.status === "ready" ? "Your book hasn't shipped yet. We'll email the tracking link as soon as it does." : "We'll look at this ourselves and email you within 2 business days.");
   const due = o.lulu.shippedAt + SHIP[o.ship].lostDays * DAY * 1000;
   if (kind === "lost" && Date.now() < due) return reply(false, "Your book is still within its normal delivery time. If it hasn't arrived by " + new Date(due).toLocaleDateString("en-US", { month: "long", day: "numeric" }) + ", come back to this page and we'll send a new one or refund you.");
@@ -872,8 +923,9 @@ async function orders(q, env, u, ctx) {
   if (p === "/api/order/checkout" && q.method === "POST") return orderCheckout(q, env);
   if (p === "/api/order/status") return orderStatus(env, u);
   if (p === "/api/order/help" && q.method === "POST") return orderHelp(q, env);
-  if (p === "/api/order/open") return json({ open: await ordersOpen(q, env), prices: Object.fromEntries(Object.entries(PRODUCTS).map(([k, v]) => [k, v.price])), rush: RUSH_PRICE, ts: env.TURNSTILE_SECRET ? TS_SITEKEY : "" });
+  if (p === "/api/order/open") return json({ open: await ordersOpen(q, env), prices: Object.fromEntries(Object.entries(PRODUCTS).map(([k, v]) => [k, v.price])), rush: RUSH_PRICE, pdf: PDF_PRICE, ts: env.TURNSTILE_SECRET ? TS_SITEKEY : "" });
   if (p.startsWith("/api/print/")) return printFile(env, u);
+  if (p.startsWith("/api/download/")) return downloadFile(env, u);
   if (p.startsWith("/api/mail/")) return mailbox(q, env, u);
   if (p === "/api/admin/orders") return adminOrders(q, env, u);
   if (p === "/api/admin/test-mail" && q.method === "POST") {
@@ -901,7 +953,7 @@ export default {
     if (u.pathname === "/api/make/status") return status(q, env || {});
     if (u.pathname === "/api/hearts") return heartsAll(q, env, ctx);
     if (u.pathname === "/api/heart") return q.method === "POST" ? heart(q, env) : json({ error: "method" }, 405);
-    if (/^\/api\/(order|print|mail|admin)\//.test(u.pathname)) { try { return await orders(q, env, u, ctx); } catch (e) { console.log("orders failed", String(e), e && e.stack); return json({ error: "server", message: "Something went wrong. Please try again." }, 500); } }
+    if (/^\/api\/(order|print|download|mail|admin)\//.test(u.pathname)) { try { return await orders(q, env, u, ctx); } catch (e) { console.log("orders failed", String(e), e && e.stack); return json({ error: "server", message: "Something went wrong. Please try again." }, 500); } }
     if (u.pathname.startsWith("/api/team/")) { try { return await team(q, env, u, ctx); } catch (e) { console.log("team failed", String(e)); return json({ error: "server", message: "Something went wrong: " + String(e).slice(0, 120) }, 500); } }
     if (u.pathname === "/api/make") {
       if (q.method !== "POST") return json({ error: "method" }, 405);

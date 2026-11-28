@@ -65,6 +65,7 @@
   </div>
   <div class="box faq">
     <h2>Good to know</h2>
+    <p><b>Rather print it yourself?</b> Every custom book also comes as a printable PDF for $14.99, emailed as soon as it's drawn. Handy for last-minute gifts.</p>
     <p><b>Shipping is free</b> in the US (about 2 to 3 weeks). Faster shipping is $15 more (about 1 to 2 weeks). For Christmas, order by December 10 with faster shipping.</p>
     <p><b>Real book:</b> 8.5 × 11 inch paperback, bright white paper, each picture on its own page with a blank back so markers don't bleed through.</p>
     <p><b>No photos needed.</b> We draw from your description, so you never upload a picture of your child.</p>
@@ -113,9 +114,12 @@
     <ol class="caps" id="caps"></ol>
   </div>
   <div class="box">
-    <h2>Love it? We'll print it and mail it.</h2>
-    <p>We draw the rest of the pages as soon as you order, then print and mail your book. <b id="pPrice">$29.99</b> with free shipping (about 2 to 3 weeks), or $15 more for faster shipping (about 1 to 2 weeks). You pick at checkout.</p>
-    <div class="row"><button class="btn pri" id="buy">Order this book</button><button class="btn" id="startOver">Start over</button></div>
+    <h2>Love it? Pick how you want it.</h2>
+    <div class="prods" style="margin-top:10px">
+      <div class="prod"><h2 style="font-size:20px">Printed and mailed</h2><b class="price" id="pPrice">$29.99</b><p>A real 8.5 × 11 paperback, each picture on its own page. Free shipping (about 2 to 3 weeks), or $15 more for faster shipping (about 1 to 2 weeks).</p><button class="btn pri" id="buy">Order the printed book</button></div>
+      <div class="prod"><h2 style="font-size:20px">Print it yourself</h2><b class="price" id="pPdfPrice">$14.99</b><p>The same book as a PDF to print at home on regular paper. We email the download link as soon as it's drawn, usually within 30 minutes.</p><button class="btn sky" id="buyPdf">Get the printable book</button></div>
+    </div>
+    <div class="row"><button class="btn" id="startOver">Start over</button></div>
     <div class="msg" id="bMsg"></div>
   </div>
 </section>
@@ -169,7 +173,7 @@ $('#go').addEventListener('click',function(){
       if(p.error){fail(p.message);return}clearInterval(iv);b.disabled=false;msg($('#fMsg'),'');preview(d,p.have,3)})}).catch(function(){fail('No answer from the server. Please try again.')})});
 function preview(d,have,left){show('vPreview');history.replaceState(null,'','?p='+P+'&id='+d.id+'&tok='+d.tok);$('#pTitle').textContent=d.title;$('#pDed').textContent=d.dedication||'';$('#pN').textContent=d.n;
   $('#caps').innerHTML=(d.captions||[]).map(function(c){return '<li>'+String(c).replace(/</g,'&lt;')+'</li>'}).join('');
-  if(OPEN.prices&&OPEN.prices[P])$('#pPrice').textContent=money(OPEN.prices[P]);
+  if(OPEN.prices&&OPEN.prices[P])$('#pPrice').textContent=money(OPEN.prices[P]);if(OPEN.pdf)$('#pPdfPrice').textContent=money(OPEN.pdf);
   var cards=[['c','Cover'],['1','Page 1'],['2','Page 2']],v=Date.now();
   $('#pv').innerHTML=cards.map(function(c){return '<figure><img alt="'+c[1]+'" src="/api/order/img/'+d.id+'/'+c[0]+'?tok='+d.tok+'&v='+v+'"><figcaption>'+c[1]+(left>0&&!(P==='idea'&&c[0]==='1'&&MINE&&MINE.jpg)?'<button data-redo="'+c[0]+'">↻ Redraw</button>':'')+'</figcaption></figure>'}).join('');
   $('#pRedo').textContent=left>0?'Not quite right? You can redraw up to '+left+' more time'+(left===1?'':'s')+'. The other pages are drawn after you order.':'The other pages are drawn after you order.'}
@@ -177,8 +181,9 @@ $('#pv').addEventListener('click',function(e){var b=e.target.closest('[data-redo
   fetch('/api/order/preview',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:DRAFT.id,tok:DRAFT.tok,redo:b.dataset.redo==='c'?'c':+b.dataset.redo})}).then(function(r){return r.json()}).then(function(p){if(p.error){b.textContent=p.message?'Limit reached':'Try again';return}
   return fetch('/api/order/status?id='+DRAFT.id+'&tok='+DRAFT.tok).then(function(r){return r.json()}).then(function(s){preview(DRAFT,s.have,s.redrawsLeft)})})});
 $('#startOver').addEventListener('click',function(){location.href='?p='+P});
-$('#buy').addEventListener('click',function(){if(!DRAFT)return;var b=$('#buy');b.disabled=true;msg($('#bMsg'),'Opening secure checkout…');T('order_checkout',{product:P});
-  fetch('/api/order/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:DRAFT.id,tok:DRAFT.tok})}).then(function(r){return r.json()}).then(function(j){if(j.url){location.href=j.url;return}b.disabled=false;msg($('#bMsg'),j.message||'Checkout did not open.','bad')}).catch(function(){b.disabled=false;msg($('#bMsg'),'No answer from the server. Please try again.','bad')})});
+function buy(fmt){if(!DRAFT)return;var b=$(fmt==='pdf'?'#buyPdf':'#buy');b.disabled=true;msg($('#bMsg'),'Opening secure checkout…');T('order_checkout',{product:P,format:fmt});
+  fetch('/api/order/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:DRAFT.id,tok:DRAFT.tok,format:fmt})}).then(function(r){return r.json()}).then(function(j){if(j.url){location.href=j.url;return}b.disabled=false;msg($('#bMsg'),j.message||'Checkout did not open.','bad')}).catch(function(){b.disabled=false;msg($('#bMsg'),'No answer from the server. Please try again.','bad')})}
+$('#buy').addEventListener('click',function(){buy('print')});$('#buyPdf').addEventListener('click',function(){buy('pdf')});
 function status(id,tok,justPaid){fetch('/api/order/status?id='+encodeURIComponent(id)+'&tok='+encodeURIComponent(tok)).then(function(r){return r.json()}).then(function(s){
   if(s.error){show(OPEN.open?'vPick':'vClosed');return}
   P=s.product;remember(id,tok,s.title);
@@ -187,14 +192,16 @@ function status(id,tok,justPaid){fetch('/api/order/status?id='+encodeURIComponen
   if(justPaid)T('purchase',{product:s.product,transaction_id:id});
   show('vDone');$('#dId').textContent=id;$('#dTitle').textContent=s.title;
   var st=s.status,pct=10,step='We\'re drawing your pages',note='';
-  if(st==='paid'||st==='drawing'){pct=10+Math.round(60*s.drawn/Math.max(1,s.n));note=s.drawn+' of '+s.n+' pages drawn. You can close this page; we\'ll email you when it ships.'}
+  var pdf=s.format==='pdf';
+  if(st==='paid'||st==='drawing'){pct=10+Math.round((pdf?85:60)*s.drawn/Math.max(1,s.n));note=s.drawn+' of '+s.n+' pages drawn. You can close this page; we\'ll email you '+(pdf?'the download link when it\'s ready.':'when it ships.')}
+  else if(st==='delivered'){pct=100;step='Your book is ready!';note='We also emailed you the link. Save a copy; the link works for 30 days. '}
   else if(st==='ready'||st==='printing'){pct=80;step='Your book is at the printer';note='Printing takes a few business days. We\'ll email the tracking link when it ships.'}
   else if(st==='shipped'){pct=100;step='Your book has shipped!';note=s.tracking?'':'Tracking is on its way to your inbox.'}
   else if(st==='reprint'){pct=80;step='We\'re printing a new copy';note='We\'ll email tracking when it ships.'}
   else if(st==='refunded'){pct=100;step='This order was refunded';}
   else {step='We\'re looking into your order';note='We\'ll email you soon.'}
-  $('#dStep').textContent=step;$('#dBar').style.width=pct+'%';$('#dNote').innerHTML=note+(s.tracking?'<a class="btn sky" target="_blank" rel="noopener" href="'+s.tracking.replace(/"/g,'')+'">Track your book</a>':'');
-  clearTimeout(POLL);if(st==='paid'||st==='drawing')POLL=setTimeout(function(){status(id,tok,false)},20000)})}
+  $('#dStep').textContent=step;$('#dBar').style.width=pct+'%';$('#dNote').innerHTML=note+(s.download?'<a class="btn pri" target="_blank" rel="noopener" href="'+s.download.replace(/"/g,'')+'">⬇ Download your book</a>':'')+(s.tracking?'<a class="btn sky" target="_blank" rel="noopener" href="'+s.tracking.replace(/"/g,'')+'">Track your book</a>':'');
+  clearTimeout(POLL);if(st==='paid'||st==='drawing'||(pdf&&st==='ready'))POLL=setTimeout(function(){status(id,tok,false)},20000)})}
 })();
 </script>
 </body>
