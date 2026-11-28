@@ -738,7 +738,9 @@ async function interiorPdf(env, o) {
   for (let i = 0; i < o.n; i++) {
     const im = imgObj(pdf, imgs[i]);
     let bx, by, bw, bh;
-    if (o.product === "picked") { bx = 18; by = 0; bw = W - 36; bh = H; } // the browser's page already has margins; inset to Lulu's 0.5 in safety else { bx = 54; by = 36; bw = W - 54 - 36; bh = H - 72; }
+    // A picked page already has the browser's margins, so it is only inset to Lulu's 0.5 in safety area.
+    if (o.product === "picked") { bx = 18; by = 0; bw = W - 36; bh = H; } else { bx = 54; by = 36; bw = W - 54 - 36; bh = H - 72; }
+    if (!(bw > 0 && im.w > 0 && im.h > 0)) throw new Error("bad page size");
     const s = Math.min(bw / im.w, bh / im.h), w = im.w * s, h = im.h * s, x = bx + (bw - w) / 2, y = by + (bh - h) / 2;
     page("q " + w.toFixed(2) + " 0 0 " + h.toFixed(2) + " " + x.toFixed(2) + " " + y.toFixed(2) + " cm /Im" + i + " Do Q", "/Im" + i + " " + im.n + " 0 R");
     page(""); // blank back so markers don't bleed through
@@ -934,6 +936,13 @@ async function orders(q, env, u, ctx) {
   if (p.startsWith("/api/download/")) return downloadFile(env, u);
   if (p.startsWith("/api/mail/")) return mailbox(q, env, u);
   if (p === "/api/admin/orders") return adminOrders(q, env, u);
+  if (p === "/api/admin/retry" && q.method === "POST") {
+    if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
+    const b = await q.json().catch(() => ({})); const o = await oGet(env, b.id); if (!o || !o.pay) return json({ error: "nope" }, 404);
+    if (o.lulu) (o.luluPast = o.luluPast || []).push(o.lulu.job);
+    delete o.lulu; delete o.needsNate; delete o.luluFails; o.status = "ready"; log(o, "retry print job (admin)");
+    await oPut(env, o); await activeSet(env, o.id, true); return json({ ok: true });
+  }
   if (p === "/api/admin/tick" && q.method === "POST") {
     if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
     return json({ notes: await cron(env, true) });
