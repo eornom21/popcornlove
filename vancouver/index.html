@@ -325,6 +325,7 @@ var P={
  steam:{n:'Gastown Steam Clock',a:'305 Water St, Vancouver, BC'},
  robson:{n:'Robson Square Ice Rink',a:'800 Robson St, Vancouver, BC'},
  water:{n:'Water St. Cafe',a:'300 Water St, Vancouver, BC V6B 1B6'},
+ dinesty:{n:'Dinesty Dumpling House',a:'1719 Robson St, Vancouver, BC V6G 1C8'},
  nemesis:{n:'Nemesis Coffee Gastown',a:'302 W Hastings St, Vancouver, BC'},
  bus5:{n:'Stanley Park Pavilion',a:'610 Pipeline Rd, Vancouver, BC V6G 1Z4'},
  brock:{n:'Brockton Point Totem Poles',a:'Stanley Park, Vancouver, BC'},
@@ -363,8 +364,9 @@ var DAYS=[
   {m:685,tm:'11:25 AM',ic:'✈️',tt:'Flight UA 8504',sb:'SFO 11:25 AM → YVR 2:47 PM · Air Canada Express/Jazz'},
   {m:920,tm:'~3:20 PM',ic:'🚆',tt:'Airport to downtown',sb:'Canada Line SkyTrain to Waterfront Station (under 30 min), then ~7 min walk to Woodward\'s W43.',li:['Tap a credit card or Apple Pay at the gate — one per adult. Kids ride free.','Sit at the very front: there\'s no driver, so the kids get the windshield.'],map:P.wf},
   {m:1005,tm:'~4:45 PM',ic:'🏠',tt:'Check into Woodward\'s W43',sb:'128 West Cordova Street, Gastown',home:1},
-  {m:1035,tm:'~5:15 PM',ic:'⛸️',tt:'Explore Gastown & Robson Square',sb:'Or just stroll. It\'s dark by 4:15, so Water Street is all lights.',li:['Steam Clock whistles every 15 minutes — 3 minutes from the door.','Lee\'s Donuts is right across from it (open to 7 PM).','Robson Square rink: free skating, rentals about $5, usually open 9–9 from the start of December. Check that it\'s open first.','The Christmas Market is open tonight 4–9:30 and Thursdays are calm — a good night to sneak a first look.'],map:P.steam,links:[['Rink status','https://www.robsonsquare.com/']]},
-  {m:1125,tm:'6:45 PM',ic:'🍴',tt:'Dinner: Water St. Café',sb:'300 Water Street — across from the Steam Clock. Table for 5 at 6:45, under Nate.',star:1,bk:1,map:P.water,tel:'+16046892832',links:[['Reserve','https://www.exploretock.com/waterstcafe']],alt:'thu-dinner'}
+  {m:1035,tm:'~5:15 PM',ic:'🕰️',tt:'Steam Clock, then a cab to Robson',sb:'It\'s dark by 4:15, so Water Street is all lights. A quick look at the Steam Clock (it whistles every 15 minutes), then a 10-minute taxi to dinner.',map:P.steam},
+  {m:1065,tm:'~5:45 PM',ic:'🥟',tt:'Dinner: Dinesty Dumpling House',sb:'1719 Robson St. Soup dumplings, and the kids can watch them being made in the window. On Courtenay\'s guide.',li:['No online reservations. Call to ask them to hold a table for 5, or walk in.','The kitchen closes early on Thursdays, around 8:00 to 8:30. Go early.','If the flight runs late, Water St. Café is still held for 6:45, three minutes from the Airbnb.'],flag:'<b>Not reserved.</b> Walk in, or call ahead.',star:1,map:P.dinesty,tel:'+16046697769',alt:'thu-dinner'},
+  {m:1140,tm:'~7:00 PM',ic:'⛸️',tt:'Robson Street & Robson Square',sb:'Walk east down Robson from dinner: shops and lights for about 15 minutes to Robson Square.',li:['Robson Square rink: free skating, rentals about $5, usually open 9–9 from the start of December. Check that it\'s open first.','From the rink it\'s a 15-minute walk or a short cab home to Gastown.'],star:1,map:P.robson,links:[['Rink status','https://www.robsonsquare.com/']]}
  ]},
  {c:'c2',n:'Day 2',d:'Friday, Dec 4',s:'Fri',num:'4',t:'Bus Tour + Family Photos + Market 🎄',sub:'Photos at the Steam Clock, then the Market ♡',art:'img/polaroid.jpg',items:[
   {m:510,tm:'~8:30 AM',ic:'☕',tt:'Breakfast: Nemesis Coffee',sb:'Gastown, 302 W Hastings St. Counter service, four minutes from the door. The bus stop is on the way back.',star:1,map:P.nemesis,alt:'fri-breakfast'},
@@ -412,7 +414,8 @@ var HEADS=[
 
 /* ---------- data: checklists ---------- */
 var BOOK=[
- ['wsc','Water St. Café — Thu Dec 3, 6:45 PM','Table for 5 under Nate. Free to cancel.',null,1],
+ ['din','Dinesty Dumpling House — Thu Dec 3, about 5:45 PM','Thursday dinner. No online booking: call (604) 669-7769 to hold a table for 5, or walk in.'],
+ ['wsc','Water St. Café — Thu Dec 3, 6:45 PM (backup)','Table for 5 still held under Nate as the fallback for dumplings. Free to cancel.',null,1],
  ['osf','Old Spaghetti Factory — Fri Dec 4, 6:30 PM','Table for 5 under Nate, with a note asking for the streetcar.',null,1],
  ['bus','Big Bus hop-on hop-off — Fri Dec 4','All five tickets are bought. They\'re in Nate\'s email and the Big Bus Tours app. Activate them in the app Friday morning.',null,1],
  ['fam','Family photos — confirm with the photographer','Friday about 3:30–4:00 PM, 30 minutes, at the Steam Clock on Water Street. Not booked yet.'],
@@ -458,8 +461,9 @@ var EXTRAS=[
 /* ---------- data: food ---------- */
 function o(id,name,tag,meta,pros,cons,x){x=x||{};x.id=id;x.name=name;x.tag=tag;x.meta=meta;x.pros=pros;x.cons=cons;return x}
 var SLOTS=[
- {id:'thu-dinner',day:'Thu',t:'Thursday dinner',w:'Travel day. Everyone\'s tired; it\'s dark and probably wet. Close matters most.',opts:[
-  o('water','Water St. Café','star','On the poster · Booked Thu 6:45 PM · 4 min walk · $$–$$$',['Across from the Steam Clock — ask for a window','Fresh pasta, BC salmon: something for everyone','Takes reservations'],['Dressier and pricier than a travel-day dinner needs','Kitchen closes at 9 PM','Kids are ordering pasta'],{p:P.water,tel:'+16046892832',res:'https://www.exploretock.com/waterstcafe'}),
+ {id:'thu-dinner',day:'Thu',t:'Thursday dinner',w:'Dumplings on Robson, from Courtenay\'s guide. Water St. Café is still held as the close-by fallback if the flight runs late.',opts:[
+  o('dinesty','Dinesty Dumpling House','star','The plan · Robson St, 10 min taxi · $$',['Soup dumplings; kids can watch them being made','Shareable, quick and good value','Robson Street and the rink are a walk away afterwards'],['No online reservations: call or walk in','Closes around 8:00 to 8:30 on Thursdays','Ten-minute taxi each way','Loud and brisk'],{p:P.dinesty,tel:'+16046697769'}),
+  o('water','Water St. Café','alt','Backup · table held for 6:45 PM · 4 min walk · $$–$$$',['Across from the Steam Clock — ask for a window','Fresh pasta, BC salmon: something for everyone','Takes reservations'],['Dressier and pricier than a travel-day dinner needs','Kitchen closes at 9 PM','Kids are ordering pasta'],{p:P.water,tel:'+16046892832',res:'https://www.exploretock.com/waterstcafe'}),
   o('steam','Steamworks Brew Pub','best','Best bet if the flight runs late · 6 min walk · $$',['Big, loud room — nobody notices tired kids','Pizza, burgers, fish and chips; harbour views','Open till midnight, so no clock-watching'],['It\'s a brewpub: noisy','Food is solid, not special','No promise of a kids\' menu — pizza covers it'],{p:P.steamworks,tel:'+16046892739',res:'https://steamworks.com/brew-pub/'}),
   o('taco','Tacofino Taco Bar','alt','Alternative · 2 min walk · $$',['Closest good dinner; the fish tacos are the thing','Burrito Bar take-out counter next door — carry it home','Fast'],['Bar energy picks up as the night goes on','Spicier menu than picky kids like','Entrance is off Blood Alley, a dim lane'],{p:P.tacofino,tel:'+16048997907'}),
   o('beppe','Di Beppe','alt','Alternative · 2 min walk · $$',['Pizza and pasta — the easy kid win','Takes bookings'],['Lively and loud at dinner','Tight tables for five'],{p:P.dibeppe})
@@ -478,7 +482,6 @@ var SLOTS=[
   o('osf','The Old Spaghetti Factory','star','On the poster · Booked Fri 6:30 PM · 3 min walk · $$',['A real streetcar and stained glass in the dining room','Kids\' meals come with bread, a drink and ice cream','Easy walk home'],['It\'s the chain you know: fine, not special','Friday waits without a booking'],{p:P.osf,tel:'+16046841288'}),
   o('mkt','Make the Market dinner','best','Best bet if nobody wants to move · $$',['Bratwurst, schnitzel, raclette, Belgian fries, chimney cakes','No marching cold kids to a second stop','Kinderpunsch and Glühwein'],['Eating standing up, outdoors','It adds up fast','Almost no cover if it rains'],{p:P.market}),
   o('miku','Miku','alt','On Courtenay\'s list · 5 min from the Market · $$$',['Flame-seared sushi, waterfront room','The grown-up meal of the trip'],['Pricey','Not built for tired kids at 7 PM','Needs a reservation'],{p:'Miku Vancouver'}),
-  o('dinesty','Dinesty Dumpling House','alt','On Courtenay\'s list · Robson St, taxi · $$',['Soup dumplings; kids can watch them being made','Shareable and good value'],['Ten-minute taxi each way','Loud and brisk'],{p:'Dinesty Dumpling House Robson Street'}),
   o('luigi','Ask for Luigi','alt','Alternative · 10 min walk east · $$–$$$',['The best pasta near Gastown','Takes bookings'],['Tiny room — five is a hard table','The walk east isn\'t one for kids after dark; taxi'],{p:P.luigi})
  ]},
  {id:'sat-breakfast',day:'Sat',t:'Saturday breakfast',w:'Big day: Granville Island, then Capilano by 3:30.',opts:[
