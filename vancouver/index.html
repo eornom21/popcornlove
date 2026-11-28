@@ -380,7 +380,7 @@ var DAYS=[
   {m:1305,tm:'~9:45 PM',ic:'🌙',tt:'Nightcap 2: Courtenay & Amy — Lavantine',sb:'Rooftop lounge, 14th floor, 833 W Pender St. A short cab or a 14-minute walk. Nate has the kids.',star:1,map:P.lavantine,alt:'fri-night'}
  ]},
  {c:'c3',n:'Day 3',d:'Saturday, Dec 5',s:'Sat',num:'5',t:'Granville Island + Capilano Canyon Lights 🌲',sub:'Lights, mountains & magic ♡',art:'img/bridge.jpg',items:[
-  {m:540,tm:'9:00 AM',ic:'🍴',tt:'Breakfast: Café Medina',sb:'780 Richards St. Opens 9:00 on weekends.',star:1,flag:'<b>Not reserved yet.</b> A 9:00 table for 5 is open on Tock; a C$50 donation holds it. Without one, weekend waits can run 90 minutes. Famous for Belgian waffles.',map:P.medina,links:[['Reserve','https://www.exploretock.com/medinacafe/search?date=2026-12-05&size=5&time=09%3A00']],alt:'sat-breakfast'},
+  {m:540,tm:'9:00 AM',ic:'🍴',tt:'Breakfast: Café Medina',sb:'780 Richards St. Table for 5 at 9:00, reserved under Nate, so no waiting in the weekend line. Famous for Belgian waffles.',star:1,bk:1,map:P.medina,alt:'sat-breakfast'},
   {m:630,tm:'~10:30 AM',ic:'⛴️',tt:'Granville Island Public Market',sb:'Aquabus from downtown (10–15 min).',li:['Food stalls, artisans, Kids Market.','The original Lee\'s Donuts stall is here.'],map:P.gi,links:[['Aquabus dock',null,'Aquabus Hornby Street Dock']]},
   {m:750,tm:'~12:30 PM',ic:'🍴',tt:'Lunch: Granville Island Public Market',sb:'Graze. On the list: Nanaimo bars and candied salmon.',star:1,alt:'sat-lunch'},
   {m:885,tm:'~2:45 PM',ic:'🚌',tt:'Head to Capilano',sb:'Free shuttle from Canada Place, or a 20–25 minute taxi over the Lions Gate Bridge.',add:1,map:P.canpl,links:[['Shuttle schedule','https://capbridge.com/shuttle-schedule']]},
@@ -407,7 +407,7 @@ var HEADS=[
  ['Family photos moved to Friday afternoon','Was 10:00 AM at Brockton Point. Now a <b>30-minute session about 3:30 PM at the Steam Clock</b>, which works in any weather and frees the morning for the bus. Time and spot are still to confirm with the photographer.'],
  ['Friday: lunch added, Market at 4:30','The Market doesn\'t open until 4:00 PM on Fridays. <b>Lunch at Tap & Barrel</b> next door, then the seawall or a rest, then in at 4:30 (the 4:00 slot sold out).'],
  ['Sunday: gifts on Water Street','The Market opens at 11:30 AM Sunday, too late for a 12:30 airport arrival. <b>Last wander is Gastown and Robson.</b>'],
- ['Saturday: Café Medina with a reservation','Walk-in waits can hit 90 minutes on weekends, so <b>this one needs its reservation</b> (see Book ahead).']
+ ['Saturday: Café Medina with a reservation','Walk-in waits can hit 90 minutes on weekends, so we <b>reserved a 9:00 table for 5</b>.']
 ];
 
 /* ---------- data: checklists ---------- */
@@ -418,7 +418,7 @@ var BOOK=[
  ['fam','Family photos — confirm with the photographer','Friday about 3:30–4:00 PM, 30 minutes, at the Steam Clock on Water Street. Not booked yet.'],
  ['mkt','Christmas Market — Fri Dec 4, 4:30 PM slot','Tickets are bought: 3 adult + 1 youth (6 and under is free). They\'re in Nate\'s email. Arrive between 4:30 and 5:00.',null,1],
  ['cap','Capilano Canyon Lights — Sat Dec 5, 3:30–4:00 PM','3 adults + 2 children, C$305.30 with tax.','https://www.capbridge.com/tickets-and-hours/'],
- ['med','Café Medina — Sat Dec 5, 9:00 AM','Table for 5 is open; a C$50 donation holds it.','https://www.exploretock.com/medinacafe/search?date=2026-12-05&size=5&time=09%3A00'],
+ ['med','Café Medina — Sat Dec 5, 9:00 AM','Table for 5 is reserved under Nate.',null,1],
  ['pp','Find all five passports','Check the expiry dates today, not Wednesday night.'],
  ['ph','Phones: turn on Canada roaming','And tell the card companies if yours still asks.'],
  ['ci','Check in with Air Canada, 24 hours out','Wed Dec 2, 11:25 AM.']
@@ -480,8 +480,8 @@ var SLOTS=[
   o('luigi','Ask for Luigi','alt','Alternative · 10 min walk east · $$–$$$',['The best pasta near Gastown','Takes bookings'],['Tiny room — five is a hard table','The walk east isn\'t one for kids after dark; taxi'],{p:P.luigi})
  ]},
  {id:'sat-breakfast',day:'Sat',t:'Saturday breakfast',w:'Big day: Granville Island, then Capilano by 3:30.',opts:[
-  o('med','Café Medina','star','On the poster · 15 min walk or short taxi · $$',['Michelin-recommended; the Belgian waffles are the reason','A real sit-down start to the biggest day'],['Weekend waits up to 90 minutes without a booking','Reserve on Tock or be there at 9:00','The opposite direction from Gastown'],{p:P.medina,res:'https://www.exploretock.com/medinacafe/search?date=2026-12-05&size=5&time=09%3A00'}),
-  o('gi-bk','Breakfast at Granville Island','best','Best bet if Medina isn\'t booked · $',['Skips a stop: go straight to the island','Lee\'s original stall opens at 8; bakeries and coffee all around','More market time before the crowds'],['Grazing, not a sit-down','Saturday tables are scarce'],{p:P.gi}),
+  o('med','Café Medina','star','Booked for 9:00 · 15 min walk or short taxi · $$',['Michelin-recommended; the Belgian waffles are the reason','A real sit-down start to the biggest day'],['The opposite direction from Gastown','Loud and busy on a Saturday'],{p:P.medina}),
+  o('gi-bk','Breakfast at Granville Island','best','Backup · $',['Skips a stop: go straight to the island','Lee\'s original stall opens at 8; bakeries and coffee all around','More market time before the crowds'],['Grazing, not a sit-down','Saturday tables are scarce'],{p:P.gi}),
   o('fork','Twisted Fork','alt','Alternative · Gastown · $$',['Sit-down brunch close to home: stuffed French toast, eggs benny'],['Small room, weekend line'],{p:'Twisted Fork Bistro'})
  ]},
  {id:'sat-lunch',day:'Sat',t:'Saturday lunch',w:'On Granville Island. Leave by 2:30 for Capilano.',opts:[
