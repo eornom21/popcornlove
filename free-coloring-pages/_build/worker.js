@@ -425,7 +425,7 @@ const PLAN_SCHEMA = { type: "object", additionalProperties: false, required: ["t
   pages: { type: "array", items: { type: "object", additionalProperties: false, required: ["caption", "scene"], properties: { caption: { type: "string" }, scene: { type: "string" } } } } } };
 const PLAN_RULES = "You plan personalized coloring books for a family-friendly print shop. Every scene must work as black-and-white line art: one clear moment, a full scene, no text, signs, letters or numbers in the picture. " +
   "Never use characters from movies, TV, books, games or toys, real celebrities, sports teams, brands or logos: replace any the customer mentions with an original generic version (for example 'a friendly blue cartoon puppy'). " +
-  "Nothing scary, violent, romantic, crude or unkind. Describe the main character once in 'character' (age, build, hair, face, glasses, usual outfit) so an illustrator draws them the same on every page; use only looks the customer gave plus neutral clothing. Use names exactly as written.";
+  "Nothing scary, violent, romantic, crude or unkind. Describe the main character once in 'character' (age, build, hair, face, glasses, usual outfit), plus any pet or sidekick who recurs, so an illustrator draws them the same on every page; use only looks the customer gave plus neutral clothing. Use names exactly as written.";
 async function askJSON(env, system, user) {
   const models = [env.TEXT_MODEL || "gpt-5-mini", "gpt-4.1-mini"];
   for (const model of models) {
@@ -443,7 +443,7 @@ const clip = (t, n) => cleanIdea(t, n);
 function planPrompt(o) {
   const f = o.form;
   if (o.product === "kid") return "Make a 24-page coloring book starring a child.\nName: " + f.name + "\nAge: " + f.age + "\nWhat they look like: " + f.looks + "\nFavorite things: " + f.likes + "\nPet (if any): " + f.pet + "\nBest friend (if any): " + f.friend + "\nOccasion: " + (f.occasion || "just because") +
-    "\n\ntitle: at most 36 characters, includes the child's name exactly as written (like \"Maya's Big Coloring Adventure\").\ndedication: at most 60 characters for the title page (like \"Made for Maya, age 6\" or \"Happy 6th birthday, Maya!\").\npages: exactly 24. caption: 2 to 6 words. scene: one or two sentences. The child is in nearly every scene, doing things with their favorite things in varied places; the pet and best friend appear in some; include the occasion if one was given; the last page is a happy ending.";
+    "\n\ncharacter: describe the child AND, if there is a pet, the pet (breed, size, coat color and markings, ears, collar) so both look exactly the same on every page.\ntitle: at most 36 characters, includes the child's name exactly as written (like \"Maya's Big Coloring Adventure\").\ndedication: at most 60 characters for the title page (like \"Made for Maya, age 6\" or \"Happy 6th birthday, Maya!\").\npages: exactly 24. caption: 2 to 6 words. scene: one or two sentences. The child is in nearly every scene, doing things with their favorite things in varied places; the pet and best friend appear in some; include the occasion if one was given; the last page is a happy ending.";
   if (o.product === "joke") return "Make a 24-page inside-joke coloring book for an adult, as a funny, affectionate gift.\nWho it's for: " + f.name + "\nWho they are: " + f.who + "\nWhat they look like: " + f.looks + "\nInside jokes, hobbies and things they're known for: " + f.jokes + "\nFrom: " + f.from + "\nOccasion: " + (f.occasion || "just because") +
     "\n\nGentle teasing is fine; nothing sexual, crude, hateful, about drugs, or unkind about weight, looks, age, health or identity. Draw them as a friendly cartoon.\ntitle: at most 36 characters, includes their name. dedication: at most 60 characters like \"For Dave, from Nate\".\npages: exactly 24, each built on one of the jokes or hobbies, varied and funny; caption 2 to 6 words; scene one or two sentences.";
   return "Make a coloring book around this idea: \"" + f.idea + "\"" + (f.name ? " for " + f.name : "") + ". Page 1 is the customer's own drawing of the idea.\n\n" +
@@ -456,7 +456,7 @@ function levelFor(o) {
 }
 function pagePrompt(o, n) {
   const sc = o.scenes[n - 1];
-  return (n > 1 ? "Use the attached coloring page only as the model for how the main character looks (same face, hair, build and outfit); draw a completely new picture of this scene. " : "") +
+  return (n > 1 ? "Use the attached coloring page only as the model for how the main character and any pet look (same face, hair, build and outfit; same breed, size and markings for the pet); draw a completely new picture of this scene. " : "") +
     "Black and white coloring book page, portrait orientation. Scene: " + sc.scene + (o.character ? " Main character: " + o.character : "") + " " + STYLES[o.level] + " " + WHOLE + " " + TAIL + " " + RULES;
 }
 function coverPrompt(o) {
@@ -952,6 +952,20 @@ async function orders(q, env, u, ctx) {
     if (o.lulu) (o.luluPast = o.luluPast || []).push(o.lulu.job);
     delete o.lulu; delete o.needsNate; delete o.luluFails; o.status = "ready"; log(o, "retry print job (admin)");
     await oPut(env, o); await activeSet(env, o.id, true); return json({ ok: true });
+  }
+  if (p === "/api/admin/extra-print" && q.method === "POST") {
+    // A personal copy of an existing order's book (Nate, Nov 27): its own Lulu job, no customer emails, not business cost.
+    if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
+    const b = await q.json().catch(() => ({})); const o = await oGet(env, b.id), src = await oGet(env, b.shipFrom);
+    if (!o || !o.pay || !src || !src.pay || !src.pay.ship.street1) return json({ error: "nope" }, 404);
+    if (o.extraPrint) return json({ error: "already", job: o.extraPrint });
+    const P = PRODUCTS[o.product]; if (!P.gen && o.product !== "picked") return json({ error: "nope" }, 400);
+    if (!o.pages) { o.pages = 4 + 2 * o.n; if (o.pages < 32) o.pages = 32; }
+    const copy = Object.assign({}, o, { ship: "std", pay: Object.assign({}, o.pay, { ship: src.pay.ship, phone: src.pay.phone }) });
+    const r = await luluSubmit(env, copy, "COPY");
+    if (!r.ok) return json({ error: "lulu", why: r.why }, 502);
+    o.coverPt = copy.coverPt; o.extraPrint = r.job; log(o, "personal print copy, Lulu job " + r.job + " (not business)"); await oPut(env, o);
+    return json({ ok: true, job: r.job });
   }
   if (p === "/api/admin/tick" && q.method === "POST") {
     if (!(await teamOk(q, env))) return json({ error: "key" }, 403);
