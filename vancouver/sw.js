@@ -1,5 +1,5 @@
 /* Offline support for the Vancouver trip app. Bump VERSION when files change. */
-var VERSION = 'van-v11';
+var VERSION = 'van-v12';
 var FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png',
   'img/hero.jpg', 'img/latte.jpg', 'img/polaroid.jpg', 'img/bridge.jpg', 'img/seaplane.jpg', 'img/market.jpg', 'img/poster.jpg',
   'fonts/kaushan.woff2', 'fonts/nunito.woff2', 'fonts/barlow-600.woff2', 'fonts/barlow-700.woff2'];
