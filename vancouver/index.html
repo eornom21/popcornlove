@@ -288,6 +288,13 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
 .night nav.tabs{background:rgba(16,28,54,.96);border-top-color:#2a3d66}
 .night nav.tabs button{color:#b9c6de}
 .night nav.tabs button.on{color:#fff;background:#24386a}
+/* family sharing */
+.fam{list-style:none;margin:6px 0 2px}
+.fam li{padding:6px 0;border-bottom:1px dashed var(--line);font-size:15px;color:var(--ink)}
+.fam li:last-child{border-bottom:0}
+.fam b{color:var(--navy)}
+.fam small{display:block;font-size:12.5px;color:var(--muted)}
+#famcard .k{font-family:var(--cond);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12.5px;color:#b3261e}
 @media (prefers-reduced-motion:reduce){.door.ready,.lights i{animation:none}}
 </style>
 </head>
@@ -312,6 +319,7 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
     <button class="tile" id="open-poster"><i>🖼️</i>Courtenay's poster<small>The original board</small></button>
   </div>
   <div class="card note" id="spot-box" style="display:none"><div style="font-weight:800;color:var(--navy)">📍 Got your spot.</div><div class="btns"><a class="btn pri" id="spot-link" href="#">Text it to the family</a></div><div class="small" style="margin-top:6px">Opens Messages with a map link. Pick who gets it.</div></div>
+  <div class="card" id="famcard" style="display:none"></div>
   <div class="card now" id="doorcard" style="display:none"></div>
   <h2 class="sec">⏱️ Right now in Vancouver</h2>
   <div class="card"><div class="timers" id="timers"></div><div class="small" style="margin-top:8px">At the Market: snow showers every 30 minutes, a light show on the Pyramid every hour, and the Prost Show at 7:00 PM.</div><div class="btns"><button class="btn" data-snow>❄️ Let it snow</button></div></div>
@@ -363,6 +371,8 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
     <div class="small" style="margin-top:4px">✓ Historic Gastown · ✓ Walk to the Steam Clock and the Market · London Drugs and Nesters Market (groceries) are in the same complex.</div>
     <div class="btns"><a class="btn pri" id="home-dir2" href="#">Directions home</a><button class="btn" id="show-addr2">Show the driver</button></div>
   </div>
+  <h2 class="sec">👨‍👩‍👧 Family sharing</h2>
+  <div class="card" id="share"></div>
   <h2 class="sec">✈️ Flights</h2>
   <div class="card">
     <div class="kv">
@@ -429,7 +439,7 @@ var TRIP=['2026-12-03','2026-12-04','2026-12-05','2026-12-06'];
 /* ---------- storage ---------- */
 var mem={};
 function get(k,d){try{var v=localStorage.getItem('van.'+k);return v===null?d:JSON.parse(v)}catch(e){return (k in mem)?mem[k]:d}}
-function set(k,v){mem[k]=v;try{localStorage.setItem('van.'+k,JSON.stringify(v))}catch(e){}}
+function set(k,v){mem[k]=v;try{localStorage.setItem('van.'+k,JSON.stringify(v))}catch(e){}syncTouch(k,v)}
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function enc(s){return encodeURIComponent(s)}
@@ -794,7 +804,7 @@ function loadFx(){showFx();if(!window.fetch)return;
    v19 additions: sheet, show-the-driver, text my spot, forecast per stop,
    timers, doors, photo hunt, treats, games, Trip Wrapped, kid mode, night
    ==================================================================== */
-var BUILD='van-v19';
+var BUILD='van-v20';
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],WDL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 /* ---------- sheet ---------- */
@@ -967,7 +977,7 @@ function renderTreats(){
   h+='<ul class="tr">'+TREATS.concat(s.custom).map(function(t){var q=treatRow(s,t),st='';
     for(var i=1;i<=5;i++)st+='<button class="'+(i<=q.mine?'on':'')+'" data-rate="'+esc(t[0])+'|'+i+'" aria-label="'+i+' of 5">🍩</button>';
     return'<li><div class="tn">'+esc(t[1])+(q.n?'<small>'+q.avg.toFixed(1)+' average · '+q.n+(q.n===1?' vote':' votes')+'</small>':'')+'</div><div class="st">'+st+'</div></li>'}).join('')+'</ul>';
-  h+='<div class="mini"><input id="treat-new" type="text" maxlength="40" placeholder="Add a treat" aria-label="Add a treat"><button class="btn" data-addtreat>Add</button></div><div class="btns"><button class="btn" data-sharetreats>Share the scores</button></div><p class="small" style="margin-top:8px">Scores are saved on this phone. Pass it around the table.</p>';
+  h+='<div class="mini"><input id="treat-new" type="text" maxlength="40" placeholder="Add a treat" aria-label="Add a treat"><button class="btn" data-addtreat>Add</button></div><div class="btns"><button class="btn" data-sharetreats>Share the scores</button></div><p class="small" style="margin-top:8px">'+(syncCfg?'Scores are shared with the family\'s phones.':'Scores are saved on this phone. Pass it around the table.')+'</p>';
   $('treats').innerHTML=h;$('p-treats').textContent=b.rated?b.rated+' rated':'';
 }
 function treatsText(){var s=treatState(),rows=[];
@@ -1142,6 +1152,128 @@ function checkUpdate(){
 
 function renderFun(){renderDoors();renderTreats();renderGames();renderWrapCard()}
 
+/* ====================================================================
+   Family sharing: one shared copy of checklists, the hunt, restaurant picks,
+   treat scores, tallies and "where we are" notes. Each entry is [value, time];
+   the newest wins. Photos, doors and best-moment notes stay on each phone.
+   The service is vancouver/_build/worker.js.
+   ==================================================================== */
+var SYNC_URL='https://vancouver-trip.natemonroe21.workers.dev/sync';
+var SYNCED={book:'c',pack:'c',spec:'c',hunt:'c',picks:'p',tally:'t',treats:'x'};
+var NOTE_LIFE=36*3600e3,QUICK=['At the Airbnb','Heading back','In line for food','Come find us'];
+var syncMap=get('sync',{}),syncCfg=get('synccfg',null),syncBusy=false,syncDirty=false,syncPending=false,syncLast=get('synclast',0),syncErr='',lastStamp=0,shareWho='';
+function rawSet(k,v){mem[k]=v;try{localStorage.setItem('van.'+k,JSON.stringify(v))}catch(e){}}
+function stamp(){lastStamp=Math.max(Date.now(),lastStamp+1);return lastStamp}
+function empty(v){return v===false||v===null||v===undefined||v===0||v===''}
+function flat(store,val){
+  var o={},k,n;val=val||{};
+  if(store==='treats'){
+    (val.custom||[]).forEach(function(t){o['tc:'+t[0]]=t[1]});
+    (val.raters||[]).forEach(function(r){o['tr:'+r]=1});
+    for(k in (val.r||{}))for(n in val.r[k])o['r:'+k+'|'+n]=val.r[k][n]||0;
+    return o;
+  }
+  var p=SYNCED[store]==='c'?'c:'+store+':':SYNCED[store]+':';
+  for(k in val)o[p+k]=SYNCED[store]==='c'?!!val[k]:val[k];
+  return o;
+}
+function syncTouch(store,val){
+  if(!SYNCED[store])return;
+  var f=flat(store,val),ch=false,k,cur;
+  for(k in f){cur=syncMap[k];
+    if(cur?JSON.stringify(cur[0])===JSON.stringify(f[k]):empty(f[k]))continue;
+    syncMap[k]=[f[k],stamp()];ch=true}
+  if(ch){rawSet('sync',syncMap);syncSoon()}
+}
+function unflat(k,v,stores){
+  var m,i;
+  function st(name){return stores[name]||(stores[name]=get(name,{})||{})}
+  function tre(){return stores.treats||(stores.treats=treatState())}
+  if((m=/^c:(book|pack|spec|hunt):(.+)$/.exec(k)))st(m[1])[m[2]]=!!v;
+  else if(k.slice(0,2)==='p:')st('picks')[k.slice(2)]=v;
+  else if(k.slice(0,2)==='t:')st('tally')[k.slice(2)]=+v||0;
+  else if(k.slice(0,3)==='tc:'){if(!tre().custom.some(function(c){return c[0]===k.slice(3)}))tre().custom.push([k.slice(3),String(v)])}
+  else if(k.slice(0,3)==='tr:'){if(tre().raters.indexOf(k.slice(3))<0)tre().raters.push(k.slice(3))}
+  else if(k.slice(0,2)==='r:'&&(i=k.indexOf('|'))>2){m=tre();m.r[k.slice(2,i)]=m.r[k.slice(2,i)]||{};m.r[k.slice(2,i)][k.slice(i+1)]=+v||0}
+}
+function syncApply(remote){
+  var ch=false,stores={},k,r,l,now=Date.now();
+  for(k in remote){r=remote[k];l=syncMap[k];
+    if(!r||r.length!==2||(k.slice(0,2)==='s:'&&r[1]<now-NOTE_LIFE))continue;
+    if(!l||r[1]>l[1]||(r[1]===l[1]&&JSON.stringify(r[0])>JSON.stringify(l[0]))){syncMap[k]=r;ch=true;unflat(k,r[0],stores)}}
+  if(!ch)return;
+  rawSet('sync',syncMap);for(k in stores)rawSet(k,stores[k]);
+  syncPending=true;syncFlush();
+}
+function typing(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName))}
+function syncFlush(){
+  if(!syncPending||typing())return;
+  syncPending=false;var y=window.pageYOffset;
+  renderLists();renderEat();renderTreats();renderWrapCard();renderFam();window.scrollTo(0,y);
+}
+function syncNow(cb){
+  if(!syncCfg||!window.fetch){if(cb)cb(false);return}
+  if(syncBusy){syncDirty=true;if(cb)cb(false);return}
+  syncBusy=true;syncDirty=false;
+  var k,now=Date.now(),pr=false;for(k in syncMap)if(k.slice(0,2)==='s:'&&syncMap[k][1]<now-NOTE_LIFE){delete syncMap[k];pr=true}
+  if(pr)rawSet('sync',syncMap);
+  fetch(SYNC_URL,{method:'POST',body:JSON.stringify({code:syncCfg.code,state:syncMap})})
+  .then(function(r){return r.json().then(function(j){return{status:r.status,j:j}})})
+  .then(function(x){
+    syncBusy=false;
+    if(x.status===403){syncErr='code';renderShare();if(cb)cb(false);return}
+    if(x.status!==200){syncErr='net';renderShare();if(cb)cb(false);return}
+    syncErr='';syncLast=Date.now();rawSet('synclast',syncLast);
+    syncApply(x.j.state||{});renderShare();renderFam();
+    if(cb)cb(true);if(syncDirty)syncSoon();
+  }).catch(function(){syncBusy=false;syncErr='net';renderShare();if(cb)cb(false)});
+}
+function syncSoon(){if(!syncCfg)return;syncDirty=true;clearTimeout(syncSoon.t);syncSoon.t=setTimeout(function(){syncNow()},1500)}
+function clockTime(t){try{return new Date(t).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}catch(e){return''}}
+function ago(t){var m=Math.max(0,Math.round((Date.now()-t)/60000));return m<1?'just now':m<60?m+' min ago':Math.floor(m/60)+' hr ago'}
+function renderShare(){
+  var c=$('share');if(!c)return;
+  if(syncCfg&&get('synccfg',null)){
+    var s=syncErr==='net'?'Can\'t reach the shared copy right now. Changes are saved on this phone and will catch up.':syncErr==='code'?'The family code changed. Disconnect, then enter the new one.':(syncLast?'Last synced '+clockTime(syncLast)+'.':'Syncing…');
+    c.innerHTML='<div style="font-weight:800;color:var(--navy)">✓ Connected as '+esc(syncCfg.who)+'</div><div class="small">'+s+'</div><div class="small" style="margin-top:6px">Shared: checklists, the hunt, restaurant picks, treat scores and "where is everybody" notes. Photos stay on each phone.</div><div class="btns"><button class="btn" data-sharenow>Sync now</button><button class="btn" data-sharedisc>Disconnect</button></div>';
+    return;
+  }
+  if($('share-code'))return;
+  c.innerHTML='<div class="small">Connect this phone and a tap here shows up on everyone\'s. You type the family code once.</div><div class="mini"><input id="share-code" type="text" maxlength="60" placeholder="Family code" aria-label="Family code" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="off"></div><div class="small" style="margin-top:10px">Whose phone is this?</div><div class="raters">'+['Courtenay','Nate','Amy','The kids'].map(function(n){return'<button class="btn'+(n===shareWho?' pri':'')+'" data-sharewho="'+n+'">'+n+'</button>'}).join('')+'</div><div class="btns"><button class="btn pri" data-shareconnect>Connect</button></div>';
+}
+function shareConnect(){
+  var el=$('share-code'),code=el?el.value:'';
+  if(code.replace(/[^a-z0-9]/gi,'').length<8){toast('Type the family code');return}
+  if(!shareWho){toast('Pick whose phone this is');return}
+  syncCfg={code:code,who:shareWho};syncErr='';toast('Connecting…');
+  syncNow(function(ok){
+    if(ok){rawSet('synccfg',syncCfg);if(el)el.blur();c2();toast('Connected ✓');return}
+    var e=syncErr;syncCfg=null;syncErr='';toast(e==='code'?'That code didn\'t match':'Couldn\'t reach it. Check the signal and try again');
+  });
+  function c2(){$('share').innerHTML='';renderShare();renderFam();renderTreats()}
+}
+function shareDisconnect(){syncCfg=null;syncErr='';try{localStorage.removeItem('van.synccfg')}catch(e){}delete mem.synccfg;$('share').innerHTML='';renderShare();renderFam();renderTreats();toast('Disconnected. This phone keeps its own copy.')}
+function famNotes(){var a=[],now=Date.now(),k,e;for(k in syncMap){e=syncMap[k];if(k.slice(0,2)==='s:'&&e[0]&&e[0].x&&now-e[1]<12*3600e3)a.push({t:e[1],w:e[0].w||'',x:e[0].x})}a.sort(function(p,q){return q.t-p.t});return a.slice(0,4)}
+function renderFam(){
+  var c=$('famcard');if(!c)return;
+  if(!syncCfg||!get('synccfg',null)){c.style.display='none';c.innerHTML='';return}
+  var a=document.activeElement;if(a&&a.id==='fam-text')return;
+  var n=famNotes(),h='<div class="k">Where is everybody?</div>';
+  h+=n.length?'<ul class="fam">'+n.map(function(x){return'<li><b>'+esc(x.w)+'</b> '+esc(x.x)+'<small>'+ago(x.t)+'</small></li>'}).join('')+'</ul>':'<div class="small" style="margin:4px 0">No notes yet. Post one and it shows on every connected phone.</div>';
+  h+='<div class="btns">'+QUICK.map(function(q){return'<button class="btn" data-fam="'+esc(q)+'">'+esc(q)+'</button>'}).join('')+'</div><div class="mini"><input id="fam-text" type="text" maxlength="80" placeholder="We\'re at…" aria-label="Where we are"><button class="btn pri" data-fampost>Post</button></div>';
+  c.style.display='block';c.innerHTML=h;
+}
+function famPost(x){
+  x=String(x||'').replace(/^\s+|\s+$/g,'').slice(0,80);if(!x||!syncCfg)return;
+  var t=stamp(),i=$('fam-text');syncMap['s:'+t+'-'+Math.random().toString(36).slice(2,6)]=[{w:syncCfg.who,x:x},t];rawSet('sync',syncMap);
+  if(i){i.value='';i.blur()}renderFam();syncNow();toast('Posted');
+}
+function syncSeed(){
+  if(get('syncseed',0))return;
+  ['book','pack','spec','hunt','picks','tally','treats'].forEach(function(s){var f=flat(s,get(s,null)),k;for(k in f)if(!empty(f[k])&&!syncMap[k])syncMap[k]=[f[k],1]});
+  rawSet('sync',syncMap);rawSet('syncseed',1);
+}
+
 /* ---------- tabs ---------- */
 var TABS=['today','plan','eat','fun','info'];
 function go(tab,noScroll){
@@ -1151,7 +1283,7 @@ function go(tab,noScroll){
   renderTimers();set('tab',tab);if(!noScroll){var mt=document.querySelector('main');window.scrollTo(0,tab==='today'?0:Math.max(0,mt.offsetTop-2))}
   try{history.replaceState(null,'','#'+tab)}catch(e){}
 }
-function renderAll(){renderToday();renderPlan();renderEat();renderLists();renderFun();renderTimers();applyNight();
+function renderAll(){renderToday();renderPlan();renderEat();renderLists();renderFun();renderTimers();applyNight();renderShare();renderFam();
   Array.prototype.forEach.call($('mapseg').children,function(b){b.className=b.getAttribute('data-m')===mapPref?'on':''})}
 
 /* ---------- events ---------- */
@@ -1181,6 +1313,12 @@ document.addEventListener('click',function(e){
   if(up('data-wrapsend')){wrapSend();return}
   if(up('data-wrapshare')){share(wrapText(),false);return}
   if((el=up('data-delphoto'))){if(el.getAttribute('data-sure')){photoDel(el.getAttribute('data-delphoto'),function(){closeSheet();var y9=window.pageYOffset;renderLists();renderWrapCard();window.scrollTo(0,y9);toast('Photo removed')})}else{el.setAttribute('data-sure','1');el.textContent='Tap again to remove'}return}
+  if((el=up('data-sharewho'))){shareWho=el.getAttribute('data-sharewho');Array.prototype.forEach.call(el.parentNode.children,function(b){b.className='btn'+(b===el?' pri':'')});return}
+  if(up('data-shareconnect')){shareConnect();return}
+  if(up('data-sharedisc')){shareDisconnect();return}
+  if(up('data-sharenow')){toast('Syncing…');syncNow(function(ok){if(ok)toast('Up to date ✓')});return}
+  if((el=up('data-fam'))){famPost(el.getAttribute('data-fam'));return}
+  if(up('data-fampost')){famPost($('fam-text')?$('fam-text').value:'');return}
   if(up('data-stop'))return;
   if((el=up('data-tab'))){go(el.getAttribute('data-tab'));return}
   if((el=up('data-go'))){go(el.getAttribute('data-go'));return}
@@ -1219,6 +1357,8 @@ document.addEventListener('input',function(e){
 document.addEventListener('keydown',function(e){
   if(e.key!=='Enter'||!e.target)return;
   if(e.target.id==='rater-new'){var b1=document.querySelector('[data-addrater]');if(b1)b1.click()}
+  if(e.target.id==='fam-text'){famPost(e.target.value)}
+  if(e.target.id==='share-code'){shareConnect()}
   if(e.target.id==='treat-new'){var b2=document.querySelector('[data-addtreat]');if(b2)b2.click()}
 });
 $('installx').addEventListener('click',function(){set('installx',1);$('install').style.display='none'});
@@ -1226,13 +1366,15 @@ $('installx').addEventListener('click',function(){set('installx',1);$('install')
 /* ---------- boot ---------- */
 var standalone=(window.navigator.standalone===true)||(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches);
 if(!standalone&&!get('installx',0))$('install').style.display='block';
+syncSeed();
 renderAll();
 var h=(location.hash||'').replace('#','');go(TABS.indexOf(h)>=0?h:get('tab','today'),true);
-loadWx();loadFx();
+loadWx();loadFx();syncNow();
 photosLoad(function(){if(Object.keys(photoCache).length){renderLists();renderWrapCard()}});
-document.addEventListener('visibilitychange',function(){if(!document.hidden){renderToday();renderDoors();applyNight();renderTimers();loadWx();checkUpdate()}});
+document.addEventListener('visibilitychange',function(){if(!document.hidden){renderToday();renderDoors();applyNight();renderTimers();loadWx();checkUpdate();syncNow()}});
 setInterval(function(){renderToday();renderDoors();applyNight()},60000);
-setInterval(renderTimers,1000);
+setInterval(function(){renderTimers();syncFlush()},1000);
+setInterval(function(){if(syncCfg&&!document.hidden)syncNow()},25000);
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
 })();
 </script>
