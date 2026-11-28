@@ -1,0 +1,526 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//popcornlove//vancouver-trip//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Vancouver Christmas Market Trip
+BEGIN:VEVENT
+UID:van26-d0-555@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261203T171500Z
+DTEND:20261203T191500Z
+SUMMARY:Be at SFO - Terminal 2
+DESCRIPTION:Check in with Air Canada (they fly the United flight number). P
+ assports for all five.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:SFO Terminal 2 (Air Canada)\, San Francisco International Airport\
+ , Terminal 2\, San Francisco\, CA
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Be at SFO — Terminal 2
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d0-685@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261203T192500Z
+DTEND:20261203T224700Z
+SUMMARY:Flight UA 8504
+DESCRIPTION:SFO 11:25 AM → YVR 2:47 PM · Air Canada Express/Jazz\n\nhttp
+ s://popcornlove.net/vancouver/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Flight UA 8504
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d0-920@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261203T232000Z
+DTEND:20261204T004500Z
+SUMMARY:Airport to downtown
+DESCRIPTION:Canada Line SkyTrain to Waterfront Station (under 30 min)\, the
+ n ~7 min walk to Woodward's W43.\n• Tap a credit card or Apple Pay at th
+ e gate — one per adult. Kids ride free.\n• Sit at the very front: ther
+ e's no driver\, so the kids get the windshield.\n\nhttps://popcornlove.net
+ /vancouver/
+LOCATION:Waterfront Station\, 601 W Cordova St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Airport to downtown
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d0-1005@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261204T004500Z
+DTEND:20261204T011500Z
+SUMMARY:Check into Woodward's W43
+DESCRIPTION:128 West Cordova Street\, Gastown\n\nhttps://popcornlove.net/va
+ ncouver/
+LOCATION:Woodward's W43\, 128 West Cordova Street\, Vancouver\, BC V6B 0E6
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Check into Woodward's W43
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d0-1035@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261204T011500Z
+DTEND:20261204T014500Z
+SUMMARY:Steam Clock\, then a cab to Robson
+DESCRIPTION:It's dark by 4:15\, so Water Street is all lights. A quick look
+  at the Steam Clock (it whistles every 15 minutes)\, then a 10-minute taxi
+  to dinner.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Gastown Steam Clock\, 305 Water St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Steam Clock\, then a cab to Robson
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d0-1065@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261204T014500Z
+DTEND:20261204T030000Z
+SUMMARY:Dinner: Dinesty Dumpling House
+DESCRIPTION:1719 Robson St. Soup dumplings\, and the kids can watch them be
+ ing made in the window. On Courtenay's guide.\n• No online reservations.
+  Call to ask them to hold a table for 5\, or walk in.\n• The kitchen clo
+ ses early on Thursdays\, around 8:00 to 8:30. Go early.\n• If the flight
+  runs late\, Water St. Café is still held for 6:45\, three minutes from t
+ he Airbnb.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Dinesty Dumpling House\, 1719 Robson St\, Vancouver\, BC V6G 1C8
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Dinner: Dinesty Dumpling House
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d0-1140@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261204T030000Z
+DTEND:20261204T043000Z
+SUMMARY:Robson Street & Robson Square
+DESCRIPTION:Walk east down Robson from dinner: shops and lights for about 1
+ 5 minutes to Robson Square.\n• Robson Square rink: free skating\, rental
+ s about $5\, usually open 9–9 from the start of December. Check that it'
+ s open first.\n• From the rink it's a 15-minute walk or a short cab home
+  to Gastown.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Robson Square Ice Rink\, 800 Robson St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Robson Street & Robson Square
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-510@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261204T163000Z
+DTEND:20261204T174000Z
+SUMMARY:Breakfast: Nemesis Coffee
+DESCRIPTION:Gastown\, 302 W Hastings St. Counter service\, four minutes fro
+ m the door. The bus stop is on the way back.\n\nhttps://popcornlove.net/va
+ ncouver/
+LOCATION:Nemesis Coffee Gastown\, 302 W Hastings St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Breakfast: Nemesis Coffee
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-580@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261204T174000Z
+DTEND:20261204T193000Z
+SUMMARY:Hop-on hop-off bus from Gastown
+DESCRIPTION:Stop 10\, outside Lee's Donuts at 199 Water St — three minute
+ s from the Airbnb. This is the first bus of the day. The full loop is abou
+ t 75 minutes: Canada Place\, Robson Street\, Stanley Park\, Granville Isla
+ nd\, Yaletown and back.\n• Tickets are bought and live in the Big Bus To
+ urs app on Nate's phone. Tap Activate that morning and show the driver.\n
+ • Hop off anywhere and catch a later bus. They pass every 30–40 minute
+ s and the ticket is good all day.\n• Lunch is reserved for 11:30 at Cana
+ da Place\, so the plan is to stay on for the whole loop. You're there a li
+ ttle after 11.\n• Want to hop off at Stanley Park (Stop 5\, about 10:10)
+ ? Call Tap & Barrel and push lunch to 12:15 first.\n• Covered double-dec
+ ker in winter. Lee's Donuts opens at 8\, right at the stop.\n• If it pou
+ rs\, the Vancouver Aquarium is beside the Stanley Park stop. Tickets at th
+ e door\, cards only.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Lee's Donuts Gastown\, 199 Water St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Hop-on hop-off bus from Gastown
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-690@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261204T193000Z
+DTEND:20261204T204500Z
+SUMMARY:Lunch: Tap & Barrel · Convention Centre
+DESCRIPTION:Table for 5 at 11:30\, reserved under Nate. At Jack Poole Plaza
+ \, right beside the Market. Kids' menu\, harbour views\, seaplanes landing
+  outside. Three minutes from the Canada Place bus stop.\n• The table is 
+ at 11:30\, so stay on the bus for the full loop. A Stanley Park hop-off wo
+ uld make you late.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Tap & Barrel Convention Centre\, 1055 Canada Place\, Vancouver\, B
+ C
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lunch: Tap & Barrel · Convention Centre
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-765@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261204T204500Z
+DTEND:20261204T231500Z
+SUMMARY:Rest at the Airbnb
+DESCRIPTION:A 15-minute walk back\, a short cab\, or the bus to the Gastown
+  stop. Naps\, then into the photo outfits.\n\nhttps://popcornlove.net/vanc
+ ouver/
+LOCATION:Woodward's W43\, 128 West Cordova Street\, Vancouver\, BC V6B 0E6
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Rest at the Airbnb
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-930@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261204T233000Z
+DTEND:20261205T000000Z
+SUMMARY:Family photos at the Steam Clock
+DESCRIPTION:Water Street\, three minutes from the door. Brick\, cobblestone
+ s and lamplight look good in rain or fog\, and the clock whistles and stea
+ ms on the quarter hour. Sunset is about 4:15\, so don't let it slide later
+ .\n• Clear day with the mountains out? The waterfront at Jack Poole Plaz
+ a\, beside the Market\, is the bonus spot.\n\nhttps://popcornlove.net/vanc
+ ouver/
+LOCATION:Gastown Steam Clock\, 305 Water St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Family photos at the Steam Clock
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-965@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T000500Z
+DTEND:20261205T003000Z
+SUMMARY:Bus or walk to the Market
+DESCRIPTION:The Big Bus stop is right there\, outside Lee's Donuts: 5 minut
+ es to Canada Place on the same ticket. Or walk it in 15 minutes.\n• Buse
+ s pass every 30–40 minutes; the last one leaves this stop at 5:00. Check
+  the live map in the Big Bus app.\n• No bus within 10 minutes? Walk — 
+ your Market slot is 4:30 to 5:00.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Lee's Donuts Gastown\, 199 Water St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Bus or walk to the Market
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-990@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T003000Z
+DTEND:20261205T021500Z
+SUMMARY:Vancouver Christmas Market
+DESCRIPTION:90+ huts and the 5-storey Christmas Pyramid at Jack Poole Plaza
+ . Gates open at 4:00 on Fridays; that first slot sold out\, so ours is the
+  4:30–5:00 arrival. The lights are on by then.\n• Tickets are bought. 
+ Arrive between 4:30 and 5:00\, then stay as long as you like.\n• Santa i
+ s there all evening and Elsa walks the Market from about 5:00. Karaoke sta
+ rts at 7:00\, after we've left for dinner.\n• Carousel\, walk-through 35
+ -foot tree\, snow showers every 30 minutes\, Santa's Workshop.\n• Kinder
+ punsch for the kids\, Glühwein for the grown-ups.\n• Very little cover 
+ — hoods up if it rains.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Vancouver Christmas Market\, Jack Poole Plaza\, 1055 Canada Place\
+ , Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Vancouver Christmas Market
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-1095@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T021500Z
+DTEND:20261205T023000Z
+SUMMARY:Snack: Lee's Donuts
+DESCRIPTION:199 Water St\, across from the Steam Clock — it's on the walk
+  to dinner. A Vancouver classic since 1979. Grab a box of Honey Dips befor
+ e they close at 7.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Lee's Donuts Gastown\, 199 Water St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Snack: Lee's Donuts
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-1110@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T023000Z
+DTEND:20261205T043000Z
+SUMMARY:Dinner: Old Spaghetti Factory
+DESCRIPTION:53 Water St\, Gastown. Table for 5 at 6:30\, under Nate — we 
+ asked for a spot in or near the streetcar.\n\nhttps://popcornlove.net/vanc
+ ouver/
+LOCATION:The Old Spaghetti Factory\, 53 Water St\, Vancouver\, BC V6B 1A1
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Dinner: Old Spaghetti Factory
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-1230@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T043000Z
+DTEND:20261205T054500Z
+SUMMARY:Nightcap 1: Courtenay & Nate - L'Abattoir
+DESCRIPTION:217 Carrall St\, four minutes from the door. Amy has the kids.\
+ n\nhttps://popcornlove.net/vancouver/
+LOCATION:L'Abattoir\, 217 Carrall St\, Vancouver\, BC V6B 2J2
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Nightcap 1: Courtenay & Nate — L'Abattoir
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d1-1305@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T054500Z
+DTEND:20261205T071500Z
+SUMMARY:Nightcap 2: Courtenay & Amy - Lavantine
+DESCRIPTION:Rooftop lounge\, 14th floor\, 833 W Pender St. A short cab or a
+  14-minute walk. Nate has the kids.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Lavantine Restaurant & Skybar\, 833 W Pender St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Nightcap 2: Courtenay & Amy — Lavantine
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d2-540@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T170000Z
+DTEND:20261205T183000Z
+SUMMARY:Breakfast: Café Medina
+DESCRIPTION:780 Richards St. Table for 5 at 9:00\, reserved under Nate\, so
+  no waiting in the weekend line. Famous for Belgian waffles.\n\nhttps://po
+ pcornlove.net/vancouver/
+LOCATION:Café Medina\, 780 Richards St\, Vancouver\, BC V6B 3A4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Breakfast: Café Medina
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d2-630@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T183000Z
+DTEND:20261205T203000Z
+SUMMARY:Granville Island Public Market
+DESCRIPTION:Aquabus from downtown (10–15 min).\n• Food stalls\, artisan
+ s\, Kids Market.\n• The original Lee's Donuts stall is here.\n\nhttps://
+ popcornlove.net/vancouver/
+LOCATION:Granville Island Public Market\, 1689 Johnston St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Granville Island Public Market
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d2-750@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T203000Z
+DTEND:20261205T223000Z
+SUMMARY:Lunch: Granville Island Public Market
+DESCRIPTION:Graze. On the list: Nanaimo bars and candied salmon.\n\nhttps:/
+ /popcornlove.net/vancouver/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lunch: Granville Island Public Market
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d2-885@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T224500Z
+DTEND:20261205T233000Z
+SUMMARY:Head to Capilano
+DESCRIPTION:Free shuttle from Canada Place\, or a 20–25 minute taxi over 
+ the Lions Gate Bridge.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Canada Place\, 999 Canada Place\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Head to Capilano
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d2-930@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261205T233000Z
+DTEND:20261206T013000Z
+SUMMARY:Capilano Suspension Bridge Park - Canyon Lights
+DESCRIPTION:Arrive in daylight\, stay as the lights come on around 4. Allow
+  1.5–2 hours.\n• Tickets are bought and in Nate's email. Arrive betwee
+ n 3:30 and 4:00\, then stay as long as you like. Sunset is about 4:15\, so
+  you get the canyon in daylight and then the lights.\n• Bridge\, Cliffwa
+ lk and Treetops are all lit. Ask for the kids' Activity Card (stickers →
+  gingerbread house).\n• Free ponchos if it rains.\n\nhttps://popcornlove
+ .net/vancouver/
+LOCATION:Capilano Suspension Bridge Park\, 3735 Capilano Rd\, North Vancouv
+ er\, BC V7R 4J1
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Capilano Suspension Bridge Park — Canyon Lights
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d2-1110@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261206T023000Z
+DTEND:20261206T034500Z
+SUMMARY:Dinner (Courtenay & kids)
+DESCRIPTION:Near the Airbnb — Gastown options.\n\nhttps://popcornlove.net
+ /vancouver/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Dinner (Courtenay & kids)
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d2-1185@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261206T034500Z
+DTEND:20261206T053000Z
+SUMMARY:Nate & Amy's dinner: Chambar
+DESCRIPTION:568 Beatty St\, a 10-minute walk. Table for 2 at 7:45\, reserve
+ d under Nate. Belgian-inspired; mussels and frites are the order.\n\nhttps
+ ://popcornlove.net/vancouver/
+LOCATION:Chambar\, 568 Beatty St\, Vancouver\, BC V6B 2L3
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Nate & Amy's dinner: Chambar
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d2-1290@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261206T053000Z
+DTEND:20261206T070000Z
+SUMMARY:Cocktails at Parker Rooftop
+DESCRIPTION:1379 Howe St\, 9th floor\, a short cab from Chambar. Glass-wall
+ ed room above downtown\, so December is fine.\n\nhttps://popcornlove.net/v
+ ancouver/
+LOCATION:Parker Rooftop\, 1379 Howe St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Cocktails at Parker Rooftop
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d3-540@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261206T170000Z
+DTEND:20261206T181500Z
+SUMMARY:Breakfast: Café Medina
+DESCRIPTION:780 Richards St (opens 9:00 Sundays) — or Nemesis Coffee in G
+ astown.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Café Medina\, 780 Richards St\, Vancouver\, BC V6B 3A4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Breakfast: Café Medina
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d3-615@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261206T181500Z
+DTEND:20261206T194500Z
+SUMMARY:Last stroll
+DESCRIPTION:Water Street and Robson Street for gifts\, and one more Steam C
+ lock whistle. (The Market doesn't open until 11:30 on Sundays\, so market 
+ gifts are a Friday job.)\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Gastown Steam Clock\, 305 Water St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Last stroll
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d3-705@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261206T194500Z
+DTEND:20261206T203000Z
+SUMMARY:Leave for the airport
+DESCRIPTION:Canada Line from Waterfront (no airport fee in this direction)\
+ , or a taxi van with the bags.\n\nhttps://popcornlove.net/vancouver/
+LOCATION:Waterfront Station\, 601 W Cordova St\, Vancouver\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Leave for the airport
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d3-750@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261206T203000Z
+DTEND:20261206T210000Z
+SUMMARY:Be at the airport
+DESCRIPTION:You clear U.S. customs here in Vancouver\, before the gate.\n\n
+ https://popcornlove.net/vancouver/
+LOCATION:Vancouver International Airport (YVR)\, 3211 Grant McConachie Way\
+ , Richmond\, BC
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Be at the airport
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:van26-d3-880@popcornlove.net
+DTSTAMP:20261128T000000Z
+DTSTART:20261206T224000Z
+DTEND:20261207T000600Z
+SUMMARY:Flight UA 8577
+DESCRIPTION:YVR 2:40 PM → SFO 4:06 PM\n\nhttps://popcornlove.net/vancouve
+ r/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Flight UA 8577
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

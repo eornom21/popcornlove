@@ -170,11 +170,130 @@ nav.tabs button.on i{filter:none;opacity:1}
 .toast{position:fixed;left:50%;bottom:calc(92px + var(--sab));transform:translateX(-50%);background:#1d3a6b;color:#fff;padding:9px 16px;border-radius:999px;font-weight:700;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
 @media (min-width:560px){.pc{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr 1fr 1fr}}
+/* ---- v19: weather chips, timers, doors, photo hunt, treats, games, wrapped, kid mode, night ---- */
+.wxc{display:inline-block;margin-left:6px;font-family:var(--body);font-weight:700;letter-spacing:0;text-transform:none;font-size:12.5px;color:#243a5e;background:#eef4fb;border:1px solid #cfdcee;border-radius:999px;padding:0 7px}
+.wxc.wet{background:#dbe9fb;border-color:#9dbde0}
+.rain{background:#e7f0fb;border:1.5px solid #9dbde0;border-radius:12px;padding:7px 10px;margin-top:7px;font-size:14px;color:#1d3a6b}
+.wear{font-size:14.5px;font-weight:700;color:var(--navy);margin-top:9px}
+.day .wear{margin:0;padding:0 14px 10px;text-align:center;font-size:13.5px}
+.timers{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tmr{border-radius:14px;background:#f3efe2;padding:10px 12px}
+.tmr b{display:block;font-family:var(--cond);letter-spacing:.05em;text-transform:uppercase;font-size:12px;color:var(--muted)}
+.tmr span{display:block;font-weight:800;font-size:23px;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.2}
+.tmr em{display:block;font-style:normal;font-size:12.5px;color:var(--muted)}
+.jump button{flex:0 0 auto;font-family:var(--cond);font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:13px;padding:7px 12px;border-radius:999px;background:#fff;border:1.5px solid #c9d6e8;color:var(--navy)}
+.doors{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+.door{position:relative;aspect-ratio:4/5;border-radius:16px 16px 6px 6px;border:2px solid #7a1616;background:#a8231d;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-family:var(--cond);font-weight:700}
+.door .w{font-size:12px;letter-spacing:.09em;text-transform:uppercase;opacity:.9}
+.door .n{font-size:32px;line-height:1}
+.door .e{font-size:24px;line-height:1.2}
+.door:after{content:'';position:absolute;right:9px;top:54%;width:7px;height:7px;border-radius:50%;background:#ecc566}
+.door.lock{background:#ddd6c4;border-color:#bdb49c;color:#6a6048}
+.door.lock:after{background:#a89f86}
+.door.open{background:#fffdf7;border-color:#e3c88a;color:#1d3a6b}
+.door.open:after{display:none}
+.door.ready{animation:glow 1.7s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 3px rgba(236,197,102,.75)}50%{box-shadow:0 0 0 8px rgba(236,197,102,.2)}}
+/* light full-screen sheet */
+.sh{display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:55;background:#fbf6ea;overflow:auto;-webkit-overflow-scrolling:touch}
+.sh.on{display:block}
+.sh .x{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:12px;width:44px;height:44px;border-radius:50%;background:#1d3a6b;color:#fff;font-size:22px;font-weight:800;z-index:56}
+.sh .in{max-width:560px;margin:0 auto;padding:calc(64px + env(safe-area-inset-top,0px)) 16px calc(40px + var(--sab))}
+.sh h4{font-family:var(--cond);font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#1d3a6b;font-size:17px;margin:20px 2px 8px}
+.sh.door{background:#a8231d}
+.dr{background:#fffdf7;border-radius:22px;padding:24px 18px 20px;text-align:center;border:3px solid #ecc566}
+.dr .de{font-size:64px;line-height:1.1}
+.dr h3{font-family:var(--script);font-weight:400;font-size:30px;color:#b3261e;line-height:1.15;margin:6px 0 8px}
+.dr p{font-size:17px;color:#243a5e}
+.mis,.cpn{border-radius:16px;padding:12px 14px;margin:14px 0 0;font-size:16px;text-align:left}
+.mis{background:#e4efe0;color:#1f5b45}
+.cpn{background:#fff3d6;border:2px dashed #d9a93a;color:#5b430c}
+.mis b,.cpn b{display:block;font-family:var(--cond);letter-spacing:.08em;text-transform:uppercase;font-size:12.5px}
+.cpn small{display:block;margin-top:4px;font-size:12.5px;opacity:.8}
+/* photo hunt */
+.cam{flex:0 0 44px;height:44px;border-radius:12px;border:1.5px solid #c9d6e8;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative;overflow:hidden}
+.cam input,.btn input[type=file]{position:absolute;opacity:0;width:1px;height:1px;left:0;top:0}
+.chk .th{flex:0 0 44px;width:44px;height:44px;border-radius:12px;object-fit:cover;border:2px solid var(--green)}
+.pv img{width:100%;border-radius:16px;border:2px solid #e3dccb}
+/* treats */
+.raters{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 4px}
+.mini{display:flex;gap:7px;margin-top:8px}
+.mini input{flex:1;min-width:0;font:700 16px var(--body);color:#1d3a6b;padding:8px 12px;border-radius:999px;border:1.5px solid #c9d6e8;background:#fff;-webkit-appearance:none;appearance:none}
+.champ{background:#fff3d6;border:1.5px solid #ecc566;border-radius:12px;padding:8px 10px;margin:8px 0;font-size:15px;color:#5b430c}
+.tr{list-style:none;margin-top:4px}
+.tr li{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.tr li:last-child{border-bottom:0}
+.tr .tn{flex:1;min-width:0;font-weight:800;color:var(--navy);font-size:15px;line-height:1.25}
+.tr .tn small{display:block;font-weight:600;color:var(--muted);font-size:12.5px}
+.tr .st{flex:0 0 auto;display:flex}
+.tr .st button{font-size:21px;width:30px;height:38px;filter:grayscale(1);opacity:.28}
+.tr .st button.on{filter:none;opacity:1}
+/* games */
+.gq{font-weight:800;font-size:19px;color:var(--navy);line-height:1.3;margin:12px 0 10px}
+.ga{display:block;width:100%;text-align:left;border:2px solid #c9d6e8;background:#fff;border-radius:14px;padding:11px 13px;margin:7px 0;font-weight:700;font-size:16px;color:var(--navy)}
+.ga.ok{background:#dcefe1;border-color:#1f5b45;color:#1f5b45}
+.ga.no{background:#fbe3de;border-color:#b3261e;color:#8f1d1d}
+.gn{font-size:14.5px;color:#243a5e;margin-top:6px}
+/* wrapped */
+.wr{text-align:center}
+.wr .wt{font-family:var(--script);font-size:44px;color:#b3261e;line-height:1.05}
+.wr .ws{font-family:var(--cond);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1d3a6b;font-size:15px;margin:2px 0 14px}
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.wg div{background:#fffdf7;border:2px solid #e3dccb;border-radius:16px;padding:12px 8px}
+.wg b{display:block;font-family:var(--cond);font-size:32px;line-height:1;color:#1f5b45}
+.wg span{font-size:13px;font-weight:700;color:#5d6f8c}
+.tal{margin-top:12px;background:#fffdf7;border:2px solid #e3dccb;border-radius:16px;padding:4px 12px}
+.tal div{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed #e3dccb}
+.tal div:last-child{border-bottom:0}
+.tal span{flex:1;text-align:left;font-weight:700;color:#1d3a6b;font-size:15px}
+.tal b{min-width:28px;font-size:19px;color:#1d3a6b}
+.tal .btn{min-width:40px;justify-content:center;font-size:18px}
+.mo{display:block;text-align:left;margin:8px 0}
+.mo b{display:block;font-family:var(--cond);letter-spacing:.06em;text-transform:uppercase;font-size:12.5px;color:#5d6f8c;margin:0 4px 3px}
+.mo textarea{width:100%;font:600 16px/1.35 var(--body);color:#1d3a6b;padding:9px 12px;border-radius:14px;border:2px solid #c9d6e8;background:#fff;resize:vertical;-webkit-appearance:none;appearance:none}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pg img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px}
+.wpic{width:100%;border-radius:14px;border:2px solid #e3dccb;margin-top:12px}
+/* kid mode */
+.sh.kid{background:linear-gradient(180deg,#1f5b45,#17422f)}
+.kd{text-align:center;color:#fff}
+.kd .kk{font-family:var(--cond);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:20px;color:#ffe9a8}
+.kd .ke{font-size:110px;line-height:1.1;margin:4px 0}
+.kd .kt{font-weight:900;font-size:32px;line-height:1.15}
+.kd .kw{font-size:20px;font-weight:700;opacity:.92;margin-top:6px}
+.kd .kbox{background:rgba(255,255,255,.12);border-radius:22px;padding:18px 14px;margin:12px 0}
+.kd .kbox.nx{background:#fffdf7;color:#1d3a6b}
+.kd .kbox.nx .kk{color:#b3261e}
+.kd .ka{display:flex;gap:10px;margin-top:10px}
+.kd .ka div{flex:1;background:rgba(255,255,255,.12);border-radius:16px;padding:10px 6px;font-weight:800;font-size:15px;line-height:1.2}
+.kd .ka i{display:block;font-style:normal;font-size:34px}
+.kd .ka small{display:block;font-weight:700;opacity:.85;font-size:12.5px;margin-top:2px}
+/* snow + night */
+#snow{position:fixed;top:0;right:0;bottom:0;left:0;pointer-events:none;z-index:70;overflow:hidden}
+#snow i{position:absolute;top:-34px;font-style:normal;color:#dbe8fa;text-shadow:0 0 2px #6f95c8,0 0 5px rgba(111,149,200,.6);animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(112vh) rotate(300deg)}}
+.lights{display:none;position:absolute;left:0;right:0;top:0;height:18px;justify-content:space-around;border-top:2px solid #20304f;pointer-events:none}
+.lights i{width:9px;height:12px;border-radius:50% 50% 46% 46%;margin-top:2px;animation:tw 1.9s ease-in-out infinite}
+.lights i:nth-child(4n+1){background:#ff5a4d;box-shadow:0 0 8px #ff5a4d}
+.lights i:nth-child(4n+2){background:#ffd24d;box-shadow:0 0 8px #ffd24d;animation-delay:.45s}
+.lights i:nth-child(4n+3){background:#5fd08a;box-shadow:0 0 8px #5fd08a;animation-delay:.9s}
+.lights i:nth-child(4n){background:#6fb3ff;box-shadow:0 0 8px #6fb3ff;animation-delay:1.35s}
+@keyframes tw{0%,100%{opacity:1}50%{opacity:.35}}
+body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgba(74,110,180,.38),rgba(15,27,51,0) 46%),radial-gradient(circle at 92% 34%,rgba(143,29,29,.22),rgba(15,27,51,0) 40%)}
+.night .lights{display:flex}
+.night .hero{background:#0f1b33}
+.night .tagline,.night .subline,.night h2.sec,.night .foot,.night .slot>h3{color:#f6e9c4}
+.night h2.sec small,.night .slot>p.w,.night .foot small{color:#b9c6de}
+.night h2.sec .prog{color:#8fd3ad}
+.night nav.tabs{background:rgba(16,28,54,.96);border-top-color:#2a3d66}
+.night nav.tabs button{color:#b9c6de}
+.night nav.tabs button.on{color:#fff;background:#24386a}
+@media (prefers-reduced-motion:reduce){.door.ready,.lights i{animation:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header class="hero"><img src="img/hero.jpg" alt="Vancouver Christmas Market Trip — 4 days, San Francisco to Vancouver" width="1500" height="522"></header>
+<header class="hero"><img src="img/hero.jpg" alt="Vancouver Christmas Market Trip — 4 days, San Francisco to Vancouver" width="1500" height="522"><div class="lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></header>
 <div class="tagline">Good food · Bright lights · Happy hearts ♡</div>
 <div class="subline">Thu Dec 3 – Sun Dec 6, 2026</div>
 
@@ -187,11 +306,15 @@ nav.tabs button.on i{filter:none;opacity:1}
   <div class="grid">
     <a class="tile" id="home-dir" href="#"><i>🏠</i>Take us home<small>Directions to Woodward's</small></a>
     <button class="tile" id="show-addr"><i>🚕</i>Show the driver<small>Our address, big</small></button>
-    <a class="tile" href="https://tickets.vancouverchristmasmarket.com/" target="_blank" rel="noopener"><i>🎪</i>Market tickets<small>Pick a 30-min arrival slot</small></a>
-    <a class="tile" href="https://www.capbridge.com/" target="_blank" rel="noopener"><i>🌉</i>Canyon Lights<small>Timed tickets</small></a>
+    <button class="tile" data-spot><i>📍</i>Text my spot<small>Send the family your map pin</small></button>
+    <button class="tile" data-kid><i>🧒</i>Kid mode<small>What's next, read aloud</small></button>
     <button class="tile" data-go="eat"><i>🍴</i>Where to eat<small>Picks + alternatives</small></button>
     <button class="tile" id="open-poster"><i>🖼️</i>Courtenay's poster<small>The original board</small></button>
   </div>
+  <div class="card note" id="spot-box" style="display:none"><div style="font-weight:800;color:var(--navy)">📍 Got your spot.</div><div class="btns"><a class="btn pri" id="spot-link" href="#">Text it to the family</a></div><div class="small" style="margin-top:6px">Opens Messages with a map link. Pick who gets it.</div></div>
+  <div class="card now" id="doorcard" style="display:none"></div>
+  <h2 class="sec">⏱️ Right now in Vancouver</h2>
+  <div class="card"><div class="timers" id="timers"></div><div class="small" style="margin-top:8px">At the Market: snow showers every 30 minutes, a light show on the Pyramid every hour, and the Prost Show at 7:00 PM.</div><div class="btns"><button class="btn" data-snow>❄️ Let it snow</button></div></div>
   <h2 class="sec">❄️ Weather <small id="wx-src"></small></h2>
   <div class="card c3" id="wx"><div class="small">Loading Vancouver weather…</div></div>
   <h2 class="sec">✅ Book ahead <small class="prog" id="p-book"></small></h2>
@@ -202,6 +325,7 @@ nav.tabs button.on i{filter:none;opacity:1}
 <section class="view" id="v-plan">
   <div class="chips" id="chips"></div>
   <div id="days"></div>
+  <div class="card note"><div style="font-weight:800;color:var(--navy)">📅 Put the trip on your calendar</div><div class="small">Every stop, with an alert 20 minutes before. Tap Add All when your calendar opens.</div><div class="btns"><a class="btn pri" href="trip.ics">Add to calendar</a></div></div>
 </section>
 
 <!-- EAT -->
@@ -215,8 +339,17 @@ nav.tabs button.on i{filter:none;opacity:1}
 
 <!-- FUN -->
 <section class="view" id="v-fun">
-  <div class="card c2 count" style="background:#fbe3de;border-color:#e3a59c"><div class="big" style="font-size:32px">The Great Vancouver Hunt</div><div class="lbl">Tap each one when you find it · <span class="prog" id="p-hunt"></span></div></div>
+  <div class="jump"><button data-scroll="sec-doors">Doors</button><button data-scroll="sec-hunt">Hunt</button><button data-scroll="sec-treats">Treats</button><button data-scroll="sec-games">Games</button><button data-scroll="sec-wrap">Wrapped</button><button data-kid>Kid mode</button></div>
+  <h2 class="sec" id="sec-doors">🚪 Countdown doors <small class="prog" id="p-doors"></small></h2>
+  <div class="doors" id="doors"></div>
+  <div class="card c2 count" id="sec-hunt" style="background:#fbe3de;border-color:#e3a59c"><div class="big" style="font-size:32px">The Great Vancouver Hunt</div><div class="lbl">Tap when you find it, or snap a 📷 for proof · <span class="prog" id="p-hunt"></span></div></div>
   <div id="hunt"></div>
+  <h2 class="sec" id="sec-treats">🍩 Treat scorecard <small class="prog" id="p-treats"></small></h2>
+  <div class="card" id="treats"></div>
+  <h2 class="sec" id="sec-games">🎲 Line games <small>for the plane and the queues</small></h2>
+  <div class="card" id="games"></div>
+  <h2 class="sec" id="sec-wrap">🎁 Trip Wrapped</h2>
+  <div class="card" id="wrapcard"></div>
   <h2 class="sec">✨ If there's a spare hour</h2>
   <div id="extras"></div>
 </section>
@@ -263,6 +396,7 @@ nav.tabs button.on i{filter:none;opacity:1}
   <div class="card"><ul class="chk" id="l-pack"></ul></div>
   <h2 class="sec">📍 Maps</h2>
   <div class="card"><div class="small">Open map buttons in</div><div class="seg" id="mapseg"><button data-m="apple">Apple Maps</button><button data-m="google">Google Maps</button></div>
+    <div class="small" style="margin-top:12px">After-dark look (twinkle lights after sunset)</div><div class="seg" id="nightseg"><button data-night="auto">On</button><button data-night="off">Off</button></div>
     <p class="small" style="margin-top:10px">Emergency in Canada: <a href="tel:911"><strong>911</strong></a>, same as home.</p></div>
   <h2 class="sec">🖼️ The original</h2>
   <div class="card"><img class="poster" id="poster-thumb" src="img/poster.jpg" alt="Courtenay's Vancouver Christmas Market Trip poster" loading="lazy"><div class="btns"><button class="btn" id="open-poster2">Open full size</button><button class="btn pri" id="shareapp">Share this app</button></div></div>
@@ -282,6 +416,8 @@ nav.tabs button.on i{filter:none;opacity:1}
 
 <div class="ov" id="ov-poster"><button class="x" data-close>✕</button><img src="img/poster.jpg" alt="Courtenay's poster" loading="lazy"></div>
 <div class="ov" id="ov-addr"><button class="x" data-close>✕</button><div class="addr"><b>128 West Cordova Street</b><span>Woodward's W43 · Gastown<br>(at Abbott Street)</span></div></div>
+<div class="sh" id="sheet"><button class="x" data-close aria-label="Close">✕</button><div class="in" id="sheet-in"></div></div>
+<div id="snow" aria-hidden="true"></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -524,16 +660,17 @@ function btns(it){
   var h='';
   if(it.home)h+='<a class="btn pri" href="'+dir(HOME)+'" target="_blank" rel="noopener">📍 Directions</a>';
   if(it.map)h+='<a class="btn" href="'+place(it.map)+'" target="_blank" rel="noopener">📍 Map</a>';
+  if(it.map&&it.map.a)h+='<button class="btn" data-addr="'+esc(it.map.n)+'|'+esc(it.map.a)+'">🚕 Show driver</button>';
   (it.links||[]).forEach(function(l){h+='<a class="btn" href="'+(l[1]||place(l[2]))+'" target="_blank" rel="noopener">'+esc(l[0])+'</a>'});
   if(it.tel)h+='<a class="btn" href="tel:'+it.tel+'">📞 Call</a>';
   if(it.alt)h+='<button class="btn" data-alt="'+it.alt+'">🍴 Options</button>';
   return h?'<div class="btns">'+h+'</div>':'';
 }
-function itemHtml(it){
+function itemHtml(it,di){
   var tag=(it.add?'<span class="tag add">added</span>':'')+(it.bk?'<span class="tag best">✓ booked</span>':'');
-  return '<div class="it"><div class="ic">'+it.ic+'</div><div class="bd"><div class="tm">'+esc(it.tm)+'</div><div class="tt">'+esc(it.tt)+tag+'</div><div class="sb">'+esc(it.sb)+'</div>'+
+  return '<div class="it"><div class="ic">'+it.ic+'</div><div class="bd"><div class="tm">'+esc(it.tm)+(di===undefined?'':wxChip(di,it))+'</div><div class="tt">'+esc(it.tt)+tag+'</div><div class="sb">'+esc(it.sb)+'</div>'+
     (it.li?'<ul>'+it.li.map(function(x){return'<li>'+esc(x)+'</li>'}).join('')+'</ul>':'')+
-    (it.flag?'<div class="flag">⚠️ '+it.flag+'</div>':'')+btns(it)+'</div></div>';
+    (it.flag?'<div class="flag">⚠️ '+it.flag+'</div>':'')+(di===undefined?'':rainNote(di,it))+btns(it)+'</div></div>';
 }
 
 /* ---------- plan ---------- */
@@ -541,7 +678,7 @@ var curDay=0;
 function renderPlan(){
   $('chips').innerHTML=DAYS.map(function(d,i){return'<button class="chip '+d.c+(i===curDay?' on':'')+'" data-day="'+i+'"><span>'+d.s+'</span><b>'+d.num+'</b></button>'}).join('');
   var d=DAYS[curDay];
-  $('days').innerHTML='<div class="day '+d.c+'"><div class="dh"><div class="dn">'+d.n.toUpperCase()+'</div><div class="dd">'+d.d+'</div><div class="dt">'+esc(d.t)+'</div></div><img class="art" src="'+d.art+'" alt=""><div class="dh" style="padding:8px 12px"><div class="ds">'+esc(d.sub)+'</div></div><div class="items">'+d.items.map(itemHtml).join('')+'</div></div>'+
+  $('days').innerHTML='<div class="day '+d.c+'"><div class="dh"><div class="dn">'+d.n.toUpperCase()+'</div><div class="dd">'+d.d+'</div><div class="dt">'+esc(d.t)+'</div></div><img class="art" src="'+d.art+'" alt=""><div class="dh" style="padding:8px 12px"><div class="ds">'+esc(d.sub)+'</div></div>'+(wearLine(TRIP[curDay])?'<div class="wear">'+esc(wearLine(TRIP[curDay]))+'</div>':'')+'<div class="items">'+d.items.map(function(it){return itemHtml(it,curDay)}).join('')+'</div></div>'+
    '<div class="btns" style="justify-content:space-between;margin:0 2px 8px">'+(curDay>0?'<button class="btn" data-day="'+(curDay-1)+'">← '+DAYS[curDay-1].d.split(',')[0]+'</button>':'<span></span>')+(curDay<3?'<button class="btn pri" data-day="'+(curDay+1)+'">'+DAYS[curDay+1].d.split(',')[0]+' →</button>':'')+'</div>';
 }
 
@@ -568,7 +705,7 @@ function renderToday(){
     curDay=idx;
   }else{
     c.innerHTML='<div class="big">Home again ♡</div><div class="lbl">Same family · New traditions</div>';
-    w.className='card now';w.innerHTML='<div class="t">That\'s a wrap.</div><div class="s">The plan, the picks and the hunt are all still here.</div><div class="btns"><button class="btn pri" data-go="plan">Look back</button></div>';
+    w.className='card now';w.innerHTML='<div class="t">That\'s a wrap.</div><div class="s">The plan, the picks and the hunt are all still here.</div><div class="btns"><button class="btn pri" data-wrap>🎁 Trip Wrapped</button><button class="btn" data-go="plan">Look back</button></div>';
   }
   $('home-dir').href=dir(HOME);$('home-dir2').href=dir(HOME);
 }
@@ -587,7 +724,7 @@ function renderHunt(){
   var st=get('hunt',{}),tot=0,dn=0;
   $('hunt').innerHTML=HUNT.map(function(g){
     return'<h2 class="sec">'+esc(g[0])+'</h2><div class="card '+g[1]+'" style="border-color:var(--b)"><ul class="chk">'+g[2].map(function(x){tot++;if(st[x[0]])dn++;
-      return'<li class="'+(st[x[0]]?'done':'')+'" data-k="hunt" data-id="'+x[0]+'"><div class="box">★</div><div class="tx">'+esc(x[1])+(x[2]?'<small>'+esc(x[2])+'</small>':'')+'</div></li>'}).join('')+'</ul></div>'}).join('');
+      return'<li class="'+(st[x[0]]?'done':'')+'" data-k="hunt" data-id="'+x[0]+'"><div class="box">★</div><div class="tx">'+esc(x[1])+(x[2]?'<small>'+esc(x[2])+'</small>':'')+'</div>'+(photoCache[x[0]]?'<img class="th" src="'+photoCache[x[0]]+'" alt="Photo" data-view="'+x[0]+'">':'<label class="cam" data-stop aria-label="Take a photo">📷<input type="file" accept="image/*" capture="environment" data-photo="'+x[0]+'"></label>')+'</li>'}).join('')+'</ul></div>'}).join('');
   $('p-hunt').textContent=dn+' of '+tot+' found'+(dn===tot?' — champions!':'');
   $('extras').innerHTML=EXTRAS.map(function(x){return'<div class="card"><div class="tt" style="font-weight:800;color:var(--navy);font-size:16.5px">'+x[0]+' '+esc(x[1])+'</div><div style="font-size:14.5px">'+esc(x[2])+'</div><div class="btns"><a class="btn" href="'+place(x[3])+'" target="_blank" rel="noopener">📍 Map</a></div></div>'}).join('');
 }
@@ -604,6 +741,7 @@ function renderEat(){
     return'<div class="slot" id="s-'+s.id+'"><h3>'+esc(s.t)+'</h3><p class="w">'+esc(s.w)+'</p>'+s.opts.map(function(x){
       var on=picks[s.id]===x.id,tg=TAGS[x.tag];
       var b='<button class="btn'+(on?' on':'')+'" data-pick="'+s.id+'|'+x.id+'">'+(on?'♥ Our pick':'♡ Pick')+'</button><a class="btn" href="'+place(x.p)+'" target="_blank" rel="noopener">📍 Map</a>';
+      if(x.p&&x.p.a)b+='<button class="btn" data-addr="'+esc(x.p.n)+'|'+esc(x.p.a)+'">🚕</button>';
       if(x.res)b+='<a class="btn" href="'+x.res+'" target="_blank" rel="noopener">Reserve</a>';
       if(x.tel)b+='<a class="btn" href="tel:'+x.tel+'">📞</a>';
       return'<div class="opt'+(on?' picked':'')+'"><h4>'+esc(x.name)+' <span class="tag '+tg[0]+'">'+tg[1]+'</span></h4><div class="meta">'+esc(x.meta)+'</div><div class="pc"><div class="p"><b>Pros</b><ul>'+x.pros.map(function(p){return'<li>'+esc(p)+'</li>'}).join('')+'</ul></div><div class="n"><b>Trade-offs</b><ul>'+x.cons.map(function(p){return'<li>'+esc(p)+'</li>'}).join('')+'</ul></div></div><div class="btns">'+b+'</div></div>'}).join('')+'</div>'}).join('');
@@ -627,10 +765,10 @@ function share(text,withUrl){
 /* ---------- weather ---------- */
 var WX={0:['☀️','Clear'],1:['🌤️','Mostly clear'],2:['⛅','Partly cloudy'],3:['☁️','Cloudy'],45:['🌫️','Fog'],48:['🌫️','Fog'],51:['🌦️','Drizzle'],53:['🌦️','Drizzle'],55:['🌧️','Drizzle'],56:['🌧️','Icy drizzle'],57:['🌧️','Icy drizzle'],61:['🌧️','Light rain'],63:['🌧️','Rain'],65:['🌧️','Heavy rain'],66:['🌧️','Freezing rain'],67:['🌧️','Freezing rain'],71:['🌨️','Light snow'],73:['🌨️','Snow'],75:['❄️','Heavy snow'],77:['🌨️','Snow'],80:['🌦️','Showers'],81:['🌧️','Showers'],82:['🌧️','Downpours'],85:['🌨️','Snow showers'],86:['🌨️','Snow showers'],95:['⛈️','Thunder'],96:['⛈️','Thunder'],99:['⛈️','Thunder']};
 function wxFallback(msg){
-  $('wx').innerHTML='<div class="wxnow"><i>🌧️</i><div><b>Low-to-mid 40s°F</b><div class="small">Typical for early December: cool, damp, rain on most days. Sunset about 4:15 PM.</div></div></div>'+(msg?'<div class="small">'+msg+'</div>':'');
+  $('wx').innerHTML='<div class="wxnow"><i>🌧️</i><div><b>Low-to-mid 40s°F</b><div class="small">Typical for early December: cool, damp, rain on most days. Sunset about 4:15 PM.</div></div></div>'+(msg?'<div class="small">'+msg+'</div>':'')+'<div class="wear" id="wear"></div>';renderWear();
 }
 function loadWx(){
-  var u='https://api.open-meteo.com/v1/forecast?latitude=49.2827&longitude=-123.1207&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&timezone=America%2FVancouver&forecast_days=16';
+  var u='https://api.open-meteo.com/v1/forecast?latitude=49.2827&longitude=-123.1207&current=temperature_2m,weather_code&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&timezone=America%2FVancouver&forecast_days=16';
   if(!window.fetch){wxFallback();return}
   fetch(u).then(function(r){return r.json()}).then(function(j){
     var cur=j.current||{},cw=WX[cur.weather_code]||['🌡️',''],dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],cls={'2026-12-03':'c1','2026-12-04':'c2','2026-12-05':'c3','2026-12-06':'c4'};
@@ -641,7 +779,7 @@ function loadWx(){
       var w=WX[j.daily.weather_code[i]]||['🌡️',''],d=new Date(t[i]+'T12:00:00'),pp=j.daily.precipitation_probability_max[i];
       return'<div class="d '+(cls[t[i]]||'c3')+'"><b>'+dn[d.getDay()]+' '+d.getDate()+'</b><i>'+w[0]+'</i><span>'+Math.round(j.daily.temperature_2m_max[i])+'° / '+Math.round(j.daily.temperature_2m_min[i])+'°</span><em>'+(pp==null?w[1]:pp+'% rain')+'</em></div>'}).join('')+'</div>';
     h+='<div class="small" style="margin-top:8px">'+(any?'Forecast for our four days. It firms up inside a week.':'Our dates aren\'t in forecast range yet — this is the next few days there.')+' Sunset about 4:15 PM.</div>';
-    $('wx').innerHTML=h;$('wx-src').textContent='live';
+    $('wx').innerHTML=h+'<div class="wear" id="wear"></div>';$('wx-src').textContent='live';saveHourly(j);renderWear();
   }).catch(function(){wxFallback('Live forecast needs a connection.')});
 }
 
@@ -652,22 +790,397 @@ function showFx(){var v=parseFloat($('cad').value)||0;$('usd').textContent='≈ 
 function loadFx(){showFx();if(!window.fetch)return;
   fetch('https://open.er-api.com/v6/latest/CAD').then(function(r){return r.json()}).then(function(j){if(j&&j.rates&&j.rates.USD){rate=j.rates.USD;rateLive=true;set('fx',rate);showFx()}}).catch(function(){})}
 
+/* ====================================================================
+   v19 additions: sheet, show-the-driver, text my spot, forecast per stop,
+   timers, doors, photo hunt, treats, games, Trip Wrapped, kid mode, night
+   ==================================================================== */
+var BUILD='van-v19';
+var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],WDL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+/* ---------- sheet ---------- */
+function openSheet(html,cls){var s=$('sheet');$('sheet-in').innerHTML=html;s.className='sh on'+(cls?' '+cls:'');s.scrollTop=0}
+function sheetOpen(){return $('sheet').className.indexOf('on')>=0}
+function closeSheet(){if(!sheetOpen())return;$('sheet').className='sh';$('sheet-in').innerHTML='';try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}}
+
+/* ---------- show the driver / text my spot ---------- */
+function showAddr(n,a,extra){
+  var p=String(a||'').split(','),o=$('ov-addr');
+  o.querySelector('b').textContent=p[0]||n;
+  o.querySelector('span').innerHTML=esc(n)+(p.length>1?'<br>'+esc(p.slice(1).join(',').replace(/^\s+/,'')):'')+(extra?'<br>'+esc(extra):'');
+  o.className='ov on';
+}
+function showHome(){var o=$('ov-addr');o.querySelector('b').textContent='128 West Cordova Street';o.querySelector('span').innerHTML='Woodward\'s W43 · Gastown<br>(at Abbott Street)';o.className='ov on'}
+function textSpot(){
+  if(!navigator.geolocation){toast('Location isn\'t available here');return}
+  toast('Finding you…');
+  navigator.geolocation.getCurrentPosition(function(p){
+    var ll=p.coords.latitude.toFixed(5)+','+p.coords.longitude.toFixed(5);
+    var link=mapPref==='google'?'https://www.google.com/maps/search/?api=1&query='+ll:'https://maps.apple.com/?ll='+ll+'&q='+enc('I\'m here');
+    $('spot-link').href='sms:&body='+enc('I\'m here 📍 '+link);
+    $('spot-box').style.display='block';
+    toast('Got your spot');
+  },function(){toast('Turn on Location for this app, then try again')},{enableHighAccuracy:true,timeout:12000,maximumAge:30000});
+}
+
+/* ---------- forecast for each stop ---------- */
+var WXH=get('wxh',null),WXD=get('wxd',null);
+var NOWX={'0:555':1,'0:685':1,'3:750':1,'3:880':1};
+var RAIN={
+ '0:1035':'Umbrellas for Water Street; the cab is the dry part.',
+ '0:1140':'Skip the walk: cab straight to Robson Square, or call it a night.',
+ '1:930':'Clear umbrellas look good in photos. Ask the photographer about a covered doorway.',
+ '1:965':'Take the bus instead of the walk.',
+ '1:990':'The Market is outdoors. Ponchos on, something hot in hand.',
+ '2:630':'Good news: the Public Market is indoors.',
+ '2:930':'Rain shells on. The lights still glow in the rain.',
+ '3:615':'Shop Water Street door to door, or linger over breakfast.'
+};
+function wxAt(di,m){
+  if(!WXH||!WXH.t)return null;
+  var hh=Math.floor(m/60),k=TRIP[di]+'T'+(hh<10?'0':'')+hh+':00',i=WXH.t.indexOf(k);
+  if(i<0||WXH.temp[i]==null)return null;
+  return{temp:WXH.temp[i],pp:WXH.pp?WXH.pp[i]:null,code:WXH.code?WXH.code[i]:null};
+}
+function wxChip(di,it){
+  if(NOWX[di+':'+it.m]||!/\d/.test(it.tm))return'';
+  var w=wxAt(di,it.m);if(!w)return'';
+  var ic=(WX[w.code]||['🌡️'])[0];
+  return'<span class="wxc'+(w.pp!=null&&w.pp>=50?' wet':'')+'">'+ic+' '+Math.round(w.temp)+'°'+(w.pp!=null?' · '+w.pp+'%':'')+'</span>';
+}
+function rainNote(di,it){
+  var w=wxAt(di,it.m),r=RAIN[di+':'+it.m];
+  if(!w||!r||w.pp==null||w.pp<60)return'';
+  return'<div class="rain">☔ Rain likely ('+w.pp+'%). '+esc(r)+'</div>';
+}
+function wearLine(date){
+  var d=WXD&&WXD[date];if(!d)return'';
+  var s=[];
+  if(d.pp!=null&&d.pp>=60)s.push('Rain shells and waterproof shoes');else if(d.pp!=null&&d.pp>=30)s.push('Bring the rain shell');else s.push('Mostly dry');
+  if(d.max<40)s.push('hats, gloves and the warmest layer');else if(d.max<48)s.push('a warm layer and a hat');else s.push('a light warm layer');
+  return'🧥 '+s.join(' · ');
+}
+function saveHourly(j){
+  try{
+    var h=j.hourly,o={t:[],temp:[],pp:[],code:[]},d={};
+    for(var i=0;i<h.time.length;i++){if(TRIP.indexOf(h.time[i].slice(0,10))>=0){o.t.push(h.time[i]);o.temp.push(h.temperature_2m[i]);o.pp.push(h.precipitation_probability?h.precipitation_probability[i]:null);o.code.push(h.weather_code?h.weather_code[i]:null)}}
+    for(i=0;i<j.daily.time.length;i++){if(TRIP.indexOf(j.daily.time[i])>=0)d[j.daily.time[i]]={max:j.daily.temperature_2m_max[i],min:j.daily.temperature_2m_min[i],pp:j.daily.precipitation_probability_max[i]}}
+    if(o.t.length){WXH=o;set('wxh',o)}
+    if(Object.keys(d).length){WXD=d;set('wxd',d)}
+    renderPlan();renderWear();
+  }catch(e){}
+}
+function renderWear(){
+  var el=$('wear');if(!el)return;
+  var n=vanNow(),idx=TRIP.indexOf(n.date),date=idx>=0?n.date:TRIP[0],l=wearLine(date);
+  el.textContent=l?(idx>=0?'Today: ':'Thursday: ')+l.replace('🧥 ',''):'';
+  el.style.display=l?'block':'none';
+}
+
+/* ---------- timers ---------- */
+function fmtCd(s){var m=Math.floor(s/60),x=s%60;return m+':'+(x<10?'0':'')+x}
+function renderTimers(){
+  var el=$('timers');if(!el||$('v-today').className.indexOf('on')<0||document.hidden)return;
+  var fake=/[?&]now=/.test(location.search),n=vanNow();
+  var left=fake?(15-(n.min%15))*60:900-(Math.floor(Date.now()/1000)%900);
+  var d=975-n.min,h='<div class="tmr"><b>🕰️ Next Steam Clock whistle</b><span>'+fmtCd(left)+'</span><em>Every 15 minutes on Water Street</em></div>';
+  if(d>0&&n.min>=470)h+='<div class="tmr"><b>🌇 Sunset in</b><span>'+Math.floor(d/60)+'h '+(d%60)+'m</span><em>About 4:15 PM, then the lights</em></div>';
+  else h+='<div class="tmr"><b>✨ After dark</b><span>Lights on</span><em>Sunrise is about 7:50 AM</em></div>';
+  el.innerHTML=h;
+}
+
+/* ---------- countdown doors ---------- */
+var DOORS=[
+ {d:'2026-11-28',e:'🪙',t:'Loonies and toonies',x:'Canadian money has nicknames. The $1 coin is a loonie, because there\'s a bird called a loon on it. The $2 coin is a toonie.',m:'Find a picture of a loon. What sound do you think it makes?'},
+ {d:'2026-11-29',e:'🚝',t:'The train with no driver',x:'The SkyTrain from the airport drives itself. Sit at the very front window and it feels like you\'re the driver.',m:'Decide who gets the front window first.'},
+ {d:'2026-11-30',e:'🕰️',t:'A clock that whistles',x:'The Gastown Steam Clock was built in 1977. It puffs steam and whistles a tune every 15 minutes, and it\'s three minutes from our front door.',m:'Practice your best steam whistle.'},
+ {d:'2026-12-01',e:'🌉',t:'The big bridge',x:'The Capilano Suspension Bridge is 137 metres long and hangs 70 metres above the river. That\'s about as high as a 20-storey building.',m:'Who is brave enough to look down?'},
+ {d:'2026-12-02',e:'🧳',t:'One more sleep',x:'Tomorrow we fly to Canada. Vancouver is on the Pacific Ocean, with snowy mountains right behind the city.',m:'Lay out your warmest hat, your gloves and one thing for the plane.'},
+ {d:'2026-12-03',e:'✈️',t:'Wheels up!',x:'The flight is about two and a half hours. Look for snowy mountains out the window on the way north.',m:'Be the first to spot a seaplane in Vancouver.',c:'Good for one hot chocolate, any time on this trip.'},
+ {d:'2026-12-04',e:'🎪',t:'Market day',x:'Tonight\'s Christmas Market has a carousel, a walk-through Christmas tree 35 feet tall, and a snow shower every 30 minutes.',m:'Get caught in the snow.',c:'Good for one extra donut at Lee\'s.'},
+ {d:'2026-12-05',e:'🌲',t:'The canyon lights up',x:'Tonight the bridge, the cliffs and the forest are covered in lights. Seven little bridges hang high between the giant trees.',m:'Count all seven treetop bridges.',c:'You pick tonight\'s treat.'},
+ {d:'2026-12-06',e:'🏡',t:'Last morning',x:'One more walk on Water Street before the flight home.',m:'Hear one more Steam Clock whistle. Then tell everyone your favourite moment and save it in Trip Wrapped.'}
+];
+function renderDoors(){
+  var st=get('doors',{}),n=vanNow().date,op=0;
+  $('doors').innerHTML=DOORS.map(function(d,i){
+    var av=d.d<=n,o=!!st[d.d],dt=new Date(d.d+'T12:00:00');if(o)op++;
+    return'<button class="door '+(o?'open':av?'ready':'lock')+'" data-door="'+i+'" aria-label="Door for '+WDL[dt.getDay()]+'"><span class="w">'+WD[dt.getDay()]+'</span><span class="n">'+dt.getDate()+'</span><span class="e">'+(o?d.e:av?'🎁':'🔒')+'</span></button>'}).join('');
+  $('p-doors').textContent=op+' of '+DOORS.length+' opened';
+  var c=$('doorcard'),t=null;DOORS.forEach(function(d,i){if(d.d===n&&!st[d.d])t=i});
+  if(t!==null){c.style.display='block';c.innerHTML='<div class="k">Today\'s door</div><div class="t">🚪 A new door is ready to open</div><div class="btns"><button class="btn pri" data-door="'+t+'">Open it</button></div>'}
+  else c.style.display='none';
+}
+function openDoor(i){
+  var d=DOORS[i],n=vanNow().date;if(!d)return;
+  if(d.d>n){toast('Opens '+WDL[new Date(d.d+'T12:00:00').getDay()]);return}
+  var st=get('doors',{});st[d.d]=1;set('doors',st);renderDoors();renderWrapCard();
+  openSheet('<div class="dr"><div class="de">'+d.e+'</div><h3>'+esc(d.t)+'</h3><p>'+esc(d.x)+'</p>'+(d.m?'<div class="mis"><b>Mission</b>'+esc(d.m)+'</div>':'')+(d.c?'<div class="cpn"><b>🎟️ Coupon</b>'+esc(d.c)+'<small>Show this door to Dad.</small></div>':'')+'<div class="btns" style="justify-content:center;margin-top:16px"><button class="btn pri big" data-close>Done</button></div></div>','door');
+}
+
+/* ---------- photos (kept on this phone) ---------- */
+var idb=null,idbFail=false,photoCache={};
+function idbOpen(cb){
+  if(idb){cb(idb);return}
+  if(idbFail||!window.indexedDB){cb(null);return}
+  try{var r=indexedDB.open('van-trip',1);
+    r.onupgradeneeded=function(){r.result.createObjectStore('photos')};
+    r.onsuccess=function(){idb=r.result;cb(idb)};
+    r.onerror=function(){idbFail=true;cb(null)};
+  }catch(e){idbFail=true;cb(null)}
+}
+function photoPut(id,data,cb){idbOpen(function(db){if(!db){cb(false);return}
+  try{var tx=db.transaction('photos','readwrite');tx.objectStore('photos').put(data,id);
+    tx.oncomplete=function(){photoCache[id]=data;cb(true)};tx.onerror=tx.onabort=function(){cb(false)}}catch(e){cb(false)}})}
+function photoDel(id,cb){idbOpen(function(db){if(!db){cb(false);return}
+  try{var tx=db.transaction('photos','readwrite');tx.objectStore('photos')['delete'](id);
+    tx.oncomplete=function(){delete photoCache[id];cb(true)};tx.onerror=tx.onabort=function(){cb(false)}}catch(e){cb(false)}})}
+function photosLoad(cb){idbOpen(function(db){if(!db){cb();return}
+  try{var rq=db.transaction('photos','readonly').objectStore('photos').openCursor();
+    rq.onsuccess=function(){var c=rq.result;if(c){photoCache[c.key]=c.value;c['continue']()}else cb()};rq.onerror=function(){cb()}}catch(e){cb()}})}
+function shrink(file,cb){
+  var u=URL.createObjectURL(file),im=new Image();
+  im.onload=function(){var s=Math.min(1,1100/Math.max(im.width,im.height)),c=document.createElement('canvas'),d=null;
+    c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);
+    try{c.getContext('2d').drawImage(im,0,0,c.width,c.height);d=c.toDataURL('image/jpeg',.8)}catch(e){}
+    URL.revokeObjectURL(u);cb(d)};
+  im.onerror=function(){URL.revokeObjectURL(u);cb(null)};
+  im.src=u;
+}
+function huntName(id){var n='';HUNT.forEach(function(g){g[2].forEach(function(x){if(x[0]===id)n=x[1]})});return n}
+function viewPhoto(id){
+  if(!photoCache[id])return;
+  openSheet('<div class="pv"><h4 style="margin-top:0">'+esc(huntName(id)||'Photo')+'</h4><img src="'+photoCache[id]+'" alt=""><div class="btns" style="justify-content:center;margin-top:12px"><label class="btn" style="position:relative">📷 Retake<input type="file" accept="image/*" capture="environment" data-photo="'+esc(id)+'"></label><button class="btn" data-delphoto="'+esc(id)+'">Remove photo</button><button class="btn pri" data-close>Done</button></div><p class="small" style="text-align:center;margin-top:10px">Photos stay on this phone.</p></div>');
+}
+
+/* ---------- treat scorecard ---------- */
+var TREATS=[['honey','Lee\'s Honey Dip donut'],['xlb','Dinesty soup dumplings'],['waffle','Café Medina waffle'],['kinder','Kinderpunsch'],['pretzel','Market pretzel'],['nana','Nanaimo bar'],['salm','Candied salmon'],['osf','Spaghetti Factory ice cream'],['choc','Hot chocolate'],['fog','London Fog'],['pout','Poutine']];
+function treatState(){var s=get('treats',null)||{};s.custom=s.custom||[];s.raters=s.raters||['Courtenay','Nate','Amy'];s.cur=s.cur||s.raters[0];s.r=s.r||{};return s}
+function treatRow(s,t){var r=s.r[t[0]]||{},ks=Object.keys(r).filter(function(k){return r[k]}),sum=0;ks.forEach(function(k){sum+=r[k]});return{n:ks.length,avg:ks.length?sum/ks.length:0,mine:r[s.cur]||0}}
+function treatBoard(){var s=treatState(),best=null,rated=0;
+  TREATS.concat(s.custom).forEach(function(t){var q=treatRow(s,t);if(!q.n)return;rated++;if(!best||q.avg>best.avg||(q.avg===best.avg&&q.n>best.n))best={name:t[1],avg:q.avg,n:q.n}});
+  return{champ:best,rated:rated}}
+function renderTreats(){
+  var s=treatState(),b=treatBoard();
+  var h='<div class="small">Who\'s rating?</div><div class="raters">'+s.raters.map(function(n){return'<button class="btn'+(n===s.cur?' pri':'')+'" data-rater="'+esc(n)+'">'+esc(n)+'</button>'}).join('')+'</div>'+
+    '<div class="mini"><input id="rater-new" type="text" maxlength="16" placeholder="Add a name" aria-label="Add a name" autocapitalize="words"><button class="btn" data-addrater>Add</button></div>';
+  if(b.champ)h+='<div class="champ">🏆 In the lead: <b>'+esc(b.champ.name)+'</b> · '+b.champ.avg.toFixed(1)+' of 5</div>';
+  h+='<ul class="tr">'+TREATS.concat(s.custom).map(function(t){var q=treatRow(s,t),st='';
+    for(var i=1;i<=5;i++)st+='<button class="'+(i<=q.mine?'on':'')+'" data-rate="'+esc(t[0])+'|'+i+'" aria-label="'+i+' of 5">🍩</button>';
+    return'<li><div class="tn">'+esc(t[1])+(q.n?'<small>'+q.avg.toFixed(1)+' average · '+q.n+(q.n===1?' vote':' votes')+'</small>':'')+'</div><div class="st">'+st+'</div></li>'}).join('')+'</ul>';
+  h+='<div class="mini"><input id="treat-new" type="text" maxlength="40" placeholder="Add a treat" aria-label="Add a treat"><button class="btn" data-addtreat>Add</button></div><div class="btns"><button class="btn" data-sharetreats>Share the scores</button></div><p class="small" style="margin-top:8px">Scores are saved on this phone. Pass it around the table.</p>';
+  $('treats').innerHTML=h;$('p-treats').textContent=b.rated?b.rated+' rated':'';
+}
+function treatsText(){var s=treatState(),rows=[];
+  TREATS.concat(s.custom).forEach(function(t){var q=treatRow(s,t);if(q.n)rows.push([q.avg,t[1]+': '+q.avg.toFixed(1)+' of 5 ('+q.n+(q.n===1?' vote)':' votes)')])});
+  rows.sort(function(a,b){return b[0]-a[0]});
+  return'Vancouver treat scores 🍩\n'+(rows.length?rows.map(function(r){return r[1]}).join('\n'):'(nothing rated yet)')}
+
+/* ---------- line games ---------- */
+var TRIVIA=[
+ ['What is the nickname for Canada\'s $1 coin?',['Moosie','Loonie','Buckaroo'],1,'There\'s a loon on it. The $2 coin is a toonie.'],
+ ['How many points are on the maple leaf on Canada\'s flag?',['11','9','13'],0,'Eleven points.'],
+ ['How often does the Gastown Steam Clock whistle?',['Once a day','Every hour','Every 15 minutes'],2,'Every quarter hour.'],
+ ['Which is bigger: Stanley Park or New York\'s Central Park?',['Central Park','Stanley Park','They\'re the same'],1,'Stanley Park is about 1,000 acres. Central Park is 843.'],
+ ['What is the capital of Canada?',['Ottawa','Toronto','Vancouver'],0,'Ottawa, in Ontario.'],
+ ['Which ocean is Vancouver on?',['Atlantic','Arctic','Pacific'],2,'The Pacific.'],
+ ['What animal is on the Canadian nickel?',['Moose','Beaver','Polar bear'],1,'The beaver is Canada\'s national animal.'],
+ ['How long is the Capilano Suspension Bridge?',['37 metres','137 metres','1 kilometre'],1,'137 metres, and 70 metres above the river.'],
+ ['Who drives the SkyTrain?',['A driver in the back','Nobody. It drives itself','A driver up front'],1,'It\'s automated. Grab the front window.'],
+ ['Which sport was invented by a Canadian?',['Basketball','Baseball','Golf'],0,'James Naismith, in 1891.'],
+ ['What province is Vancouver in?',['Alberta','Ontario','British Columbia'],2,'British Columbia, or B.C.'],
+ ['What do Canadians call a knit winter hat?',['A toque','A parka','A chesterfield'],0,'Say it like "tuke."'],
+ ['What year did Vancouver host the Winter Olympics?',['2002','2010','2018'],1,'The Olympic Cauldron is at Jack Poole Plaza, where the Christmas Market is.'],
+ ['What is Canada\'s national winter sport?',['Curling','Skiing','Ice hockey'],2,'Lacrosse is the national summer sport.'],
+ ['How many time zones does Canada have?',['Six','Four','Two'],0,'Six, from Pacific to Newfoundland.'],
+ ['What does the "u" in "colour" tell you?',['It\'s a typo','You\'re in Canada','It\'s French'],1,'Canadians spell it colour, favourite and neighbour.']
+];
+var WYR=['ride the carousel ten times OR cross the big bridge ten times?','eat only donuts all day OR only dumplings all day?','have a pet seaplane OR a pet steam clock?','live in a treehouse at Capilano OR a hut at the Christmas Market?','drive the SkyTrain OR steer the Aquabus?','get snowed on every 30 minutes OR hear a whistle every 15 minutes?','wear mittens all summer OR flip-flops all winter?','have maple syrup on everything OR never have it again?','be a mountie on a horse OR a pilot on a seaplane?','skate to school OR ski to school?','find a moose in the kitchen OR a beaver in the bathtub?','have a hot chocolate that never ends OR a donut box that never empties?','sleep in a snow fort OR a lighthouse?','sing every time you walk through a door OR dance every time you cross a street?'];
+var ISPY=['something red and white','a maple leaf','a seaplane','someone wearing a toque','a dog in a sweater','a Canadian flag','something that steams','a mountain with snow on it','a boat','lights in a tree','a clock','a double-decker bus','something made of bricks','a seagull','someone holding a hot drink','a bicycle'];
+var game={mode:'trivia',ord:null,i:0,ans:-1,score:0,seen:0};
+function shuffle(n){var a=[],i,j,t;for(i=0;i<n;i++)a.push(i);for(i=n-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=a[i];a[i]=a[j];a[j]=t}return a}
+function gameList(){return game.mode==='trivia'?TRIVIA:game.mode==='wyr'?WYR:ISPY}
+function renderGames(){
+  var L=gameList();if(!game.ord||game.ord.length!==L.length){game.ord=shuffle(L.length);game.i=0;game.ans=-1}
+  var x=L[game.ord[game.i%L.length]],h='<div class="seg" style="margin-top:0">'+[['trivia','Trivia'],['wyr','Would you rather'],['ispy','I spy']].map(function(m){return'<button class="'+(game.mode===m[0]?'on':'')+'" data-game="'+m[0]+'">'+m[1]+'</button>'}).join('')+'</div>';
+  if(game.mode==='trivia'){
+    h+='<div class="gq">'+esc(x[0])+'</div>'+x[1].map(function(a,k){var c=game.ans<0?'':(k===x[2]?' ok':(k===game.ans?' no':''));return'<button class="ga'+c+'" data-ans="'+k+'">'+esc(a)+'</button>'}).join('');
+    if(game.ans>=0)h+='<div class="gn">'+(game.ans===x[2]?'✅ Yes! ':'Not quite. ')+esc(x[3])+'</div>';
+    h+='<div class="btns" style="justify-content:space-between;align-items:center"><span class="small">Score: '+game.score+' of '+game.seen+'</span><button class="btn pri" data-gnext>Next question →</button></div>';
+  }else if(game.mode==='wyr'){
+    h+='<div class="gq">Would you rather '+esc(x)+'</div><div class="btns"><button class="btn pri" data-gnext>Next one →</button></div>';
+  }else{
+    h+='<div class="gq">I spy with my little eye… '+esc(x)+'.</div><div class="gn">First one to point at it wins the round.</div><div class="btns"><button class="btn pri" data-gnext>Next one →</button></div>';
+  }
+  $('games').innerHTML=h;
+}
+
+/* ---------- Trip Wrapped ---------- */
+var TALLY=[['donut','🍩','Donuts eaten'],['choc','☕','Hot chocolates'],['dump','🥟','Dumplings eaten'],['whistle','🕰️','Steam whistles heard']];
+function counts(){
+  var st=get('hunt',{}),tot=0,dn=0;HUNT.forEach(function(g){g[2].forEach(function(x){tot++;if(st[x[0]])dn++})});
+  var tb=treatBoard();
+  return{tot:tot,dn:dn,ph:Object.keys(photoCache).length,doors:Object.keys(get('doors',{})).length,champ:tb.champ,rated:tb.rated,bridges:(st.bridge?1:0)+(st.tops?7:0)};
+}
+function renderWrapCard(){
+  var el=$('wrapcard');if(!el)return;var c=counts();
+  el.innerHTML='<div class="tt" style="font-weight:800;color:var(--navy);font-size:16.5px">The trip so far</div><div style="font-size:14.5px">'+c.dn+' of '+c.tot+' hunt finds · '+c.ph+(c.ph===1?' photo':' photos')+' · '+c.rated+(c.rated===1?' treat':' treats')+' rated · '+c.doors+(c.doors===1?' door':' doors')+' opened</div><div class="btns"><button class="btn pri" data-wrap>Open Trip Wrapped</button></div>';
+}
+function stat(v,l){return'<div><b>'+v+'</b><span>'+l+'</span></div>'}
+function openWrap(){
+  var c=counts(),tal=get('tally',{}),mo=get('moments',{}),ids=Object.keys(photoCache);
+  var h='<div class="wr"><div class="wt">Vancouver 2026</div><div class="ws">Trip Wrapped</div><div class="wg">'+stat(c.dn+' / '+c.tot,'hunt finds')+stat(c.ph,c.ph===1?'photo':'photos')+stat(c.bridges,'bridges crossed')+stat(c.doors,'doors opened')+'</div>';
+  h+='<div class="tal">'+TALLY.map(function(t){return'<div><span>'+t[1]+' '+t[2]+'</span><button class="btn" data-tal="'+t[0]+'|-1" aria-label="one fewer">−</button><b id="tal-'+t[0]+'">'+(tal[t[0]]||0)+'</b><button class="btn" data-tal="'+t[0]+'|1" aria-label="one more">+</button></div>'}).join('')+'</div>';
+  if(c.champ)h+='<div class="champ" style="text-align:left">🏆 Treat champion: <b>'+esc(c.champ.name)+'</b> · '+c.champ.avg.toFixed(1)+' of 5</div>';
+  h+='<h4 style="text-align:left">Best moment of each day</h4>'+DAYS.map(function(d,i){return'<label class="mo"><b>'+d.d.split(',')[0]+'</b><textarea rows="2" maxlength="160" data-moment="'+i+'" placeholder="What was the best part?">'+esc(mo[i]||'')+'</textarea></label>'}).join('');
+  if(ids.length)h+='<h4 style="text-align:left">Photos</h4><div class="pg">'+ids.map(function(id){return'<img src="'+photoCache[id]+'" alt="" data-view="'+esc(id)+'">'}).join('')+'</div>';
+  h+='<div class="btns" style="justify-content:center;margin-top:16px"><button class="btn pri big" data-wrappic>Make the keepsake picture</button><button class="btn big" data-wrapshare>Share the recap</button></div><div id="wpic"></div><p class="small" style="margin-top:10px">Everything here is saved on this phone.</p></div>';
+  openSheet(h,'wrap');
+}
+function wrapText(){
+  var c=counts(),tal=get('tally',{}),mo=get('moments',{}),o=['Vancouver 2026 — Trip Wrapped 🎄',c.dn+' of '+c.tot+' hunt finds · '+c.ph+' photos · '+c.bridges+' bridges crossed'];
+  var t=TALLY.filter(function(x){return tal[x[0]]}).map(function(x){return x[1]+' '+tal[x[0]]+' '+x[2].toLowerCase()});if(t.length)o.push(t.join(' · '));
+  if(c.champ)o.push('🏆 Treat champion: '+c.champ.name+' ('+c.champ.avg.toFixed(1)+' of 5)');
+  DAYS.forEach(function(d,i){if(mo[i])o.push(d.d.split(',')[0]+': '+mo[i])});
+  return o.join('\n');
+}
+var wrapBlob=null;
+function wrapLines(x,text,maxW){var w=String(text).split(/\s+/),l='',out=[];w.forEach(function(q){var t=l?l+' '+q:q;if(x.measureText(t).width>maxW&&l){out.push(l);l=q}else l=t});if(l)out.push(l);return out}
+function wrapPicture(){
+  var c=counts(),tal=get('tally',{}),mo=get('moments',{}),W=1080,H=1350,cv=document.createElement('canvas'),x=cv.getContext('2d'),ids=Object.keys(photoCache).slice(0,6);
+  cv.width=W;cv.height=H;
+  x.fillStyle='#fbf6ea';x.fillRect(0,0,W,H);x.fillStyle='#a8231d';x.fillRect(0,0,W,18);x.fillRect(0,H-18,W,18);x.fillStyle='#1f5b45';x.fillRect(0,18,W,8);x.fillRect(0,H-26,W,8);
+  x.textAlign='center';x.fillStyle='#b3261e';x.font='104px "Kaushan Script","Snell Roundhand",cursive';x.fillText('Vancouver 2026',W/2,150);
+  x.fillStyle='#1d3a6b';x.font='700 38px "Barlow Semi Condensed","Arial Narrow",sans-serif';x.fillText('CHRISTMAS MARKET TRIP  ·  WRAPPED',W/2,208);
+  function rest(y){
+    x.textAlign='center';x.fillStyle='#1f5b45';x.font='800 46px Nunito,Helvetica,Arial,sans-serif';
+    x.fillText(c.dn+' of '+c.tot+' hunt finds   ·   '+c.bridges+' bridges crossed',W/2,y);y+=62;
+    var t=TALLY.filter(function(q){return tal[q[0]]}).map(function(q){return tal[q[0]]+' '+q[2].toLowerCase()});
+    x.fillStyle='#1d3a6b';x.font='700 36px Nunito,Helvetica,Arial,sans-serif';
+    if(t.length){wrapLines(x,t.join('   ·   '),W-120).slice(0,2).forEach(function(l){x.fillText(l,W/2,y);y+=48})}
+    if(c.champ){x.fillStyle='#8a5a09';x.fillText('Treat champion: '+c.champ.name,W/2,y);y+=56}
+    y+=8;x.textAlign='left';
+    DAYS.forEach(function(d,i){if(!mo[i]||y>H-90)return;
+      x.fillStyle='#b3261e';x.font='700 30px "Barlow Semi Condensed","Arial Narrow",sans-serif';x.fillText(d.d.split(',')[0].toUpperCase(),70,y);y+=40;
+      x.fillStyle='#243a5e';x.font='600 34px Nunito,Helvetica,Arial,sans-serif';
+      wrapLines(x,mo[i],W-140).slice(0,2).forEach(function(l){if(y<H-50){x.fillText(l,70,y);y+=44}});y+=10});
+    cv.toBlob(function(b){wrapBlob=b;var el=$('wpic');if(!el||!b)return;
+      el.innerHTML='<img class="wpic" src="'+URL.createObjectURL(b)+'" alt="Trip Wrapped picture"><div class="btns" style="justify-content:center"><button class="btn pri" data-wrapsend>Share or save the picture</button></div><p class="small">Or press and hold the picture to save it.</p>';
+      el.scrollIntoView&&el.scrollIntoView({behavior:'smooth',block:'start'})},'image/jpeg',.9);
+  }
+  if(!ids.length){rest(330);return}
+  var cols=3,gap=16,cell=Math.floor((W-120-gap*(cols-1))/cols),rows=Math.ceil(ids.length/cols),left=ids.length,y0=250;
+  ids.forEach(function(id,k){var im=new Image();
+    im.onload=im.onerror=function(){
+      if(im.width){var s=Math.min(im.width,im.height),cx=60+(k%cols)*(cell+gap),cy=y0+Math.floor(k/cols)*(cell+gap);
+        x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,cx,cy,cell,cell);x.strokeStyle='#fffdf7';x.lineWidth=6;x.strokeRect(cx,cy,cell,cell)}
+      if(--left===0)rest(y0+rows*(cell+gap)+60)};
+    im.src=photoCache[id]});
+}
+function wrapSend(){
+  if(!wrapBlob)return;
+  try{var f=new File([wrapBlob],'vancouver-wrapped.jpg',{type:'image/jpeg'});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f]}).catch(function(){});return}}catch(e){}
+  var a=document.createElement('a');a.href=URL.createObjectURL(wrapBlob);a.download='vancouver-wrapped.jpg';document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+/* ---------- kid mode ---------- */
+function mins(m){if(m<60)return m+(m===1?' minute':' minutes');var h=Math.floor(m/60),r=m%60;return h+(h===1?' hour':' hours')+(r?' and '+r+' minutes':'')}
+function kidTitle(it){return it.tt.replace(/^(Breakfast|Lunch|Dinner|Snack): /,'$1 at ').replace(/ — .*$/,'')}
+function kidInfo(){
+  var n=vanNow(),idx=TRIP.indexOf(n.date),before=dayDiff(n.date,TRIP[0]);
+  if(idx<0&&before>0){var sl=before+(before===1?' sleep':' sleeps');return{now:{e:'🛫',k:sl+' to go',t:'Then we fly to Vancouver!'},say:sl+' to go. Then we fly to Vancouver!',after:[]}}
+  if(idx<0)return{now:{e:'🏡',k:'Home again',t:'What a trip!'},say:'We are home again. What a trip!',after:[]};
+  var its=DAYS[idx].items.filter(function(it){return /\d/.test(it.tm)&&it.m<1200}),cur=null,rest=[];
+  its.forEach(function(it){if(it.m<=n.min)cur=it;else rest.push(it)});
+  var o={after:rest.slice(1,3)},say=[];
+  if(cur){o.now={e:cur.ic,k:'Right now',t:kidTitle(cur)};say.push('Right now: '+kidTitle(cur)+'.')}
+  if(rest[0]){o.next={e:rest[0].ic,k:'Next, in '+mins(rest[0].m-n.min),t:kidTitle(rest[0]),w:rest[0].tm.replace('~','About ')};say.push('Next, in '+mins(rest[0].m-n.min)+': '+kidTitle(rest[0])+'.')}
+  else if(n.min>=1140||!cur){o.next={e:'🌙',k:'Next',t:'Pyjamas, teeth and bed',w:'Big day tomorrow'};say.push('Next: pyjamas, teeth and bed.')}
+  o.say=say.join(' ');return o;
+}
+function openKid(){
+  var k=kidInfo(),h='<div class="kd">';
+  if(k.now)h+='<div class="kbox"><div class="kk">'+esc(k.now.k)+'</div><div class="ke">'+k.now.e+'</div><div class="kt">'+esc(k.now.t)+'</div></div>';
+  if(k.next)h+='<div class="kbox nx"><div class="kk">'+esc(k.next.k)+'</div><div class="ke">'+k.next.e+'</div><div class="kt">'+esc(k.next.t)+'</div><div class="kw">'+esc(k.next.w||'')+'</div></div>';
+  if(k.after&&k.after.length)h+='<div class="kk" style="margin-top:14px">After that</div><div class="ka">'+k.after.map(function(it){return'<div><i>'+it.ic+'</i>'+esc(kidTitle(it))+'<small>'+esc(it.tm)+'</small></div>'}).join('')+'</div>';
+  h+='<div class="btns" style="justify-content:center;margin-top:18px">'+(window.speechSynthesis?'<button class="btn big" data-say="'+esc(k.say)+'">🔊 Read it to me</button>':'')+'<button class="btn big" data-snow>❄️ Let it snow</button></div></div>';
+  openSheet(h,'kid');
+}
+function say(t){
+  try{var u=new SpeechSynthesisUtterance(String(t).replace(/&/g,'and').replace(/[–—]/g,', ').replace(/[^\w\s.,:;'!?\-àâçéèêëîïôûùüÿñ]/gi,' '));u.rate=.92;u.lang='en-US';speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){toast('Reading aloud isn\'t available here')}
+}
+
+/* ---------- snow + night ---------- */
+function snow(){
+  var b=$('snow');if(b.childNodes.length)return;
+  var h='',i;for(i=0;i<40;i++)h+='<i style="left:'+(Math.random()*100).toFixed(1)+'%;animation-duration:'+(5+Math.random()*6).toFixed(1)+'s;animation-delay:'+(Math.random()*4).toFixed(1)+'s;font-size:'+Math.round(12+Math.random()*18)+'px">❄</i>';
+  b.innerHTML=h;setTimeout(function(){b.innerHTML=''},15500);
+}
+var shakeOn=false;
+function armShake(){
+  if(shakeOn||!window.DeviceMotionEvent)return;
+  function on(){shakeOn=true;var last=0;window.addEventListener('devicemotion',function(e){var a=e.accelerationIncludingGravity;if(!a||a.x==null)return;
+    if(Math.abs(a.x)+Math.abs(a.y)+Math.abs(a.z)>34&&Date.now()-last>4000){last=Date.now();snow()}})}
+  try{if(typeof DeviceMotionEvent.requestPermission==='function'){DeviceMotionEvent.requestPermission().then(function(r){if(r==='granted'){on();toast('Shake the phone for more snow')}}).catch(function(){})}else on()}catch(e){}
+}
+function applyNight(){
+  var n=vanNow(),on=get('night','auto')==='auto'&&(n.min>=975||n.min<470);
+  if((document.body.className==='night')!==on)document.body.className=on?'night':'';
+  var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',on?'#0f1b33':'#fbf6ea');
+  var sg=$('nightseg');if(sg)Array.prototype.forEach.call(sg.children,function(b){b.className=b.getAttribute('data-night')===get('night','auto')?'on':''});
+}
+
+/* ---------- pick up new versions without closing the app ---------- */
+var lastCheck=0;
+function checkUpdate(){
+  if(!window.fetch||Date.now()-lastCheck<600000||sheetOpen())return;
+  var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName))return;
+  lastCheck=Date.now();
+  fetch('index.html?b='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){
+    var m=/var BUILD='([^']+)'/.exec(t);if(m&&m[1]!==BUILD&&!sheetOpen())location.reload()}).catch(function(){});
+}
+
+function renderFun(){renderDoors();renderTreats();renderGames();renderWrapCard()}
+
 /* ---------- tabs ---------- */
 var TABS=['today','plan','eat','fun','info'];
 function go(tab,noScroll){
   if(TABS.indexOf(tab)<0)tab='today';
   TABS.forEach(function(t){$('v-'+t).className='view'+(t===tab?' on':'')});
   Array.prototype.forEach.call($('tabs').children,function(b){b.className=b.getAttribute('data-tab')===tab?'on':''});
-  set('tab',tab);if(!noScroll){var mt=document.querySelector('main');window.scrollTo(0,tab==='today'?0:Math.max(0,mt.offsetTop-2))}
+  renderTimers();set('tab',tab);if(!noScroll){var mt=document.querySelector('main');window.scrollTo(0,tab==='today'?0:Math.max(0,mt.offsetTop-2))}
   try{history.replaceState(null,'','#'+tab)}catch(e){}
 }
-function renderAll(){renderToday();renderPlan();renderEat();renderLists();
+function renderAll(){renderToday();renderPlan();renderEat();renderLists();renderFun();renderTimers();applyNight();
   Array.prototype.forEach.call($('mapseg').children,function(b){b.className=b.getAttribute('data-m')===mapPref?'on':''})}
 
 /* ---------- events ---------- */
 document.addEventListener('click',function(e){
   var t=e.target,el;
   function up(attr){var n=t;while(n&&n!==document){if(n.getAttribute&&n.getAttribute(attr)!==null)return n;n=n.parentNode}return null}
+  if((el=up('data-view'))){viewPhoto(el.getAttribute('data-view'));return}
+  if(up('data-close')){$('ov-poster').className='ov';$('ov-addr').className='ov';closeSheet();return}
+  if((el=up('data-door'))){openDoor(+el.getAttribute('data-door'));return}
+  if((el=up('data-addr'))){var ad=el.getAttribute('data-addr').split('|');showAddr(ad[0],ad[1]);return}
+  if(up('data-spot')){textSpot();return}
+  if(up('data-kid')){openKid();return}
+  if((el=up('data-say'))){say(el.getAttribute('data-say'));return}
+  if(up('data-snow')){armShake();snow();return}
+  if((el=up('data-night'))){set('night',el.getAttribute('data-night'));applyNight();return}
+  if((el=up('data-rater'))){var ts=treatState();ts.cur=el.getAttribute('data-rater');set('treats',ts);renderTreats();return}
+  if(up('data-addrater')){var rn=($('rater-new').value||'').replace(/^\s+|\s+$/g,''),t2=treatState();if(!rn){$('rater-new').focus();return}if(t2.raters.indexOf(rn)<0)t2.raters.push(rn);t2.cur=rn;set('treats',t2);renderTreats();return}
+  if((el=up('data-rate'))){var rp=el.getAttribute('data-rate').split('|'),t3=treatState();t3.r[rp[0]]=t3.r[rp[0]]||{};t3.r[rp[0]][t3.cur]=t3.r[rp[0]][t3.cur]===+rp[1]?0:+rp[1];set('treats',t3);renderTreats();renderWrapCard();return}
+  if(up('data-addtreat')){var tn=($('treat-new').value||'').replace(/^\s+|\s+$/g,''),t4=treatState();if(!tn){$('treat-new').focus();return}t4.custom.push(['c'+Date.now(),tn]);set('treats',t4);renderTreats();return}
+  if(up('data-sharetreats')){share(treatsText(),false);return}
+  if((el=up('data-game'))){game.mode=el.getAttribute('data-game');game.ord=null;renderGames();return}
+  if((el=up('data-ans'))){if(game.ans<0){game.ans=+el.getAttribute('data-ans');game.seen++;if(game.ans===TRIVIA[game.ord[game.i%TRIVIA.length]][2])game.score++;renderGames()}return}
+  if(up('data-gnext')){game.i++;game.ans=-1;if(game.i%gameList().length===0)game.ord=shuffle(gameList().length);renderGames();return}
+  if(up('data-wrap')){openWrap();return}
+  if((el=up('data-tal'))){var tp=el.getAttribute('data-tal').split('|'),tl=get('tally',{});tl[tp[0]]=Math.max(0,(tl[tp[0]]||0)+(+tp[1]));set('tally',tl);var tb=$('tal-'+tp[0]);if(tb)tb.textContent=tl[tp[0]];return}
+  if(up('data-wrappic')){toast('Making the picture…');wrapPicture();return}
+  if(up('data-wrapsend')){wrapSend();return}
+  if(up('data-wrapshare')){share(wrapText(),false);return}
+  if((el=up('data-delphoto'))){if(el.getAttribute('data-sure')){photoDel(el.getAttribute('data-delphoto'),function(){closeSheet();var y9=window.pageYOffset;renderLists();renderWrapCard();window.scrollTo(0,y9);toast('Photo removed')})}else{el.setAttribute('data-sure','1');el.textContent='Tap again to remove'}return}
   if(up('data-stop'))return;
   if((el=up('data-tab'))){go(el.getAttribute('data-tab'));return}
   if((el=up('data-go'))){go(el.getAttribute('data-go'));return}
@@ -678,14 +1191,36 @@ document.addEventListener('click',function(e){
   if((el=up('data-pick'))){var p=el.getAttribute('data-pick').split('|'),pk=get('picks',{});pk[p[0]]=pk[p[0]]===p[1]?null:p[1];set('picks',pk);var y=window.pageYOffset;renderEat();window.scrollTo(0,y);return}
   if((el=up('data-k'))){var k=el.getAttribute('data-k'),st=get(k,{}),id=el.getAttribute('data-id');st[id]=!st[id];set(k,st);var y2=window.pageYOffset;renderLists();window.scrollTo(0,y2);return}
   if((el=up('data-m'))){mapPref=el.getAttribute('data-m');set('map',mapPref);renderAll();return}
-  if(up('data-close')){$('ov-poster').className='ov';$('ov-addr').className='ov';return}
   if(t.id==='ov-addr'||(t.parentNode&&t.parentNode.id==='ov-addr')||t.className==='addr'){$('ov-addr').className='ov';return}
 });
 ['open-poster','open-poster2','poster-thumb'].forEach(function(i){$(i).addEventListener('click',function(){$('ov-poster').className='ov on'})});
-['show-addr','show-addr2'].forEach(function(i){$(i).addEventListener('click',function(){$('ov-addr').className='ov on'})});
+['show-addr','show-addr2'].forEach(function(i){$(i).addEventListener('click',showHome)});
 $('sharepicks').addEventListener('click',function(){share(picksText(),false)});
 $('shareapp').addEventListener('click',function(){share('Our Vancouver trip app — open it in Safari, tap Share (on newer iPhones it\'s inside the menu icon at the left of the address bar), then Add to Home Screen.',true)});
 $('cad').addEventListener('input',showFx);
+document.addEventListener('change',function(e){
+  var t=e.target,id=t&&t.getAttribute&&t.getAttribute('data-photo'),f=id&&t.files&&t.files[0];
+  if(!f)return;
+  toast('Saving the photo…');
+  shrink(f,function(d){
+    if(!d){toast('Couldn\'t read that photo');return}
+    photoPut(id,d,function(ok){
+      if(!ok){toast('Couldn\'t save photos on this phone');return}
+      var st=get('hunt',{});st[id]=true;set('hunt',st);closeSheet();
+      var y=window.pageYOffset;renderLists();renderWrapCard();window.scrollTo(0,y);toast('Got it! ★');
+    });
+  });
+});
+document.addEventListener('input',function(e){
+  var t=e.target,i=t&&t.getAttribute&&t.getAttribute('data-moment');
+  if(i===null||i===undefined)return;
+  var mo=get('moments',{});mo[i]=t.value;set('moments',mo);
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'||!e.target)return;
+  if(e.target.id==='rater-new'){var b1=document.querySelector('[data-addrater]');if(b1)b1.click()}
+  if(e.target.id==='treat-new'){var b2=document.querySelector('[data-addtreat]');if(b2)b2.click()}
+});
 $('installx').addEventListener('click',function(){set('installx',1);$('install').style.display='none'});
 
 /* ---------- boot ---------- */
@@ -694,8 +1229,10 @@ if(!standalone&&!get('installx',0))$('install').style.display='block';
 renderAll();
 var h=(location.hash||'').replace('#','');go(TABS.indexOf(h)>=0?h:get('tab','today'),true);
 loadWx();loadFx();
-document.addEventListener('visibilitychange',function(){if(!document.hidden){renderToday();loadWx()}});
-setInterval(renderToday,60000);
+photosLoad(function(){if(Object.keys(photoCache).length){renderLists();renderWrapCard()}});
+document.addEventListener('visibilitychange',function(){if(!document.hidden){renderToday();renderDoors();applyNight();renderTimers();loadWx();checkUpdate()}});
+setInterval(function(){renderToday();renderDoors();applyNight()},60000);
+setInterval(renderTimers,1000);
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
 })();
 </script>
