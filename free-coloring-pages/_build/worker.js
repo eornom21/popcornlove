@@ -916,7 +916,7 @@ async function adminOrders(q, env, u) {
   if (!(await teamOk(q, env, u.searchParams.get("k")))) return json({ error: "key" }, 403);
   const ids = await activeGet(env), extra = (u.searchParams.get("ids") || "").split(",").filter((x) => OID.test(x));
   const out = [];
-  for (const id of ids.concat(extra)) { const o = await oGet(env, id); if (o) out.push({ id, product: o.product, status: o.status, title: o.title, n: o.n, have: Object.keys(o.have || {}).length, ship: o.ship, amount: o.pay && o.pay.amount, city: o.pay && o.pay.ship.city, lulu: o.lulu && { job: o.lulu.job, status: o.lulu.status }, needsNate: o.needsNate || "", log: (o.log || []).slice(-8) }); }
+  for (const id of ids.concat(extra)) { const o = await oGet(env, id); if (o) out.push({ id, product: o.product, status: o.status, title: o.title, n: o.n, have: Object.keys(o.have || {}).length, ship: o.ship, amount: o.pay && o.pay.amount, city: o.pay && o.pay.ship.city, lulu: o.lulu && { job: o.lulu.job, status: o.lulu.status }, files: o.ptok ? "https://" + HOME + "/api/print/" + o.id + "/" + o.ptok + "/" : "", needsNate: o.needsNate || "", log: (o.log || []).slice(-8) }); }
   return json({ active: ids.length, orders: out });
 }
 
