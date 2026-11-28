@@ -282,7 +282,7 @@ nav.tabs button.on i{filter:none;opacity:1}
 body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgba(74,110,180,.38),rgba(15,27,51,0) 46%),radial-gradient(circle at 92% 34%,rgba(143,29,29,.22),rgba(15,27,51,0) 40%)}
 .night .lights{display:flex}
 .night .hero{background:#0f1b33}
-.night .tagline,.night .subline,.night h2.sec,.night .foot,.night .slot>h3{color:#f6e9c4}
+.night .tagline,.night .subline,.night h2.sec,.night .foot,.night .slot>h3,.night .foot .lnk{color:#f6e9c4}
 .night h2.sec small,.night .slot>p.w,.night .foot small{color:#b9c6de}
 .night h2.sec .prog{color:#8fd3ad}
 .night nav.tabs{background:rgba(16,28,54,.96);border-top-color:#2a3d66}
@@ -424,7 +424,7 @@ body.night{--cream:#0f1b33;background-image:radial-gradient(circle at 20% 0%,rgb
   <div class="card"><img class="poster" id="poster-thumb" src="img/poster.jpg" alt="Courtenay's Vancouver Christmas Market Trip poster" loading="lazy"><div class="btns"><button class="btn" id="open-poster2">Open full size</button><button class="btn pri" id="shareapp">Share this app</button></div></div>
 </section>
 
-<div class="foot">♡ Same family ♡ New traditions ♡ Vancouver ♡<small>Itinerary by Courtenay · Updated Nov 27, 2026 — hours change, so tap through before you go.</small></div>
+<div class="foot">♡ Same family ♡ New traditions ♡ Vancouver ♡<small>Itinerary by Courtenay · Updated Nov 27, 2026 — hours change, so tap through before you go.</small><small id="ver"></small><button class="lnk" id="upd" style="margin-top:4px">Check for a newer version</button></div>
 </main>
 </div>
 
@@ -816,7 +816,7 @@ function loadFx(){showFx();if(!window.fetch)return;
    v19 additions: sheet, show-the-driver, text my spot, forecast per stop,
    timers, doors, photo hunt, treats, games, Trip Wrapped, kid mode, night
    ==================================================================== */
-var BUILD='van-v21';
+var BUILD='van-v22';
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],WDL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 /* ---------- sheet ---------- */
@@ -1154,12 +1154,17 @@ function applyNight(){
 
 /* ---------- pick up new versions without closing the app ---------- */
 var lastCheck=0;
-function checkUpdate(){
-  if(!window.fetch||Date.now()-lastCheck<600000||sheetOpen())return;
-  var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName))return;
+function checkUpdate(manual){
+  if(!window.fetch){if(manual)toast('Can\'t check from here');return}
+  if(!manual){
+    if(Date.now()-lastCheck<20000||sheetOpen())return;
+    var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName))return;
+  }
   lastCheck=Date.now();
   fetch('index.html?b='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){
-    var m=/var BUILD='([^']+)'/.exec(t);if(m&&m[1]!==BUILD&&!sheetOpen())location.reload()}).catch(function(){});
+    var m=/var BUILD='(van-v\d+)'/.exec(t);
+    if(m&&m[1]!==BUILD&&(manual||!sheetOpen())){if(manual)toast('Updating…');location.reload();return}
+    if(manual)toast(m?'You have the newest version':'Couldn\'t check. Try again with a signal')}).catch(function(){if(manual)toast('Couldn\'t check. Try again with a signal')});
 }
 
 function renderFun(){renderDoors();renderTreats();renderGames();renderWrapCard();renderHomes()}
@@ -1408,6 +1413,8 @@ document.addEventListener('click',function(e){
 $('sharepicks').addEventListener('click',function(){share(picksText(),false)});
 $('shareapp').addEventListener('click',function(){share('Our Vancouver trip app — open it in Safari, tap Share (on newer iPhones it\'s inside the menu icon at the left of the address bar), then Add to Home Screen.',true)});
 $('cad').addEventListener('input',showFx);
+$('upd').addEventListener('click',function(){toast('Checking…');checkUpdate(true)});
+$('ver').textContent='App version '+BUILD.replace('van-v','');
 document.addEventListener('change',function(e){
   var t=e.target,id=t&&t.getAttribute&&t.getAttribute('data-photo'),f=id&&t.files&&t.files[0];
   if(!f)return;
@@ -1446,6 +1453,8 @@ var h=(location.hash||'').replace('#','');go(TABS.indexOf(h)>=0?h:get('tab','tod
 loadWx();loadFx();syncNow();
 photosLoad(function(){if(Object.keys(photoCache).length){renderLists();renderWrapCard()}});
 document.addEventListener('visibilitychange',function(){if(!document.hidden){renderToday();renderDoors();applyNight();renderTimers();loadWx();checkUpdate();syncNow()}});
+window.addEventListener('pageshow',function(){checkUpdate()});
+setInterval(function(){if(!document.hidden)checkUpdate()},300000);
 setInterval(function(){renderToday();renderDoors();applyNight()},60000);
 setInterval(function(){renderTimers();syncFlush()},1000);
 setInterval(function(){if(syncCfg&&!document.hidden)syncNow()},25000);
