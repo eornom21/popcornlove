@@ -845,6 +845,10 @@ async function advance(env, o) {
     o.status = "delivered"; o.deliveredAt = Date.now(); await send(env, o, "pdfready"); return "done";
   }
   if (o.status === "ready") {
+    // Guard against two workers submitting the same book twice (each submit is a real print charge).
+    const gk = "lulusub:" + o.id + ":" + (o.luluPast || []).length + ":" + (o.luluFails || 0);
+    if (await env.KV.get(gk)) return "wait";
+    await env.KV.put(gk, "1", { expirationTtl: 3600 });
     const r = await luluSubmit(env, o);
     if (!r.ok) { o.luluFails = (o.luluFails || 0) + 1; log(o, "lulu submit failed: " + r.why); if (o.luluFails === 3) await alertNate(env, o, "Lulu won't take the print job", r.why); return "save"; }
     o.lulu = { job: r.job, status: "CREATED", checked: Date.now() }; o.status = "printing"; log(o, "lulu job " + r.job); return "save";
