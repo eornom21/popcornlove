@@ -16,21 +16,21 @@ TODAY = datetime.date.today().isoformat()
 
 STYLE_NAME = {"easy": "Easy", "whimsical": "Medium", "realistic": "Detailed", "intricate": "Expert"}
 STYLE_BLURB = {
-    "easy": "Bold, simple shapes with thick lines and big spaces. Made for toddlers and preschoolers, about ages 2 to 5.",
-    "whimsical": "A storybook scene with medium detail and plenty to find. Great for kids about 6 to 10.",
-    "realistic": "True-to-life line art with fine detail. Good for older kids, teens and adults.",
-    "intricate": "Dense patterns with lots of small spaces to fill. Made for teens and adults who like a long, relaxing page.",
+    "easy": "Bold, simple shapes with thick lines and big spaces to fill.",
+    "whimsical": "A storybook scene with medium detail and plenty to find.",
+    "realistic": "True-to-life line art with fine detail.",
+    "intricate": "Dense patterns with lots of small spaces to fill, for a long, relaxing page.",
 }
 STYLE_HEAD = {
-    "easy": "Easy pages for little kids",
+    "easy": "Easy pages: big, simple shapes",
     "whimsical": "Medium pages: storybook scenes",
     "realistic": "Detailed pages: true to life",
-    "intricate": "Expert pages for teens and adults",
+    "intricate": "Expert pages: dense patterns",
 }
 THEME_SEO = {
     "thanksgiving": ("Thanksgiving Coloring Pages", "Turkeys, pumpkins, pies and harvest scenes for the kids' table, the classroom, or a quiet hour after the big meal."),
-    "christmas": ("Christmas Coloring Pages", "Santa, reindeer, snowmen, gingerbread and cozy winter scenes, from easy pages for little ones to detailed ornaments and wreaths for grown-ups."),
-    "halloween": ("Halloween Coloring Pages", "Friendly ghosts, jack-o'-lanterns, black cats and haunted houses. Spooky-cute for kids, with moody, detailed pages for teens and adults."),
+    "christmas": ("Christmas Coloring Pages", "Santa, reindeer, snowmen, gingerbread and cozy winter scenes, from big, simple pages to detailed ornaments and wreaths."),
+    "halloween": ("Halloween Coloring Pages", "Friendly ghosts, jack-o'-lanterns, black cats and haunted houses. Spooky-cute and simple, or moody and detailed."),
     "easter": ("Easter and Spring Coloring Pages", "Bunnies, chicks, eggs, lambs and spring flowers for Easter baskets, Sunday school and rainy spring afternoons."),
     "valentines": ("Valentine's Day Coloring Pages", "Hearts, love bugs, roses and sweet animal friends. Print a few for a class party or color one as a homemade valentine."),
     "summer": ("Summer and 4th of July Coloring Pages", "Fireworks, parades, beach days, cookouts and camping, plus eagles, lighthouses and mountain lakes for older colorists."),
@@ -40,7 +40,7 @@ THEME_SEO = {
     "animals": ("Animal Coloring Pages", "Farm animals, pets, jungle and safari animals and forest wildlife, including realistic foxes, tigers, wolves and owls."),
     "space": ("Space and Robot Coloring Pages", "Rockets, astronauts, planets, aliens and robots, with realistic rocket launches and rovers for space fans of any age."),
     "requests": ("Coloring Pages by Request", "Pages our visitors asked for, drawn fresh. Have an idea of your own? Ask for it on the home page, free."),
-    "fantasy": ("Dragon and Unicorn Coloring Pages", "Dragons, unicorns, fairies, castles, knights and wizards, from baby dragons for little kids to ornate fantasy art for adults."),
+    "fantasy": ("Dragon and Unicorn Coloring Pages", "Dragons, unicorns, fairies, castles, knights and wizards, from big, simple baby dragons to ornate fantasy art."),
 }
 CLEAN = [r"\s*No people in the scene\.", r"\s*The locomotive is an ordinary machine[^.]*\.", r"\s*It is a utility machine[^.]*\.",
          r",? with no writing on it", r" with no words", r", no labels", r", no letters"]
