@@ -569,7 +569,7 @@ async function orderDraft(q, env) {
     const pages = plan.pages.slice(0, want).map((p) => ({ caption: clip(p.caption, 60), scene: clip(p.scene, 400), shot: clip(p.shot || "", 400) }));
     while (pages.length < want) pages.push(pages[pages.length % Math.max(1, pages.length)]);
     o.scenes = product === "idea" ? [{ caption: "Where it started", scene: f.idea }].concat(pages) : pages;
-    o.n = o.scenes.length; o.title = clip(plan.title, 40); o.dedication = clip(plan.dedication, 70); o.character = clip(plan.character, 400); o.sheet = true;
+    o.n = o.scenes.length; o.title = clip(plan.title, 40); o.dedication = clip(plan.dedication, 70); o.character = clip(plan.character, 700); o.sheet = true;
   }
   log(o, "draft " + product);
   await oPut(env, o);
